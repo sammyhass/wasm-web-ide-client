@@ -1,6 +1,7 @@
 import { QueryClient, QueryFunction } from 'react-query';
 
-export const API_URL = process.env.API_URL || 'http://localhost:8080';
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 const defaultApiQueryFn: QueryFunction = async ({ queryKey }) => {
   const res = await fetch(`${API_URL}${queryKey[0]}`);
