@@ -23,7 +23,7 @@ export type WorkbenchState = {
   lastSaved: FileT[];
 };
 
-export const useWorkbench = create<WorkbenchState>((set, get) => ({
+export const useWorkbench = create<WorkbenchState>(set => ({
   files: Object.values(DEFAULT_FILES) as FileT[],
   currentFileIdx: 0,
   setCurrentFile: name => set({ currentFileName: name }),
