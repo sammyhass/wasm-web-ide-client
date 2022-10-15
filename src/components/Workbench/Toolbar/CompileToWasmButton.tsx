@@ -2,23 +2,12 @@ import { useToast } from '@/components/Toast';
 import { useWorkbench } from '@/components/Workbench';
 import { ToolbarButton } from '@/components/Workbench/Toolbar';
 import { useWasmReady } from '@/hooks/useWasmReady';
+import { compileToWasm } from '@/lib/api/mutations/compileToWasm';
 import { API_URL } from '@/lib/api/queryClient';
 import { runWASM } from '@/lib/wasm';
 import { WrenchScrewdriverIcon } from '@heroicons/react/24/solid';
+import { useMutation } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { useMutation } from 'react-query';
-
-const compileToWasm = async (code: string) => {
-  if (!code) return Promise.reject('No go code found');
-  const res = await fetch(`${API_URL}/wasm/compile`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ code: code }),
-  });
-  return await res.json();
-};
 
 export default function CompileToWasmButton() {
   const { show } = useToast();
@@ -31,9 +20,8 @@ export default function CompileToWasmButton() {
     [files]
   );
 
-  const { mutate, isLoading } = useMutation('compile', compileToWasm, {
+  const { mutate, isLoading } = useMutation(['compileToWasm'], compileToWasm, {
     onSuccess: data => {
-      console.log(data);
       runWASM(`${API_URL}${data.path}`);
       show({
         id: 'compile-success',
