@@ -2,6 +2,7 @@ import { DEFAULT_FILES } from '@/components/Workbench/defaults';
 import Tabs from '@/components/Workbench/Tabs';
 import Toolbar from '@/components/Workbench/Toolbar';
 import Editor from '@monaco-editor/react';
+import { Suspense } from 'react';
 import create from 'zustand';
 import PreviewWindow from './PreviewWindow';
 
@@ -57,7 +58,13 @@ function Workbench() {
   const file = files.find(f => f.name === currentFileName) || files[0];
 
   return (
-    <>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-80vh">
+          <div className="text-2xl">Loading...</div>
+        </div>
+      }
+    >
       <div className="bg-base-200 flex flex-col gap-1">
         <Toolbar />
         <Tabs />
@@ -78,7 +85,7 @@ function Workbench() {
         </div>
         <PreviewWindow />
       </div>
-    </>
+    </Suspense>
   );
 }
 export default Workbench;

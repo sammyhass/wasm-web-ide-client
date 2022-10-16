@@ -34,6 +34,7 @@
     "**/*.mjs"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/wasm_exec_tiny.js"
   ]
 }

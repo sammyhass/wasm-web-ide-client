@@ -5,6 +5,10 @@ export default function WasmTinyScript() {
   const ready = useWasmReady(s => s.ready);
 
   return (
-    <Script src="/wasm_exec_tiny.js" strategy="lazyOnload" onLoad={ready} />
+    <Script
+      src="/wasm_exec_tiny.js"
+      strategy="afterInteractive"
+      onLoad={ready}
+    />
   );
 }

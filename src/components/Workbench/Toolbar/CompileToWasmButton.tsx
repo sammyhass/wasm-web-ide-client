@@ -2,7 +2,7 @@ import { useToast } from '@/components/Toast';
 import { useWorkbench } from '@/components/Workbench';
 import { ToolbarButton } from '@/components/Workbench/Toolbar';
 import { useWasmReady } from '@/hooks/useWasmReady';
-import { compileToWasm } from '@/lib/api/mutations/compileToWasm';
+import { compileToWasm } from '@/lib/api/mutations';
 import { API_URL } from '@/lib/api/queryClient';
 import { runWASM } from '@/lib/wasm';
 import { WrenchScrewdriverIcon } from '@heroicons/react/24/solid';
