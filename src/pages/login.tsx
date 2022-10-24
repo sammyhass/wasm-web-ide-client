@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   const router = useRouter();
   const setJwt = useMe(s => s.setJwt);
-  const { refetch } = useMeQuery();
+  const { refetch } = useMeQuery(false);
 
   const onSuccess = useCallback(
     async (data: { token: string }) => {

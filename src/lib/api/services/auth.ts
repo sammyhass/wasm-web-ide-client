@@ -1,3 +1,4 @@
+import { User } from '@/hooks/useMe';
 import { z } from 'zod';
 import { axiosClient } from '../axios';
 
@@ -48,7 +49,7 @@ export const login = async ({ username, password }: LoginT) => {
   return data;
 };
 
-export const me = async () => {
+export const me = async (): Promise<User> => {
   const { data, status } = await axiosClient.get('/auth/me', {
     withCredentials: true,
   });
@@ -57,5 +58,5 @@ export const me = async () => {
     return Promise.reject(data);
   }
 
-  return data;
+  return data as User;
 };

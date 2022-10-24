@@ -3,7 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
-type User = unknown; // TODO: type-safety
+export type User = {
+  id: string;
+  username: string;
+};
 
 export type ApiUserResponse = {
   token: string;
@@ -25,7 +28,6 @@ export const useMe = create<{
       user: null,
       jwt: null,
       setJwt: jwt => set({ jwt }),
-      _hydrated: false,
       setUser: user => set({ user }),
     }),
     {
