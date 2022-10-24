@@ -3,16 +3,15 @@ import Navbar from '@/components/Navbar';
 import { queryClient } from '@/lib/api/queryClient';
 import { QueryClientProvider } from '@tanstack/react-query';
 import type { AppType } from 'next/app';
-import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import '../styles/globals.css';
-
-const WasmTinyScript = dynamic(() => import('@/lib/wasm/WasmTinyScript'), {
-  ssr: false,
-});
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
+      <Head>
+        <title>WASM IDE</title>
+      </Head>
       <QueryClientProvider client={queryClient}>
         <Navbar />
         <Component {...pageProps} />

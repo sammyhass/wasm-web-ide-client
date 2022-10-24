@@ -73,7 +73,7 @@ export const Alert = ({
   onClick,
   ...alert
 }: Alert & {
-  onHide: AlertStore['hide'];
+  onHide?: AlertStore['hide'];
   onClick?: () => void;
 }) => {
   return (
@@ -98,7 +98,7 @@ export const Alert = ({
 
       <button
         className="absolute top-1 right-1 btn btn-square btn-ghost btn-sm"
-        onClick={() => onHide(alert.id)}
+        onClick={() => onHide?.(alert.id)}
       >
         <XCircleIcon />
       </button>
