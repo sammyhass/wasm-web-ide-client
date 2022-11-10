@@ -44,7 +44,7 @@ function NewProjectCard() {
     <Link
       href={'/projects/new'}
       passHref
-      className='className="rounded-lg bg-base-100 cursor-pointer border hover:bg-base-200 shadow-lg transition-all duration-200 flex flex-col items-center justify-center  group h-60'
+      className="rounded-lg bg-base-100 cursor-pointer border hover:bg-base-200 shadow-lg transition-all duration-200 flex flex-col items-center justify-center group h-60"
       tabIndex={0}
     >
       <PlusIcon className="h-10 w-10" />

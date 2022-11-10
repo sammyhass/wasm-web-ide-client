@@ -30,6 +30,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ctx => {
   const id = ctx.params?.id as string | undefined;
 
   return {
+
     props: { id },
   };
 };
