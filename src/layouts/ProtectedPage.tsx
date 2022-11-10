@@ -14,11 +14,9 @@ function ProtectedPage(props: React.PropsWithChildren<unknown>) {
           You must be logged in to view this page
         </h1>
         <Link href="/login">
-          <a>
-            <button className="btn btn-primary min-w-[200px] btn-lg">
-              Login
-            </button>
-          </a>
+          <button className="btn btn-primary min-w-[200px] btn-lg">
+            Login
+          </button>
         </Link>
       </div>
     </div>
