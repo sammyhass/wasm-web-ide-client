@@ -17,27 +17,21 @@ export default function NavButtons() {
       {user ? (
         <>
           <Link href="/projects">
-            <a>
-              <button className="btn btn-outline btn-md">Your Projects</button>
-            </a>
+            <button className="btn btn-outline btn-md">Your Projects</button>
           </Link>
-          <a>
-            <button
-              className="btn btn-error btn-outline btn-md"
-              onClick={() => {
-                setJwt(null);
-                refetch();
-              }}
-            >
-              Logout
-            </button>
-          </a>
+          <button
+            className="btn btn-error btn-outline btn-md"
+            onClick={() => {
+              setJwt(null);
+              refetch();
+            }}
+          >
+            Logout
+          </button>
         </>
       ) : (
         <Link href="/login">
-          <a>
-            <button className="btn btn-outline btn-md">Login</button>
-          </a>
+          <button className="btn btn-outline btn-md">Login</button>
         </Link>
       )}
     </div>

@@ -69,7 +69,7 @@ export default function LoginPage() {
       <h1 className="text-4xl font-bold">
         {mode === 'login' ? 'Login' : 'Register'}
       </h1>
-      <form className="flex flex-col gap-5 my-5 font-mono " onSubmit={onSubmit}>
+      <form className="flex flex-col gap-5 my-5" onSubmit={onSubmit}>
         <FormControl id="username" label="Username" name="username" />
         <FormControl
           id="password"

@@ -1,5 +1,4 @@
 import { useToast } from '@/components/Toast';
-import { useWorkbench } from '@/components/Workbench';
 import { ToolbarButton } from '@/components/Workbench/Toolbar';
 import { useWasmReady } from '@/hooks/useWasmReady';
 import { API_URL } from '@/lib/api/axios';
@@ -8,15 +7,16 @@ import { runWASM } from '@/lib/wasm';
 import { WrenchScrewdriverIcon } from '@heroicons/react/24/solid';
 import { useMutation } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { useEditor } from '../../ProjectEditor';
 
 export default function CompileToWasmButton() {
   const { show } = useToast();
 
   const wasmReady = useWasmReady(s => s.isReady);
 
-  const files = useWorkbench(s => s.files);
+  const files = useEditor(s => s.files);
   const goCode = useMemo(
-    () => files.find(f => f.name === 'main.go')?.value,
+    () => files.find(f => f.language === 'go')?.content || '',
     [files]
   );
 

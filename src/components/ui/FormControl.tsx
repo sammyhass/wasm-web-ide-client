@@ -12,7 +12,7 @@ export function FormControl({
   placeholder?: string;
 }) {
   return (
-    <div className="form-control">
+    <div className="form-control font-mono">
       <label className="label" htmlFor={id}>
         <span className="label-text">{label}</span>
       </label>

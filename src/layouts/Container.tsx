@@ -1,6 +1,6 @@
 export default function Container(
   props: React.PropsWithChildren<unknown> & {
-    title: string;
+    title?: string;
     className?: string;
   }
 ) {
@@ -10,8 +10,12 @@ export default function Container(
         props.className ? props.className : ''
       }`}
     >
-      <h1 className="text-4xl font-bold">{props.title}</h1>
-      <hr className="my-5 bg-base-content" />
+      {props.title && (
+        <>
+          <h1 className="text-4xl font-bold">{props.title}</h1>
+          <hr className="my-5 bg-base-content" />
+        </>
+      )}
       {props.children}
     </div>
   );

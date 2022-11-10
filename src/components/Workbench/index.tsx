@@ -1,5 +1,4 @@
 import { DEFAULT_FILES } from '@/components/Workbench/defaults';
-import Tabs from '@/components/Workbench/Tabs';
 import Toolbar from '@/components/Workbench/Toolbar';
 import Editor from '@monaco-editor/react';
 import { Suspense } from 'react';
@@ -67,7 +66,6 @@ function Workbench() {
     >
       <div className="bg-base-200 flex flex-col gap-1">
         <Toolbar />
-        <Tabs />
       </div>
       <div className="flex h-full">
         <div className="flex-1 max-w-2xl">
