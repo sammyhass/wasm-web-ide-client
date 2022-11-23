@@ -1,6 +1,6 @@
+import { FileT } from '@/lib/api/services/projects';
 import MonacoEditor from '@monaco-editor/react';
 import { useEditor } from '.';
-import { FileT } from '../Workbench';
 
 const monacoLanguages: Record<FileT['language'], string> = {
   html: 'html',
@@ -21,9 +21,7 @@ export default function EditorWindow() {
   return (
     <MonacoEditor
       height={'80vh'}
-      defaultLanguage={
-        monacoLanguages?.[currentFile?.language ?? ''] ?? 'plaintext'
-      }
+      defaultLanguage={monacoLanguages?.[currentFile?.language ?? 'html']}
       defaultValue={currentFile?.content}
       options={{
         minimap: { enabled: false },

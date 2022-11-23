@@ -3,8 +3,8 @@ import WasmTinyScript from '@/lib/wasm/WasmTinyScript';
 import { useEffect } from 'react';
 import create from 'zustand';
 import shallow from 'zustand/shallow';
-import PreviewWindow from '../Workbench/PreviewWindow';
 import EditorWindow from './EditorWindow';
+import PreviewWindow from './PreviewWindow';
 import ProjectSettings from './ProjectSettings';
 import Tabs from './Tabs';
 import Toolbar from './Toolbar';
@@ -14,9 +14,7 @@ const langSort: Record<FileT['language'], number> = {
   js: 1,
   go: 2,
   css: 3,
-  wasm: 4,
 };
-
 type ProjectEditorState = {
   files: FileT[];
   selectedFile: string | undefined;

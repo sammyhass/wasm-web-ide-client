@@ -1,5 +1,31 @@
 import { useEditor } from '../ProjectEditor';
-import { iframeContent } from './defaults';
+
+const iframeContent = ({
+  html,
+  css,
+  js,
+}: {
+  html: string;
+  css?: string;
+  js?: string;
+}) => `
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        ${css}
+      </style>
+      <script defer type="module">
+        ${js}
+      </script>
+    </head>
+    <body>
+      ${html}
+      </body>
+  </html>
+`;
 
 export default function PreviewWindow() {
   const saveState = useEditor(s => s.lastSaved);

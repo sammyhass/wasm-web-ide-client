@@ -11,7 +11,7 @@ export type ProjectT = {
 
 export type FileT = {
   name: string;
-  language: 'html' | 'css' | 'go' | 'js' | 'wasm';
+  language: 'html' | 'css' | 'go' | 'js';
   content: string;
   updated_at: string;
   created_at: string;
