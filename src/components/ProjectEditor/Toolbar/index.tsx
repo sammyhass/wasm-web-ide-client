@@ -1,11 +1,13 @@
-import CompileToWasmButton from '@/components/Workbench/Toolbar/CompileToWasmButton';
-import { PreviewButton } from './PreviewButton';
+import CompileToWasmButton from '@/components/ProjectEditor/Toolbar/CompileToWasmButton';
+import { SaveButton } from './SaveButton';
+import SettingsButton from './SettingsButton';
 
 export default function Toolbar() {
   return (
     <div className="flex items-center gap-2 pl-2">
       <CompileToWasmButton />
-      <PreviewButton />
+      <SaveButton />
+      <SettingsButton />
     </div>
   );
 }
@@ -29,7 +31,9 @@ export function ToolbarButton({
     <button
       className={`btn btn-sm normal-case gap-2 ${loading ? 'loading' : ''} ${
         disabled ? 'btn-disabled cursor-none' : ''
-      } ${!!!title ? 'btn-square' : 'min-w-[10em] '} ${className}`}
+      } ${!!!title ? 'btn-square' : 'min-w-[10em] '} ${
+        className ? className : ''
+      }`}
       title={title}
       onClick={onClick}
     >

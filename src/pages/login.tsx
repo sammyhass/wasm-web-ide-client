@@ -1,7 +1,7 @@
 import { Alert } from '@/components/Toast';
 import { useLogin } from '@/hooks/api/useLogin';
 import { useRegister } from '@/hooks/api/useRegister';
-import { useMe, useMeQuery } from '@/hooks/useMe';
+import { ApiUserResponse, useMe, useMeQuery } from '@/hooks/useMe';
 import { ApiErrorResponse } from '@/lib/api/axios';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
@@ -11,19 +11,26 @@ import { FormControl } from '../components/ui/FormControl';
 export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'register'>('login');
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [error, setError] = useState<ZodError | string>('');
 
   const router = useRouter();
-  const setJwt = useMe(s => s.setJwt);
   const { refetch } = useMeQuery(false);
 
+  const { setUser, setJwt } = useMe();
+
   const onSuccess = useCallback(
-    async (data: { token: string }) => {
-      setJwt(data.token);
+    async (data: ApiUserResponse) => {
+      setJwt(data.jwt);
+      setUser(data.user);
+
       await refetch();
       router.push('/projects');
     },
-    [setJwt, refetch, router]
+    [refetch, router]
   );
 
   const onError = (error: ApiErrorResponse | ZodError) => {
@@ -40,28 +47,19 @@ export default function LoginPage() {
   });
   const { mutate: doRegister, isLoading: registerLoading } = useRegister({
     onSuccess,
-    onError: e => {
-      onError(e);
-    },
+    onError: onError,
   });
 
   const onSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-
-      const formData = new FormData(e.currentTarget);
-
-      const username = formData.get('username') as string;
-      const password = formData.get('password') as string;
-      const confirmPassword = formData.get('confirmPassword') as string;
-
       if (mode === 'register') {
-        doRegister(username, password, confirmPassword);
+        doRegister({ email, password, confirmPassword });
       } else if (mode === 'login') {
-        doLogin(username, password);
+        doLogin({ email, password });
       }
     },
-    [doLogin, doRegister, mode]
+    [confirmPassword, doLogin, doRegister, mode, password, email]
   );
 
   return (
@@ -70,12 +68,18 @@ export default function LoginPage() {
         {mode === 'login' ? 'Login' : 'Register'}
       </h1>
       <form className="flex flex-col gap-5 my-5" onSubmit={onSubmit}>
-        <FormControl id="username" label="Username" name="username" />
+        <FormControl
+          id="email"
+          label="Email"
+          name="email"
+          onChange={e => setEmail(e.target.value)}
+        />
         <FormControl
           id="password"
           label="Password"
           name="password"
           type="password"
+          onChange={e => setPassword(e.target.value)}
         />
         {mode === 'register' && (
           <FormControl
@@ -83,11 +87,12 @@ export default function LoginPage() {
             label="Confirm Password"
             name="confirmPassword"
             type="password"
+            onChange={e => setConfirmPassword(e.target.value)}
           />
         )}
         <button
           className={`btn btn-primary
-          ${loginLoading || registerLoading ? 'loading' : ''} 
+          ${loginLoading || registerLoading ? 'loading' : ''}
         `}
           type="submit"
           disabled={loginLoading || registerLoading}
@@ -108,8 +113,8 @@ export default function LoginPage() {
           <Alert
             type="error"
             message={
-              typeof error === 'object'
-                ? error.format()._errors.join(', ')
+              error instanceof ZodError
+                ? `${error.errors[0]?.path}: ${error.errors[0]?.message}`
                 : error
             }
             id="failed-login"

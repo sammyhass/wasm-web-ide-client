@@ -5,11 +5,11 @@ import { persist } from 'zustand/middleware';
 
 export type User = {
   id: string;
-  username: string;
+  email: string;
 };
 
 export type ApiUserResponse = {
-  token: string;
+  jwt: string;
   user: User;
 };
 

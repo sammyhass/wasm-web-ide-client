@@ -4,7 +4,7 @@ import { axiosClient } from '../axios';
 
 export const registerSchema = z
   .object({
-    username: z.string().min(3).max(20),
+    email: z.string().email(),
     password: z.string().min(6).max(20),
     confirmPassword: z.string(),
   })
@@ -14,11 +14,10 @@ export const registerSchema = z
   })
   .transform(({ confirmPassword, ...data }) => data);
 
-type RegisterT = z.infer<typeof registerSchema>;
-
-export const register = async ({ username, password }: RegisterT) => {
+type RegisterT = z.input<typeof registerSchema>;
+export const register = async ({ email, password }: RegisterT) => {
   const { data, status } = await axiosClient.post('/auth/register', {
-    username,
+    email,
     password,
   });
 
@@ -30,15 +29,15 @@ export const register = async ({ username, password }: RegisterT) => {
 };
 
 export const loginSchema = z.object({
-  username: z.string().min(1),
-  password: z.string(),
+  email: z.string().min(5),
+  password: z.string().min(8),
 });
 
-type LoginT = z.infer<typeof loginSchema>;
+type LoginT = z.input<typeof loginSchema>;
 
-export const login = async ({ username, password }: LoginT) => {
+export const login = async ({ email, password }: LoginT) => {
   const { data, status } = await axiosClient.post('/auth/login', {
-    username,
+    email,
     password,
   });
 

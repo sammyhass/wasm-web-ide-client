@@ -1,16 +1,16 @@
+import { InputHTMLAttributes } from 'react';
+
 export function FormControl({
   id,
   label,
   name,
   type = 'text',
   placeholder,
+  onChange,
+  ...rest
 }: {
-  id: string;
   label: string;
-  type?: string;
-  name: string;
-  placeholder?: string;
-}) {
+} & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div className="form-control font-mono">
       <label className="label" htmlFor={id}>
@@ -18,10 +18,12 @@ export function FormControl({
       </label>
       <input
         type={type}
+        onChange={onChange}
         placeholder={placeholder}
         className={`input`}
         name={name || id}
         id={id}
+        {...rest}
       />
     </div>
   );

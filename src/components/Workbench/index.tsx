@@ -1,5 +1,5 @@
+import Toolbar from '@/components/ProjectEditor/Toolbar';
 import { DEFAULT_FILES } from '@/components/Workbench/defaults';
-import Toolbar from '@/components/Workbench/Toolbar';
 import Editor from '@monaco-editor/react';
 import { Suspense } from 'react';
 import create from 'zustand';

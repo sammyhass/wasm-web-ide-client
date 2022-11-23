@@ -12,7 +12,9 @@ export type AlertIdentifier =
   | 'compile-error'
   | 'compile-success'
   | 'run-error'
-  | 'run-success';
+  | 'run-success'
+  | 'project-save-success'
+  | 'project-save-error';
 
 type Alert = {
   id: string;

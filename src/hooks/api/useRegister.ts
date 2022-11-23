@@ -2,7 +2,7 @@ import { ApiErrorResponse } from '@/lib/api/axios';
 import { register, registerSchema } from '@/lib/api/services/auth';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { ZodError } from 'zod';
+import { z, ZodError } from 'zod';
 import { ApiUserResponse } from '../useMe';
 
 export type UseLoginRegisterParams = {
@@ -28,21 +28,14 @@ export const useRegister = ({
   );
 
   const mutate = useCallback(
-    (username: string, password: string, confirmPassword: string) => {
-      const ok = registerSchema.safeParse({
-        username,
-        password,
-        confirmPassword,
-      });
-
-      if (ok.success) {
-        _mutate({
-          username,
-          password,
-        });
-      } else {
-        onError?.(ok.error);
+    (data: z.input<typeof registerSchema>) => {
+      try {
+        registerSchema.parse(data);
+      } catch (e) {
+        e instanceof ZodError ? onError?.(e) : null;
+        return;
       }
+      _mutate(data);
     },
     [_mutate, onError]
   );

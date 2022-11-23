@@ -54,3 +54,34 @@ export const getProject = async (id: string): Promise<ProjectT> => {
 
   return data as ProjectT;
 };
+
+export const saveProjectFiles = async ({
+  id,
+  files,
+}: {
+  id: string;
+  files: FileT[];
+}): Promise<FileT[]> => {
+  const filesAcc = files?.reduce((acc, curr) => {
+    acc[curr.name] = curr.content;
+    return acc;
+  }, {} as { [key: string]: string });
+
+  const { data, status } = await axiosClient.patch(`/projects/${id}`, {
+    files: filesAcc,
+  });
+
+  if (status !== 200) {
+    return Promise.reject(data);
+  }
+
+  return data as FileT[];
+};
+
+export const deleteProject = async (id: string): Promise<void> => {
+  const { status } = await axiosClient.delete(`/projects/${id}`);
+
+  if (status !== 204) {
+    return Promise.reject();
+  }
+};
