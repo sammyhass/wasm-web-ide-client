@@ -1,13 +1,16 @@
+import { runWasmCode } from '@/lib/wasm';
 import { useEditor } from '../ProjectEditor';
 
 const iframeContent = ({
   html,
   css,
   js,
+  wasmPath,
 }: {
   html: string;
   css?: string;
   js?: string;
+  wasmPath?: string;
 }) => `
   <!DOCTYPE html>
   <html lang="en">
@@ -17,7 +20,9 @@ const iframeContent = ({
       <style>
         ${css}
       </style>
+      <script src="/wasm_exec_tiny.js"></script>
       <script defer type="module">
+        ${runWasmCode(wasmPath)}
         ${js}
       </script>
     </head>
@@ -29,6 +34,7 @@ const iframeContent = ({
 
 export default function PreviewWindow() {
   const saveState = useEditor(s => s.lastSaved);
+  const wasmPath = useEditor(s => s.wasmPath);
 
   const html = saveState
     .filter(f => f.name === 'index.html')
@@ -47,12 +53,13 @@ export default function PreviewWindow() {
 
   return (
     <>
-      <div className="flex-1 bg-white">
+      <div className="flex-1 max-w-2xl bg-white">
         <iframe
           srcDoc={iframeContent({
             html: html || '',
             js: js || '',
             css: css || '',
+            wasmPath,
           })}
           className="w-full h-full"
           title="Preview"

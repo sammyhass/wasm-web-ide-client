@@ -38,6 +38,7 @@ export const useMe = create<{
 
 export const useMeQuery = (enabled = true) => {
   const { data, error, isLoading, refetch } = useQuery(['me'], me, {
+    cacheTime: 60,
     initialData: () => {
       const user = useMe.getState().user;
       if (user) {
@@ -45,7 +46,7 @@ export const useMeQuery = (enabled = true) => {
       }
       return undefined;
     },
-    enabled: !!useMe.getState().user && enabled,
+    enabled,
     retryOnMount: false,
     retry: false,
     onSuccess: user => {

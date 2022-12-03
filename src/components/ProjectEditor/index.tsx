@@ -1,21 +1,23 @@
 import { FileT, ProjectT } from '@/lib/api/services/projects';
-import WasmTinyScript from '@/lib/wasm/WasmTinyScript';
 import { useEffect } from 'react';
 import create from 'zustand';
 import shallow from 'zustand/shallow';
 import EditorWindow from './EditorWindow';
+import FileTree from './FileTree';
 import PreviewWindow from './PreviewWindow';
 import ProjectSettings from './ProjectSettings';
-import Tabs from './Tabs';
 import Toolbar from './Toolbar';
 
 const langSort: Record<FileT['language'], number> = {
   html: 0,
   js: 1,
-  go: 2,
-  css: 3,
+  css: 2,
+  go: 3,
 };
 type ProjectEditorState = {
+  wasmPath?: string;
+  setWasmPath: (path: string) => void;
+
   files: FileT[];
   selectedFile: string | undefined;
 
@@ -37,6 +39,8 @@ type ProjectEditorState = {
 };
 
 export const useEditor = create<ProjectEditorState>((set, get) => ({
+  wasmPath: undefined,
+  setWasmPath: (path: string) => set({ wasmPath: path }),
   setProject: project => set({ ...project }),
   files: [],
   project: null,
@@ -80,10 +84,12 @@ function ProjectEditor() {
     <div className="bg-base-200">
       <Toolbar />
       <hr className="my-2" />
-      <Tabs />
       <div className="flex">
-        <div className="flex-1">
-          <EditorWindow />
+        <div className="flex flex-col flex-1">
+          <div className="flex">
+            <FileTree />
+            <EditorWindow />
+          </div>
         </div>
         <PreviewWindow />
       </div>
@@ -109,7 +115,6 @@ export default function ProjectsEditorWrapper(props: ProjectT) {
   return (
     <>
       <ProjectEditor />
-      <WasmTinyScript />
     </>
   );
 }

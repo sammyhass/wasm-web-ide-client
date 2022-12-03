@@ -85,3 +85,15 @@ export const deleteProject = async (id: string): Promise<void> => {
     return Promise.reject();
   }
 };
+
+export const compileProject = async (id: string): Promise<string> => {
+  const { status, data } = await axiosClient.post<string>(
+    `/projects/${id}/compile`
+  );
+
+  if (status !== 200) {
+    return Promise.reject(data);
+  }
+
+  return data;
+};
