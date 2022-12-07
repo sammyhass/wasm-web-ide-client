@@ -1,13 +1,11 @@
 import CompileToWasmButton from '@/components/ProjectEditor/Toolbar/CompileToWasmButton';
 import { SaveButton } from './SaveButton';
-import SettingsButton from './SettingsButton';
 
 export default function Toolbar() {
   return (
-    <div className="flex items-center gap-2 pl-2">
+    <div className="flex items-center my-2 gap-2 pl-2">
       <CompileToWasmButton />
       <SaveButton />
-      <SettingsButton />
     </div>
   );
 }

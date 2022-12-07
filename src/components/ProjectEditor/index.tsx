@@ -2,8 +2,9 @@ import { FileT, ProjectT } from '@/lib/api/services/projects';
 import { useEffect } from 'react';
 import create from 'zustand';
 import shallow from 'zustand/shallow';
+import ConsoleWindow from './ConsoleWindow';
 import EditorWindow from './EditorWindow';
-import FileTree from './FileTree';
+import FileTreeWrapper from './FileTree';
 import PreviewWindow from './PreviewWindow';
 import ProjectSettings from './ProjectSettings';
 import Toolbar from './Toolbar';
@@ -81,14 +82,14 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
 
 function ProjectEditor() {
   return (
-    <div className="bg-base-200">
+    <div className="bg-base-200 w-full max-w-screen ">
       <Toolbar />
-      <hr className="my-2" />
-      <div className="flex">
-        <div className="flex flex-col flex-1">
-          <div className="flex">
-            <FileTree />
+      <div className="flex flex-col-reverse md:flex-row">
+        <div className="relative flex flex-1">
+          <FileTreeWrapper />
+          <div className="w-full relative">
             <EditorWindow />
+            <ConsoleWindow />
           </div>
         </div>
         <PreviewWindow />
@@ -98,7 +99,7 @@ function ProjectEditor() {
   );
 }
 
-export default function ProjectsEditorWrapper(props: ProjectT) {
+export default function ProjectsEditaaaaiWaaoarWrapper(props: ProjectT) {
   const { initProject } = useEditor(
     s => ({
       initProject: s.initProject,

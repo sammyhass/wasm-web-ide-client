@@ -20,7 +20,7 @@ export default function EditorWindow() {
   const currentFile = files.find(f => f.name === selectedFile);
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="w-full">
       {currentFile && (
         <b className="font-mono flex gap-2 p-2 text-sm">
           <LanguageIcon language={currentFile?.language} className="w-5 h-5" />
@@ -29,6 +29,7 @@ export default function EditorWindow() {
       )}
       <MonacoEditor
         height={'80vh'}
+        width={'100%'}
         defaultLanguage={monacoLanguages?.[currentFile?.language ?? 'html']}
         defaultValue={currentFile?.content}
         options={{

@@ -1,9 +1,27 @@
 import { FileT } from '@/lib/api/services/projects';
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
+import { useState } from 'react';
 import shallow from 'zustand/shallow';
 import { useEditor } from '.';
 import LanguageIcon from '../icons/Icon';
 
-export default function FileTree() {
+export default function FileTreeWrapper() {
+  const [show, setShow] = useState(true);
+
+  return show ? (
+    <FileTree onClose={() => setShow(false)} />
+  ) : (
+    <button
+      className="top-0 left-0 p-2"
+      onClick={() => setShow(true)}
+      title="Open File Tree"
+    >
+      <ArrowRightIcon className="w-5 h-5" />
+    </button>
+  );
+}
+
+function FileTree({ onClose }: { onClose: () => void }) {
   const { files, selectedFile, setSelectedFile } = useEditor(
     s => ({
       selectedFile: s.selectedFile,
@@ -13,8 +31,15 @@ export default function FileTree() {
     shallow
   );
   return (
-    <div className="flex flex-col gap-2 text-sm">
+    <div className="flex flex-col gap-2 text-sm relative min-w-fit">
       <b className="pl-4 font-mono p-2">Project Files</b>
+      <button
+        className="absolute top-0 right-0 p-2"
+        onClick={onClose}
+        title="Close"
+      >
+        <ArrowLeftIcon className="w-5 h-5" />
+      </button>
       {files.map(f => (
         <FileTreeItem
           {...f}
@@ -41,7 +66,7 @@ const FileTreeItem = ({
     }`}
     onClick={onClick}
   >
-    <LanguageIcon language={file.language} className="w-4 h-4" />
+    <LanguageIcon language={file.language} />
     <span>{file.name}</span>
   </button>
 );

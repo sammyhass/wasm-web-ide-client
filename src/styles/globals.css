@@ -5,3 +5,8 @@
 .btn {
 	@apply no-animation
 }
+
+
+html {
+	overflow-x: hidden;
+}

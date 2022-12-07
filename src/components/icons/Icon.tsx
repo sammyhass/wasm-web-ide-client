@@ -3,12 +3,10 @@ import CssIcon from './CSSIcon';
 import GoIcon from './GoIcon';
 import HtmlIcon from './HtmlIcon';
 import JavaScriptIcon from './JavaScriptIcon';
-import WasmIcon from './WasmIcon';
 
 const icons: Record<FileT['language'], React.FC> = {
   go: GoIcon,
   html: HtmlIcon,
-  wasm: WasmIcon,
   css: CssIcon,
   js: JavaScriptIcon,
 };

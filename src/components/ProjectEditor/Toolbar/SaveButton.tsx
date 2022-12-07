@@ -1,7 +1,7 @@
 import { useToast } from '@/components/Toast';
 import { ApiErrorResponse } from '@/lib/api/axios';
 import { ProjectT, saveProjectFiles } from '@/lib/api/services/projects';
-import { PlayIcon } from '@heroicons/react/24/solid';
+import { FolderIcon } from '@heroicons/react/24/solid';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import shallow from 'zustand/shallow';
@@ -54,10 +54,10 @@ export function SaveButton() {
 
   return (
     <ToolbarButton
+      title={isLoading ? 'Saving...' : 'Save'}
       onClick={onClick}
-      title="Save and Preview Project"
-      loading={isLoading}
-      icon={<PlayIcon className="h-5 w-5" />}
+      disabled={isLoading}
+      icon={<FolderIcon className="w-5 h-5" />}
     />
   );
 }

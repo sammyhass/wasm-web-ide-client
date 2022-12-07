@@ -31,7 +31,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",
-    "**/*.mjs"
+    "**/*.mjs",
+    "server-local.js"
   ],
   "exclude": [
     "node_modules",

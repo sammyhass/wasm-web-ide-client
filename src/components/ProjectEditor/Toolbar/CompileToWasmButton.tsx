@@ -1,14 +1,14 @@
-import { ToolbarButton } from '@/components/ProjectEditor/Toolbar';
 import { useToast } from '@/components/Toast';
 import { API_URL } from '@/lib/api/axios';
 import { compileProject } from '@/lib/api/services/projects';
-import { WrenchScrewdriverIcon } from '@heroicons/react/24/solid';
+import { PlayIcon } from '@heroicons/react/24/solid';
 import { useMutation } from '@tanstack/react-query';
 import { useEditor } from '..';
 
 export default function CompileToWasmButton() {
   const { show } = useToast();
   const setWasmPath = useEditor(s => s.setWasmPath);
+  const project = useEditor(s => s.project);
   const { mutate, isLoading } = useMutation(
     ['compileProject'],
     compileProject,
@@ -32,16 +32,16 @@ export default function CompileToWasmButton() {
     }
   );
 
-  const project = useEditor(s => s.project);
-
   return (
-    <ToolbarButton
+    <button
+      className={`flex btn btn-circle  btn-success text-white ${
+        isLoading ? 'loading' : ''
+      }`}
       onClick={() => {
         project?.id && mutate(project?.id);
       }}
-      title="Compile to WebAssembly"
-      loading={isLoading}
-      icon={<WrenchScrewdriverIcon className="w-6 h-6" />}
-    />
+    >
+      {!isLoading ? <PlayIcon className="w-5 h-5" /> : ''}
+    </button>
   );
 }
