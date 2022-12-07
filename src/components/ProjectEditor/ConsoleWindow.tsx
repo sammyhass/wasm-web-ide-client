@@ -3,8 +3,7 @@ import {
   ArrowUpIcon,
   XMarkIcon,
 } from '@heroicons/react/24/solid';
-import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import create from 'zustand';
 
 type LogLevel = 'log' | 'error' | 'warn' | 'info' | 'debug';
@@ -18,10 +17,31 @@ type ConsoleT = {
     args: any[];
   }[];
   clear: () => void;
+  push: (logLevel: LogLevel, message: string) => void;
+
+  mustScroll: boolean;
+  _setMustScroll: (mustScroll: boolean) => void;
 };
 
 export const useEditorConsole = create<ConsoleT>((set, get) => ({
   _messages: [],
+  mustScroll: true,
+  _setMustScroll: (mustScroll: boolean) => set({ mustScroll }),
+  push: (logLevel: LogLevel, message: string) => {
+    set(state => ({
+      _messages: [
+        ...state._messages,
+        {
+          type: 'console',
+          level: logLevel,
+          args: [message],
+          createdAt: Date.now(),
+        },
+      ],
+    }));
+
+    get()._setMustScroll(true);
+  },
   clear: () => set({ _messages: [] }),
   handleMessage: (e: MessageEvent) => {
     if (e.data.type !== 'console') return;
@@ -34,17 +54,7 @@ export const useEditorConsole = create<ConsoleT>((set, get) => ({
       console.log(...e.data);
     }
 
-    set(state => ({
-      _messages: [
-        ...state._messages,
-        {
-          type: 'console',
-          level: method,
-          args,
-          createdAt: Date.now(),
-        },
-      ],
-    }));
+    get().push(method as LogLevel, args.join(' '));
   },
 }));
 
@@ -53,6 +63,21 @@ export default function ConsoleWindow() {
   const messages = useEditorConsole(state => state._messages);
   const handleMessage = useEditorConsole(state => state.handleMessage);
   const clear = useEditorConsole(state => state.clear);
+  const mustScroll = useEditorConsole(state => state.mustScroll);
+  const setMustScroll = useEditorConsole(state => state._setMustScroll);
+  const messagesRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = useCallback(() => {
+    if (messagesRef.current) {
+      // smooth scroll to bottom
+      messagesRef.current.scrollTo({
+        top: messagesRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+
+    setMustScroll(false);
+  }, [setMustScroll]);
 
   useEffect(() => {
     const listener = (e: MessageEvent) => {
@@ -61,18 +86,28 @@ export default function ConsoleWindow() {
       }
     };
 
+    if (mustScroll) {
+      scrollToBottom();
+    }
+
     window.addEventListener('message', listener);
 
     return () => {
       window.removeEventListener('message', listener);
     };
-  }, [handleMessage]);
+  }, [handleMessage, mustScroll, scrollToBottom]);
+
+  useEffect(() => {
+    return () => {
+      clear();
+    };
+  }, [clear]);
 
   return (
-    <div className="flex flex-col gap-2 text-sm absolute bottom-0 w-full pl-2">
+    <div className="flex flex-col gap-2 text-sm absolute bottom-0 pb-2 w-full pl-2 bg-opacity-60 bg-base-300">
       {show ? (
         <div>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center my-2">
             <b>
               Console <span className="text-xs">({messages.length})</span>
             </b>
@@ -89,13 +124,15 @@ export default function ConsoleWindow() {
               </button>
             </div>
           </div>
-          <div className="h-28 max-h-32 min-h-12 overflow-y-auto py-2">
+          <div
+            className="h-28 max-h-44 min-h-12 overflow-y-auto py-2 pb-6"
+            ref={messagesRef}
+          >
             {messages.map((m, i) => (
               <div
                 key={`${m.createdAt}`}
                 className={`font-mono ${consoleMessageClass(m.level)}`}
               >
-                {format(m.createdAt, ' HH:mm:ss dd MMM')}{' '}
                 {m.level.toUpperCase()}:{' '}
                 {m.args.map((a, i) => (
                   <span key={i}>{a}</span>

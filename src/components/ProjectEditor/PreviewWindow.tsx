@@ -22,13 +22,11 @@ const iframeContent = ({
   css,
   js,
   wasmPath,
-  nonce,
 }: {
   html: string;
   css?: string;
   js?: string;
   wasmPath?: string;
-  nonce?: string; // useful for rerendering when no changes are made
 }) => `
   <!DOCTYPE html>
   <html lang="en">
@@ -48,7 +46,6 @@ const iframeContent = ({
     <body>
       ${html}
 
-      <script nonce="${nonce}">
     </body>
   </html>
 `;
@@ -72,19 +69,16 @@ export default function PreviewWindow() {
     .map(f => f.content)
     .join('');
 
-  const nonce = Math.random().toString(26);
-
   const srcDoc = iframeContent({
     html,
     js,
     css,
     wasmPath,
-    nonce,
   });
 
   return (
     <>
-      <div className="bg-white flex-1 max-w-4xl min-w-[350px]">
+      <div className="bg-white flex-1 max-w-4xl min-w-[250px]">
         <iframe srcDoc={srcDoc} className="w-full h-full" title="Preview" />
       </div>
     </>

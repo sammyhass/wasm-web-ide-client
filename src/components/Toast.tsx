@@ -119,7 +119,7 @@ export const ToastProvider = () => {
     if (alerts.length > 0) {
       intervalRef.current = setInterval(() => {
         pop();
-      }, 10000);
+      }, 2500);
     }
     return () => {
       if (intervalRef.current) {

@@ -34,6 +34,7 @@ export default function EditorWindow() {
         defaultValue={currentFile?.content}
         options={{
           minimap: { enabled: false },
+          scrollbar: { horizontal: 'hidden' },
         }}
         onChange={value => onFileChange(value || '')}
         path={currentFile?.name}
