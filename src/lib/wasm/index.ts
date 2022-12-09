@@ -7,10 +7,13 @@ export const runWasmCode = (js?: string, src?: string) =>
 
   let wasm;
 
-  WebAssembly.instantiateStreaming(fetch('${src}'), go.importObject).then(result => {
-    wasm = result.instance;
+  WebAssembly.instantiateStreaming(fetch('${src}'), go.importObject).then(___result => {
+
+    wasm = ___result.instance;
     go.run(wasm);
+
     ${js}
+    
   });
 `
-    : js ?? '';
+    : '';
