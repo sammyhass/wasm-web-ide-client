@@ -3,7 +3,7 @@ import { SaveButton } from './SaveButton';
 
 export default function Toolbar() {
   return (
-    <div className="flex items-center my-2 gap-2 pl-2">
+    <div className="flex items-center gap-2 pl-2">
       <CompileToWasmButton />
       <SaveButton />
     </div>

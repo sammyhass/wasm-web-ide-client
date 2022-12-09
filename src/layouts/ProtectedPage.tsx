@@ -1,12 +1,11 @@
-import { useMe, useMeQuery } from '@/hooks/useMe';
+import { useMeQuery } from '@/hooks/useMe';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 function ProtectedPage(props: React.PropsWithChildren<unknown>) {
-  const { user } = useMe();
-  useMeQuery();
+  const { data, isLoading } = useMeQuery();
 
-  return user ? (
+  return data?.id ? (
     <>{props.children}</>
   ) : (
     <>
@@ -15,11 +14,15 @@ function ProtectedPage(props: React.PropsWithChildren<unknown>) {
           <h1 className="text-4xl font-bold">
             You must be logged in to view this page
           </h1>
-          <Link href="/login">
-            <button className="btn btn-primary min-w-[200px] btn-lg">
-              Login
-            </button>
-          </Link>
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : (
+            <Link href="/login">
+              <button className="btn btn-primary min-w-[200px] btn-lg">
+                Login
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </>

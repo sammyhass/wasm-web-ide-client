@@ -39,13 +39,11 @@ const iframeContent = ({
       <script src="/wasm_exec_tiny.js"></script>
       <script defer type="module">
         ${consoleReassign}
-        ${runWasmCode(wasmPath)}
-        ${js}
+        ${runWasmCode(js, wasmPath)}
       </script>
     </head>
     <body>
       ${html}
-
     </body>
   </html>
 `;

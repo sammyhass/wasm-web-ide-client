@@ -1,24 +1,16 @@
-import { useWasmReady } from '@/hooks/useWasmReady';
-
-export const runWASM = async (src: string) => {
-  if (!useWasmReady.getState().isReady) {
-    console.warn('wasm_exec_tiny.js has not been loaded yet');
-    return;
-  }
-  const go = new Go();
-  console.log('Running WASM', src);
-  WebAssembly.instantiateStreaming(fetch(src), go.importObject).then(result => {
-    go.run(result.instance);
-  });
-};
-
-export const runWasmCode = (src?: string) =>
+// Sets up WebAssembly to be run in the browser along with any JS code to be
+// run after the WebAssembly is loaded
+export const runWasmCode = (js?: string, src?: string) =>
   src
     ? `
-  const go = new Go();
+  var go = new Go();
+
+  let wasm;
 
   WebAssembly.instantiateStreaming(fetch('${src}'), go.importObject).then(result => {
-    go.run(result.instance);
+    wasm = result.instance;
+    go.run(wasm);
+    ${js}
   });
 `
-    : '';
+    : js ?? '';

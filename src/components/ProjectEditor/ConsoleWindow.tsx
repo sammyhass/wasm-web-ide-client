@@ -104,16 +104,18 @@ export default function ConsoleWindow() {
   }, [clear]);
 
   return (
-    <div className="flex flex-col gap-2 text-sm absolute bottom-0 pb-2 w-full pl-2 bg-opacity-60 bg-base-300">
+    <div className="flex flex-col gap-2 text-sm absolute bottom-0 pb-2 w-full pl-2 bg-opacity-60 bg-base-300 backdrop-blur-md">
       {show ? (
         <div>
           <div className="flex gap-2 items-center my-2">
-            <b>
-              Console <span className="text-xs">({messages.length})</span>
-            </b>
-            <div className="flex-1 flex gap-2">
-              <button onClick={() => setShow(!show)} title="Hide Console">
-                <ArrowDownIcon className="w-5 h-5" />
+            <b>Console ({messages.length})</b>
+            <div className="flex-1 flex">
+              <button
+                onClick={() => setShow(!show)}
+                title="Hide Console"
+                className="btn btn-xs btn-ghost flex gap-2"
+              >
+                <ArrowDownIcon className="w-5 h-5" /> Hide
               </button>
               <button
                 onClick={() => clear()}

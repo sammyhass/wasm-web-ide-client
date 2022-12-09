@@ -1,5 +1,6 @@
 import { useMe, useMeQuery } from '@/hooks/useMe';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import shallow from 'zustand/shallow';
 
 export default function NavButtons() {
@@ -11,6 +12,8 @@ export default function NavButtons() {
     shallow
   );
   const { refetch } = useMeQuery(false);
+
+  const router = useRouter();
 
   return (
     <div className="flex gap-2">
@@ -24,6 +27,7 @@ export default function NavButtons() {
             onClick={() => {
               setJwt(null);
               refetch();
+              router.push('/');
             }}
           >
             Logout
