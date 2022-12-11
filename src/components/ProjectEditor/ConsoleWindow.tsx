@@ -104,10 +104,10 @@ export default function ConsoleWindow() {
   }, [clear]);
 
   return (
-    <div className="flex flex-col gap-2 text-sm absolute bottom-0 pb-2 w-full pl-2 bg-opacity-60 bg-base-300 backdrop-blur-md">
+    <div className="flex flex-col gap-2 text-sm absolute bottom-0 pb-2 w-full bg-opacity-60 bg-base-300 backdrop-blur-md">
       {show ? (
         <div>
-          <div className="flex gap-2 items-center my-2">
+          <div className="flex gap-2 items-center my-2 px-2">
             <b>Console ({messages.length})</b>
             <div className="flex-1 flex">
               <button
@@ -127,17 +127,20 @@ export default function ConsoleWindow() {
             </div>
           </div>
           <div
-            className="h-28 max-h-44 min-h-12 overflow-y-auto py-2 pb-6"
+            className="h-28 max-h-44 min-h-12 overflow-y-auto py-2 px-2 pb-6 "
             ref={messagesRef}
           >
             {messages.map((m, i) => (
               <div
-                key={`${m.createdAt}`}
-                className={`font-mono ${consoleMessageClass(m.level)}`}
+                key={`${m.createdAt}-${i}-${m.level}`}
+                className={`font-mono ${consoleMessageClass(
+                  m.level
+                )} break-normal hover:bg-base-200 py-1 max-w-full`}
               >
-                {m.level.toUpperCase()}:{' '}
                 {m.args.map((a, i) => (
-                  <span key={i}>{a}</span>
+                  <span key={i} className="break-normal">
+                    {a}
+                  </span>
                 ))}
               </div>
             ))}

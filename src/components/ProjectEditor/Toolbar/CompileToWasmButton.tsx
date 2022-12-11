@@ -24,6 +24,11 @@ export default function CompileToWasmButton() {
             'Your project has been compiled successfully, it will be run in the preview window.',
           id: 'compile-success',
         });
+
+        pushToConsole(
+          'info',
+          `[GO] Your project has been compiled successfully.`
+        );
       },
       onError: e => {
         show({
@@ -33,13 +38,11 @@ export default function CompileToWasmButton() {
         });
 
         const errs = (e as ApiErrorResponse).info?.join(' ').split('\n');
-
         for (const err of errs ?? []) {
-          console.error(err);
-          pushToConsole('error', (err as string).trim());
+          pushToConsole('error', `[GO] ${(err as string).trim()}`);
         }
 
-        pushToConsole('error', (e as ApiErrorResponse).info?.join(', ') ?? '');
+        console.error(errs);
       },
     }
   );

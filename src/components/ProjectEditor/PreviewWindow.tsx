@@ -1,52 +1,5 @@
-import { runWasmCode } from '@/lib/wasm';
+import { iframeContent } from '@/lib/previews';
 import { useEditor } from '../ProjectEditor';
-
-const consoleReassign = `
-  const postMessageToParent = (type, data) => {
-    window.parent.postMessage({ type, data }, '*');
-  };
-
-  ${['log', 'error', 'warn', 'info', 'debug']
-    .map(
-      method => `
-        console.${method} = (args) => {
-          postMessageToParent('console', ['${method}', args]);
-        };
-      `
-    )
-    .join('')}
-`;
-
-const iframeContent = ({
-  html,
-  css,
-  js,
-  wasmPath,
-}: {
-  html: string;
-  css?: string;
-  js?: string;
-  wasmPath?: string;
-}) => `
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <style>
-        ${css}
-      </style>
-      <script src="/wasm_exec_tiny.js"></script>
-      <script defer type="module">
-        ${consoleReassign}
-        ${runWasmCode(js, wasmPath)}
-      </script>
-    </head>
-    <body>
-      ${html}
-    </body>
-  </html>
-`;
 
 export default function PreviewWindow() {
   const saveState = useEditor(s => s.lastSaved);
