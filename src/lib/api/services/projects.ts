@@ -21,7 +21,7 @@ export const createProject = async ({
   name,
   description,
 }: Pick<ProjectT, 'name' | 'description'>): Promise<ProjectT> => {
-  const { data, status } = await axiosClient.post('/projects/', {
+  const { data, status } = await axiosClient.post('/projects', {
     name,
     description,
   });
