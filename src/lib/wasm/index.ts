@@ -13,7 +13,6 @@ export const runWasmCode = (js?: string, src?: string) =>
     go.run(wasm);
 
     ${js}
-    
   });
 `
-    : '';
+    : js;
