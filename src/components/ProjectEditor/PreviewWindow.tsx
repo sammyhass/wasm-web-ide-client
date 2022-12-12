@@ -1,5 +1,5 @@
 import { iframeContent } from '@/lib/previews';
-import { useEditor } from '../ProjectEditor';
+import { useEditor } from '.';
 
 export default function PreviewWindow() {
   const saveState = useEditor(s => s.lastSaved);

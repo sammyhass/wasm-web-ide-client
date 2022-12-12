@@ -34,6 +34,8 @@ export default function EditorWindow() {
         defaultValue={currentFile?.content}
         options={{
           minimap: { enabled: false },
+          wordWrap: 'wordWrapColumn',
+          wordWrapColumn: 60,
           scrollbar: { horizontal: 'hidden' },
         }}
         onChange={value => onFileChange(value || '')}

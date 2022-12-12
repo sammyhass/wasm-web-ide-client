@@ -6,7 +6,7 @@ const postMessageToParent = (type, data) => {
 ${['log', 'error', 'warn', 'info', 'debug']
   .map(
     method => `
-      console.${method} = (args) => {
+      console.${method} = (...args) => {
         postMessageToParent('console', ['${method}', '[JS]', args]);
       };
     `
@@ -25,7 +25,7 @@ try {
 // Sets up WebAssembly to be run in the browser along with any JS code to be
 // run after the WebAssembly is loaded
 const runWasmCode = (js?: string, src?: string) =>
-  src
+  src && src.endsWith('.wasm')
     ? `
   var go = new Go();
 
@@ -35,9 +35,14 @@ const runWasmCode = (js?: string, src?: string) =>
     wasm = ___result.instance;
     go.run(wasm);
     ${runJS(js || '')}
+  }).catch(e => {
+    console.error("failed to load wasm");
   });
 `
-    : runJS(js || '');
+    : `
+    console.warn('No WebAssembly file found. Running JS only.');    
+    ${runJS(js || '')}
+    `;
 
 export const iframeContent = ({
   html,
