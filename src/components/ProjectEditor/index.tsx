@@ -66,7 +66,14 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
         : get().selectedFile,
     });
   },
-  clear: () => set({ files: [], selectedFile: undefined }),
+  clear: () =>
+    set({
+      files: [],
+      selectedFile: undefined,
+      project: null,
+      lastSaved: [],
+      wasmPath: undefined,
+    }),
   onCurrentFileChange: value => {
     set(state => {
       const files = state.files.map(f => {
@@ -99,8 +106,8 @@ function ProjectEditor() {
   );
 }
 
-export default function ProjectsEditaaaaiWaaoarWrapper(props: ProjectT) {
-  const { initProject } = useEditor(
+export default function ProjectEditorWrapper(props: ProjectT) {
+  const { initProject, clear } = useEditor(
     s => ({
       initProject: s.initProject,
       clear: s.clear,
@@ -111,7 +118,11 @@ export default function ProjectsEditaaaaiWaaoarWrapper(props: ProjectT) {
   useEffect(() => {
     if (!props.files || !props) return;
     initProject(props);
-  }, [initProject, props]);
+
+    return () => {
+      clear();
+    };
+  }, [clear, initProject, props]);
 
   return (
     <>
