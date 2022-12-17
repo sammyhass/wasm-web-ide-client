@@ -4,7 +4,6 @@ import { axiosClient } from '../axios';
 export type ProjectT = {
   id: string;
   name: string;
-  description?: string;
   created_at: string;
   files?: FileT[];
 };
@@ -17,13 +16,15 @@ export type FileT = {
   created_at: string;
 };
 
+const checkId = (id: string) => {
+  id.trim().length > 0 ? null : Promise.reject('Invalid id');
+};
+
 export const createProject = async ({
   name,
-  description,
-}: Pick<ProjectT, 'name' | 'description'>): Promise<ProjectT> => {
+}: Pick<ProjectT, 'name'>): Promise<ProjectT> => {
   const { data, status } = await axiosClient.post('/projects', {
     name,
-    description,
   });
   if (status !== 200) {
     return Promise.reject(data);
@@ -46,6 +47,8 @@ export const getProjects = async (): Promise<ProjectT[]> => {
 };
 
 export const getProject = async (id: string): Promise<ProjectT> => {
+  checkId(id);
+
   const { data, status } = await axiosClient.get(`/projects/${id}`);
 
   if (status !== 200) {
@@ -62,6 +65,8 @@ export const saveProjectFiles = async ({
   id: string;
   files: FileT[];
 }): Promise<FileT[]> => {
+  checkId(id);
+
   const filesAcc = files?.reduce((acc, curr) => {
     acc[curr.name] = curr.content;
     return acc;
@@ -81,12 +86,16 @@ export const saveProjectFiles = async ({
 export const deleteProject = async (id: string): Promise<void> => {
   const { status } = await axiosClient.delete(`/projects/${id}`);
 
-  if (status !== 204) {
+  if (status !== 200) {
     return Promise.reject();
   }
+
+  return;
 };
 
 export const compileProject = async (id: string): Promise<string> => {
+  checkId(id);
+
   const { status, data } = await axiosClient.post<string>(
     `/projects/${id}/compile`
   );

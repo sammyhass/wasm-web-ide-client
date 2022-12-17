@@ -32,9 +32,8 @@ export default function NewProjectPage() {
     const formData = new FormData(e.currentTarget);
 
     const name = formData.get('name') as string;
-    const description = formData.get('description') as string;
 
-    mutate({ name, description });
+    mutate({ name });
 
     router.push('/projects');
   };
@@ -57,17 +56,6 @@ export default function NewProjectPage() {
               id="name"
               required
               name="name"
-            />
-          </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Description (optional)</span>
-            </label>
-            <textarea
-              placeholder="Project Description"
-              className="textarea h-24 textarea-bordered resize-none"
-              id="description"
-              name="description"
             />
           </div>
           <button className={`btn btn-primary ${loading ? 'loading' : ''}`}>

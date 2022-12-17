@@ -1,9 +1,9 @@
 import { useToast } from '@/components/Toast';
+import { useEditor } from '@/hooks/useEditor';
 import { ApiErrorResponse, API_URL } from '@/lib/api/axios';
 import { compileProject } from '@/lib/api/services/projects';
 import { PlayIcon } from '@heroicons/react/24/solid';
 import { useMutation } from '@tanstack/react-query';
-import { useEditor } from '..';
 import { useEditorConsole } from '../ConsoleWindow';
 
 export default function CompileToWasmButton() {

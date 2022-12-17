@@ -1,6 +1,6 @@
+import { useEditor } from '@/hooks/useEditor';
 import { FileT } from '@/lib/api/services/projects';
 import MonacoEditor from '@monaco-editor/react';
-import { useEditor } from '.';
 import LanguageIcon from '../icons/Icon';
 
 const monacoLanguages: Record<FileT['language'], string> = {

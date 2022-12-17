@@ -1,8 +1,8 @@
+import { useEditor } from '@/hooks/useEditor';
 import { FileT } from '@/lib/api/services/projects';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 import shallow from 'zustand/shallow';
-import { useEditor } from '.';
 import LanguageIcon from '../icons/Icon';
 
 export default function FileTreeWrapper() {

@@ -1,4 +1,5 @@
 import { useToast } from '@/components/Toast';
+import { useEditor } from '@/hooks/useEditor';
 import { ApiErrorResponse } from '@/lib/api/axios';
 import { ProjectT, saveProjectFiles } from '@/lib/api/services/projects';
 import { FolderIcon } from '@heroicons/react/24/solid';
@@ -6,7 +7,6 @@ import { useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import shallow from 'zustand/shallow';
 import { ToolbarButton } from '.';
-import { useEditor } from '..';
 
 export function SaveButton() {
   const project = useEditor(s => s.project);
