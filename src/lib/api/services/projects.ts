@@ -1,24 +1,33 @@
 import { AxiosResponse } from 'axios';
+import { z } from 'zod';
 import { axiosClient } from '../axios';
 
-export type ProjectT = {
-  id: string;
-  name: string;
-  created_at: string;
-  files?: FileT[];
-};
+const languageSchema = z.union([
+  z.literal('html'),
+  z.literal('css'),
+  z.literal('go'),
+  z.literal('js'),
+]);
 
-export type FileT = {
-  name: string;
-  language: 'html' | 'css' | 'go' | 'js';
-  content: string;
-  updated_at: string;
-  created_at: string;
-};
+const fileSchema = z.object({
+  name: z.string(),
+  language: languageSchema,
+  content: z.string(),
+  updated_at: z.string(),
+  created_at: z.string(),
+});
 
-const checkId = (id: string) => {
-  id.trim().length > 0 ? null : Promise.reject('Invalid id');
-};
+const projectSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  created_at: z.string(),
+  files: z.array(fileSchema).optional(),
+});
+
+export type ProjectT = z.output<typeof projectSchema>;
+export type FileT = z.output<typeof fileSchema>;
+
+const parseId = (id: string) => z.string().uuid().parse(id);
 
 export const createProject = async ({
   name,
@@ -26,13 +35,15 @@ export const createProject = async ({
   const { data, status } = await axiosClient.post('/projects', {
     name,
   });
+
   if (status !== 200) {
     return Promise.reject(data);
   }
 
-  return data as ProjectT;
+  return projectSchema.parse(data);
 };
 
+const projectsArraySchema = z.array(projectSchema);
 export const getProjects = async (): Promise<ProjectT[]> => {
   const { data, status } = await axiosClient.get<
     unknown,
@@ -43,11 +54,11 @@ export const getProjects = async (): Promise<ProjectT[]> => {
     return Promise.reject(data);
   }
 
-  return data;
+  return projectsArraySchema.parse(data);
 };
 
 export const getProject = async (id: string): Promise<ProjectT> => {
-  checkId(id);
+  parseId(id);
 
   const { data, status } = await axiosClient.get(`/projects/${id}`);
 
@@ -55,7 +66,7 @@ export const getProject = async (id: string): Promise<ProjectT> => {
     return Promise.reject(data);
   }
 
-  return data as ProjectT;
+  return projectSchema.parse(data);
 };
 
 export const saveProjectFiles = async ({
@@ -65,7 +76,7 @@ export const saveProjectFiles = async ({
   id: string;
   files: FileT[];
 }): Promise<FileT[]> => {
-  checkId(id);
+  parseId(id);
 
   const filesAcc = files?.reduce((acc, curr) => {
     acc[curr.name] = curr.content;
@@ -80,7 +91,7 @@ export const saveProjectFiles = async ({
     return Promise.reject(data);
   }
 
-  return data as FileT[];
+  return z.array(fileSchema).parse(data);
 };
 
 export const deleteProject = async (id: string): Promise<void> => {
@@ -94,7 +105,7 @@ export const deleteProject = async (id: string): Promise<void> => {
 };
 
 export const compileProject = async (id: string): Promise<string> => {
-  checkId(id);
+  parseId(id);
 
   const { status, data } = await axiosClient.post<string>(
     `/projects/${id}/compile`
@@ -104,5 +115,5 @@ export const compileProject = async (id: string): Promise<string> => {
     return Promise.reject(data);
   }
 
-  return data;
+  return z.string().parse(data);
 };

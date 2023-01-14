@@ -1,8 +1,9 @@
 import { Alert } from '@/components/Toast';
 import { useLogin } from '@/hooks/api/useLogin';
 import { useRegister } from '@/hooks/api/useRegister';
-import { ApiUserResponse, useMe, useMeQuery } from '@/hooks/useMe';
+import { useMe, useMeQuery } from '@/hooks/useMe';
 import { ApiErrorResponse } from '@/lib/api/axios';
+import { LoginResponseT } from '@/lib/api/services/auth';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { ZodError } from 'zod';
@@ -23,14 +24,14 @@ export default function LoginPage() {
   const { setUser, setJwt } = useMe();
 
   const onSuccess = useCallback(
-    async (data: ApiUserResponse) => {
+    async (data: LoginResponseT) => {
       setJwt(data.jwt);
       setUser(data.user);
 
       await refetch();
       router.push('/projects');
     },
-    [refetch, router]
+    [refetch, router, setJwt, setUser]
   );
 
   const onError = (error: ApiErrorResponse | ZodError) => {

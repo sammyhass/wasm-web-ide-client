@@ -7,6 +7,8 @@ import type { AppProps, AppType } from 'next/app';
 import Head from 'next/head';
 import { ReactElement, ReactNode } from 'react';
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 // Fonts
 import '@fontsource/fira-code/400.css';
 import '@fontsource/fira-code/700.css';
@@ -38,6 +40,8 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
       <QueryClientProvider client={queryClient}>
         {getLayout(<Component {...pageProps} />)}
         <ToastProvider />
+
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>
   );

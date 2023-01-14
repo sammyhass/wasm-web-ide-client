@@ -1,26 +1,12 @@
-import { me } from '@/lib/api/services/auth';
+import { me, UserT } from '@/lib/api/services/auth';
 import { useQuery } from '@tanstack/react-query';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type User = {
-  id: string;
-  email: string;
-};
-
-export type ApiUserResponse = {
-  jwt: string;
-  user: User;
-};
-
-export type ApiUserResponseOnDone = (
-  data: ApiUserResponse
-) => void | Promise<void>;
-
 export const useMe = create<{
-  user: User | null;
+  user: UserT | null;
   jwt: string | null;
-  setUser: (user: User | null) => void;
+  setUser: (user: UserT | null) => void;
   setJwt: (jwt: string | null) => void;
 }>()(
   persist(
