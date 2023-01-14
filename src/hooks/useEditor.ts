@@ -7,6 +7,7 @@ const langSort: Record<FileT['language'], number> = {
   css: 2,
   go: 3,
 };
+type ProjectWithoutFiles = Omit<ProjectT, 'files'>;
 type ProjectEditorState = {
   wasmPath?: string;
   setWasmPath: (path: string) => void;
@@ -21,8 +22,8 @@ type ProjectEditorState = {
   initProject: (project: ProjectT) => void;
   clear: () => void;
 
-  setProject: (project: ProjectT | null) => void;
-  project: Omit<ProjectT, 'files'> | null;
+  setProject: (project: ProjectWithoutFiles | null) => void;
+  project: ProjectWithoutFiles | null;
 
   showSettings: boolean;
   setShowSettings: (show: boolean) => void;
@@ -34,7 +35,11 @@ type ProjectEditorState = {
 export const useEditor = create<ProjectEditorState>((set, get) => ({
   wasmPath: undefined,
   setWasmPath: (path: string) => set({ wasmPath: path }),
-  setProject: project => set({ ...project }),
+  setProject: project => {
+    set({
+      project,
+    });
+  },
   files: [],
   project: null,
   setFiles: files => set({ files }),
@@ -44,7 +49,7 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
   setShowSettings: showSettings => set({ showSettings }),
   showSettings: false,
   setSelectedFile: name => set({ selectedFile: name }),
-  initProject: (project: ProjectT) => {
+  initProject: project => {
     const { files, ...rest } = project;
     const sortedFiles = files?.sort(
       (a, b) => langSort[a.language] - langSort[b.language]
@@ -62,6 +67,8 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
         ? files?.[0]?.name ?? undefined
         : get().selectedFile,
     });
+
+    console.log(get().files);
   },
   clear: () =>
     set({

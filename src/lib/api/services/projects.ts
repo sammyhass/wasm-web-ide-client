@@ -13,19 +13,20 @@ const fileSchema = z.object({
   name: z.string(),
   language: languageSchema,
   content: z.string(),
-  updated_at: z.string(),
-  created_at: z.string(),
 });
 
 const projectSchema = z.object({
   id: z.string(),
   name: z.string(),
   created_at: z.string(),
-  files: z.array(fileSchema).optional(),
+  files: z.nullable(z.array(fileSchema)),
+  user_id: z.string(),
 });
 
 export type ProjectT = z.output<typeof projectSchema>;
+//          ^?
 export type FileT = z.output<typeof fileSchema>;
+//          ^?
 
 const parseId = (id: string) => z.string().uuid().parse(id);
 
