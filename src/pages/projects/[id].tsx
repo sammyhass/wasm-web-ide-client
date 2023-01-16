@@ -41,7 +41,7 @@ export default function ProjectOverviewPage(props: Props) {
         <ProjectEditor />
       ) : (
         <Container>
-          <div className="flex flex-col items-center justify-center h-full bg-base-200 shadow-md min-h-16 gap-2">
+          <div className="flex flex-col items-center justify-center bg-base-200 shadow-md min-h-16 gap-2 py-4">
             <h1 className="text-2xl font-bold">
               {status === 'error' ? 'Project Not Found' : 'Loading...'}
             </h1>
