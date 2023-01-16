@@ -5,19 +5,11 @@ import { ProjectT, saveProjectFiles } from '@/lib/api/services/projects';
 import { FolderIcon } from '@heroicons/react/24/solid';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import shallow from 'zustand/shallow';
 import { ToolbarButton } from '.';
 
 export function SaveButton() {
   const project = useEditor(s => s.project);
   const files = useEditor(s => s.files);
-  const { lastSaved, setLastSaved } = useEditor(
-    s => ({
-      lastSaved: s.lastSaved,
-      setLastSaved: s.setLastSaved,
-    }),
-    shallow
-  );
 
   const { show } = useToast();
 
@@ -40,7 +32,6 @@ export function SaveButton() {
         message: 'Project saved successfully',
         type: 'success',
       });
-      setLastSaved(d ?? []);
     },
     onError: d => {
       show({

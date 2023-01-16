@@ -27,9 +27,6 @@ type ProjectEditorState = {
 
   showSettings: boolean;
   setShowSettings: (show: boolean) => void;
-
-  lastSaved: FileT[];
-  setLastSaved: (files: FileT[]) => void;
 };
 
 export const useEditor = create<ProjectEditorState>((set, get) => ({
@@ -43,8 +40,6 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
   files: [],
   project: null,
   setFiles: files => set({ files }),
-  lastSaved: [],
-  setLastSaved: files => set({ lastSaved: files }),
   selectedFile: undefined,
   setShowSettings: showSettings => set({ showSettings }),
   showSettings: false,

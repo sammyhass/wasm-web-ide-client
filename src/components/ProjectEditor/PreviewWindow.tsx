@@ -1,10 +1,16 @@
 import { iframeContent } from '@/lib/previews';
 
+import { useProject } from '@/hooks/api/useProject';
 import { useEditor } from '@/hooks/useEditor';
 
 export default function PreviewWindow() {
-  const saveState = useEditor(s => s.lastSaved);
+  const id = useEditor(s => s.project?.id);
+
   const wasmPath = useEditor(s => s.wasmPath);
+
+  const { data: project } = useProject(id);
+
+  const saveState = project?.files ?? [];
 
   const html = saveState
     .filter(f => f.name === 'index.html')
