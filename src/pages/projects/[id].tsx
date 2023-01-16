@@ -25,12 +25,12 @@ export default function ProjectOverviewPage(props: Props) {
 
   const title = useMemo(
     () =>
-      status === 'success' && data
+      status === 'success' && data?.name
         ? data.name
         : status === 'error'
         ? ''
         : 'Loading',
-    [status, data]
+    [status, data?.name]
   );
 
   return (
@@ -41,7 +41,7 @@ export default function ProjectOverviewPage(props: Props) {
         <ProjectEditor />
       ) : (
         <Container>
-          <div className="flex flex-col items-center justify-center h-full bg-base-200 shadow-md min-h-16 gap-12">
+          <div className="flex flex-col items-center justify-center h-full bg-base-200 shadow-md min-h-16 gap-2">
             <h1 className="text-2xl font-bold">
               {status === 'error' ? 'Project Not Found' : 'Loading...'}
             </h1>
