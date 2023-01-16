@@ -3,7 +3,7 @@ import { useEditor } from '@/hooks/useEditor';
 import { ApiErrorResponse } from '@/lib/api/axios';
 import { ProjectT, saveProjectFiles } from '@/lib/api/services/projects';
 import { FolderIcon } from '@heroicons/react/24/solid';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import shallow from 'zustand/shallow';
 import { ToolbarButton } from '.';
@@ -21,12 +21,20 @@ export function SaveButton() {
 
   const { show } = useToast();
 
+  const queryClient = useQueryClient();
+
   const { mutate, isLoading } = useMutation<
     ProjectT['files'],
     ApiErrorResponse,
     { id: string; files: NonNullable<ProjectT['files']> }
   >(['saveProjectFiles'], saveProjectFiles, {
     onSuccess: d => {
+      queryClient.setQueryData<ProjectT>(
+        ['project', project?.id],
+        projectData => {
+          return projectData ? { ...projectData, files: d } : undefined;
+        }
+      );
       show({
         id: 'project-save-success',
         message: 'Project saved successfully',
