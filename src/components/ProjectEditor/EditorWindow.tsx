@@ -28,7 +28,7 @@ export default function EditorWindow() {
         </b>
       )}
 
-      <Editor
+      <FileEditor
         content={currentFile?.content ?? ''}
         onChange={onFileChange}
         language={currentFile?.language}
@@ -37,7 +37,7 @@ export default function EditorWindow() {
   );
 }
 
-function Editor({
+function FileEditor({
   content,
   onChange,
   language,

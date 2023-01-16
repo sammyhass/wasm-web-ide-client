@@ -15,11 +15,9 @@ type Props = {
 };
 export default function ProjectOverviewPage(props: Props) {
   const initProject = useEditor(s => s.initProject);
-  const { data, error, status } = useProject(props.id, {
+  const { data, status } = useProject(props.id, {
     cacheTime: 0,
-    refetchOnWindowFocus: false,
-    onSettled: (data, error) => {
-      if (error || !data) return;
+    onSuccess: data => {
       initProject(data);
     },
   });
@@ -30,21 +28,23 @@ export default function ProjectOverviewPage(props: Props) {
       : status === 'error'
       ? ''
       : 'Loading';
+
   return (
     <ProtectedPage>
       <Navbar title={<h1 className="text-xl font-bold">{title}</h1>} />
-      {status === 'success' && data && props.id && (
-        <ProjectEditor id={props.id} />
-      )}
 
-      {status === 'error' && (
+      {status === 'success' && data && props.id ? (
+        <ProjectEditor />
+      ) : (
         <Container>
-          <div className="flex flex-col items-center justify-center h-full bg-base-200 shadow-md min-h-16">
-            <h1 className="text-2xl font-bold">Project Not Found</h1>
-
+          <div className="flex flex-col items-center justify-center h-full bg-base-200 shadow-md min-h-16 gap-12">
+            <h1 className="text-2xl font-bold">
+              {status === 'error' ? 'Project Not Found' : 'Loading...'}
+            </h1>
             <p className="text-base text-center">
-              The project you are looking for does not exist or you do not have
-              access to it.
+              {status === 'error'
+                ? 'The project you are looking for does not exist or you do not have access to it.'
+                : 'Just a moment...'}
             </p>
           </div>
         </Container>

@@ -4,11 +4,11 @@ import { useState } from 'react';
 import LanguageIcon from '../icons/Icon';
 
 export default function FileTreeWrapper({
-  fileNames,
+  files,
   selectFile,
   selectedFile,
 }: {
-  fileNames?: string[];
+  files?: string[];
   selectFile: (file: string) => void;
   selectedFile?: string;
 }) {
@@ -17,7 +17,7 @@ export default function FileTreeWrapper({
   return show ? (
     <FileTree
       onClose={() => setShow(false)}
-      fileNames={fileNames}
+      fileNames={files}
       selectFile={selectFile}
       selectedFile={selectedFile}
     />
