@@ -16,6 +16,7 @@ import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/700.css';
 
 import { ToastProvider } from '@/components/Toast';
+
 import '../styles/globals.css';
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<

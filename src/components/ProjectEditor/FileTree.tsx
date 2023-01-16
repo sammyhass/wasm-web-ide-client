@@ -1,15 +1,26 @@
-import { useEditor } from '@/hooks/useEditor';
 import { FileT } from '@/lib/api/services/projects';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
-import shallow from 'zustand/shallow';
 import LanguageIcon from '../icons/Icon';
 
-export default function FileTreeWrapper() {
+export default function FileTreeWrapper({
+  fileNames,
+  selectFile,
+  selectedFile,
+}: {
+  fileNames?: string[];
+  selectFile: (file: string) => void;
+  selectedFile?: string;
+}) {
   const [show, setShow] = useState(true);
 
   return show ? (
-    <FileTree onClose={() => setShow(false)} />
+    <FileTree
+      onClose={() => setShow(false)}
+      fileNames={fileNames}
+      selectFile={selectFile}
+      selectedFile={selectedFile}
+    />
   ) : (
     <button
       className="top-0 left-0 p-2"
@@ -21,15 +32,17 @@ export default function FileTreeWrapper() {
   );
 }
 
-function FileTree({ onClose }: { onClose: () => void }) {
-  const { files, selectedFile, setSelectedFile } = useEditor(
-    s => ({
-      selectedFile: s.selectedFile,
-      files: s.files,
-      setSelectedFile: s.setSelectedFile,
-    }),
-    shallow
-  );
+function FileTree({
+  onClose,
+  fileNames,
+  selectFile,
+  selectedFile,
+}: {
+  onClose: () => void;
+  fileNames?: string[];
+  selectFile: (file: string) => void;
+  selectedFile?: string;
+}) {
   return (
     <div className="flex flex-col gap-2 text-sm relative min-w-fit">
       <b className="pl-4 font-mono p-2">Project Files</b>
@@ -40,12 +53,13 @@ function FileTree({ onClose }: { onClose: () => void }) {
       >
         <ArrowLeftIcon className="w-5 h-5" />
       </button>
-      {files.map(f => (
+      {fileNames?.map(f => (
         <FileTreeItem
-          {...f}
-          key={`${f.name}${f.content}`}
-          onClick={() => setSelectedFile(f.name)}
-          selected={selectedFile === f.name}
+          onClick={() => selectFile(f)}
+          selected={f === selectedFile}
+          name={f}
+          key={f}
+          language={f.split('.').pop() as FileT['language']}
         />
       ))}
     </div>
@@ -56,7 +70,7 @@ const FileTreeItem = ({
   onClick,
   selected,
   ...file
-}: FileT & {
+}: Pick<FileT, 'name' | 'language'> & {
   onClick?: () => void;
   selected?: boolean;
 }) => (

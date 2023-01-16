@@ -16,7 +16,10 @@ type Props = {
 export default function ProjectOverviewPage(props: Props) {
   const initProject = useEditor(s => s.initProject);
   const { data, error, status } = useProject(props.id, {
-    onSuccess: data => {
+    cacheTime: 0,
+    refetchOnWindowFocus: false,
+    onSettled: (data, error) => {
+      if (error || !data) return;
       initProject(data);
     },
   });
@@ -30,7 +33,9 @@ export default function ProjectOverviewPage(props: Props) {
   return (
     <ProtectedPage>
       <Navbar title={<h1 className="text-xl font-bold">{title}</h1>} />
-      {status === 'success' && data && <ProjectEditor />}
+      {status === 'success' && data && props.id && (
+        <ProjectEditor id={props.id} />
+      )}
 
       {status === 'error' && (
         <Container>

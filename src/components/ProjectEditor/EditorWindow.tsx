@@ -1,6 +1,7 @@
 import { useEditor } from '@/hooks/useEditor';
 import { FileT } from '@/lib/api/services/projects';
 import MonacoEditor from '@monaco-editor/react';
+import { useMemo } from 'react';
 import LanguageIcon from '../icons/Icon';
 
 const monacoLanguages: Record<FileT['language'], string> = {
@@ -11,13 +12,23 @@ const monacoLanguages: Record<FileT['language'], string> = {
 };
 
 export default function EditorWindow() {
-  const {
-    onCurrentFileChange: onFileChange,
-    selectedFile,
-    files,
-  } = useEditor();
+  const { onCurrentFileChange: onFileChange, selectedFile } = useEditor();
 
+  const files = useEditor(
+    state => state.files,
+    (a, b) => JSON.stringify(a) === JSON.stringify(b)
+  );
   const currentFile = files.find(f => f.name === selectedFile);
+
+  const content = useMemo(() => {
+    if (!currentFile) return '';
+    return currentFile.content;
+  }, [currentFile]);
+
+  const language = useMemo(() => {
+    if (!currentFile) return 'js';
+    return currentFile.language;
+  }, [currentFile]);
 
   return (
     <div className="w-full">
@@ -27,21 +38,34 @@ export default function EditorWindow() {
           {selectedFile}
         </b>
       )}
-      <MonacoEditor
-        height={'80vh'}
-        width={'100%'}
-        defaultLanguage={monacoLanguages?.[currentFile?.language ?? 'html']}
-        defaultValue={currentFile?.content}
-        options={{
-          minimap: { enabled: false },
-          wordWrap: 'wordWrapColumn',
-          wordWrapColumn: 60,
-          scrollbar: { horizontal: 'hidden' },
-        }}
-        onChange={value => onFileChange(value || '')}
-        path={currentFile?.name}
-        theme="vs-dark"
-      />
+
+      <Editor content={content} onChange={onFileChange} language={language} />
     </div>
+  );
+}
+
+function Editor({
+  content,
+  onChange,
+  language,
+}: {
+  language?: FileT['language'];
+  content: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <MonacoEditor
+      value={content}
+      options={{
+        minimap: { enabled: true },
+      }}
+      height={'80vh'}
+      width={'100%'}
+      language={monacoLanguages?.[language ?? 'html']}
+      theme="vs-dark"
+      onChange={v => {
+        onChange(v || '');
+      }}
+    />
   );
 }

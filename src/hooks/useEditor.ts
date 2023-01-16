@@ -48,16 +48,18 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
   selectedFile: undefined,
   setShowSettings: showSettings => set({ showSettings }),
   showSettings: false,
+
   setSelectedFile: name => set({ selectedFile: name }),
   initProject: project => {
     const { files, ...rest } = project;
-    const sortedFiles = files?.sort(
-      (a, b) => langSort[a.language] - langSort[b.language]
-    );
+    const sortedFiles = files
+      ?.sort((a, b) => langSort[a.language] - langSort[b.language])
+      .map(f => ({ ...f, content: f.content ?? '' }));
     console.log(
       `initialising project ${project.name} with ${sortedFiles?.length} files`
     );
-    set({
+
+    set(s => ({
       wasmPath: undefined,
       project: rest,
       files: sortedFiles,
@@ -66,19 +68,19 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
       selectedFile: !get().selectedFile
         ? files?.[0]?.name ?? undefined
         : get().selectedFile,
-    });
+    }));
 
     console.log(get().files);
   },
   clear: () =>
-    set({
+    set(s => ({
       files: [],
       showSettings: false,
       selectedFile: undefined,
       project: null,
       lastSaved: [],
       wasmPath: undefined,
-    }),
+    })),
   onCurrentFileChange: value => {
     set(state => {
       const files = state.files.map(f => {
