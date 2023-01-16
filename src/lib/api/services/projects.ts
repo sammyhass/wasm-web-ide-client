@@ -23,10 +23,10 @@ const projectSchema = z.object({
   user_id: z.string(),
 });
 
+const projectsArraySchema = z.array(projectSchema);
+
 export type ProjectT = z.output<typeof projectSchema>;
-//          ^?
 export type FileT = z.output<typeof fileSchema>;
-//          ^?
 
 const parseId = (id: string) => z.string().uuid().parse(id);
 
@@ -44,7 +44,6 @@ export const createProject = async ({
   return projectSchema.parse(data);
 };
 
-const projectsArraySchema = z.array(projectSchema);
 export const getProjects = async (): Promise<ProjectT[]> => {
   const { data, status } = await axiosClient.get<
     unknown,

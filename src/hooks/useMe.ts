@@ -35,7 +35,7 @@ export const useMeQuery = (enabled = true) => {
         useMe.setState({ user: null, jwt: null });
       }
     },
-    onError: error => {
+    onError: () => {
       useMe.setState({ user: null, jwt: null });
     },
   });

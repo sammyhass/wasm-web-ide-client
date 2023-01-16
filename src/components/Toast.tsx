@@ -8,13 +8,16 @@ import { useEffect, useRef } from 'react';
 import create from 'zustand';
 import shallow from 'zustand/shallow';
 
-export type AlertIdentifier =
-  | 'compile-error'
-  | 'compile-success'
-  | 'run-error'
-  | 'run-success'
-  | 'project-save-success'
-  | 'project-save-error';
+const AlertTypes = [
+  'compile-error',
+  'compile-success',
+  'run-error',
+  'run-success',
+  'project-save-success',
+  'project-save-error',
+] as const;
+
+type AlertIdentifier = typeof AlertTypes[number];
 
 type Alert = {
   id: string;
@@ -27,7 +30,7 @@ type ShowAlertInput = Pick<Alert, 'message' | 'type'> & {
 };
 
 const generateAlertId = (ident: AlertIdentifier) =>
-  `alert-${ident}-${Math.random().toString(36).substr(2, 9)}`;
+  `alert-${ident}-${Math.random().toString(36).slice(0, 12)}`;
 
 type AlertStore = {
   alerts: Alert[];

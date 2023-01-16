@@ -15,12 +15,12 @@ export const registerSchema = z
 
 type RegisterInputT = z.input<typeof registerSchema>;
 
-export const userSchema = z.object({
+const userSchema = z.object({
   id: z.string(),
   email: z.string().email(),
 });
 
-export const loginSchema = z.object({
+const loginSchema = z.object({
   email: z.string().min(5).email(),
   password: z.string().min(8),
 });
@@ -33,7 +33,10 @@ const loginResponseSchema = z.object({
 export type UserT = z.output<typeof userSchema>;
 export type LoginResponseT = z.output<typeof loginResponseSchema>;
 
-export const register = async ({ email, password }: RegisterInputT) => {
+export const register = async ({
+  email,
+  password,
+}: RegisterInputT): Promise<LoginResponseT> => {
   const { data, status } = await axiosClient.post('/auth/register', {
     email,
     password,
@@ -47,8 +50,10 @@ export const register = async ({ email, password }: RegisterInputT) => {
 };
 
 type LoginInputT = z.input<typeof loginSchema>;
-
-export const login = async ({ email, password }: LoginInputT) => {
+export const login = async ({
+  email,
+  password,
+}: LoginInputT): Promise<LoginResponseT> => {
   const { data, status } = await axiosClient.post('/auth/login', {
     email,
     password,
