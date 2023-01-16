@@ -5,6 +5,7 @@ import Container from '@/layouts/Container';
 import ProtectedPage from '@/layouts/ProtectedPage';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
+import { useMemo } from 'react';
 
 const ProjectEditor = dynamic(() => import('@/components/ProjectEditor'), {
   ssr: false,
@@ -22,12 +23,15 @@ export default function ProjectOverviewPage(props: Props) {
     },
   });
 
-  const title =
-    status === 'success' && data
-      ? data.name
-      : status === 'error'
-      ? ''
-      : 'Loading';
+  const title = useMemo(
+    () =>
+      status === 'success' && data
+        ? data.name
+        : status === 'error'
+        ? ''
+        : 'Loading',
+    [status, data]
+  );
 
   return (
     <ProtectedPage>
