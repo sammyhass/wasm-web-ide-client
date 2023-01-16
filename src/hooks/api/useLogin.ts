@@ -1,8 +1,7 @@
 import { ApiErrorResponse } from '@/lib/api/axios';
-import { login, loginSchema } from '@/lib/api/services/auth';
+import { login, LoginInputT } from '@/lib/api/services/auth';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { z } from 'zod';
 import { UseLoginRegisterParams } from './useRegister';
 
 export const useLogin = ({ onSuccess, onError }: UseLoginRegisterParams) => {
@@ -16,7 +15,7 @@ export const useLogin = ({ onSuccess, onError }: UseLoginRegisterParams) => {
   });
 
   const mutate = useCallback(
-    (data: z.input<typeof loginSchema>) => {
+    (data: LoginInputT) => {
       return _mutate(data);
     },
     [_mutate]

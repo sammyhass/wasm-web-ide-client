@@ -49,7 +49,7 @@ export const register = async ({
   return loginResponseSchema.parse(data);
 };
 
-type LoginInputT = z.input<typeof loginSchema>;
+export type LoginInputT = z.input<typeof loginSchema>;
 export const login = async ({
   email,
   password,
