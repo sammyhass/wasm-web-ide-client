@@ -1,7 +1,6 @@
 import { useEditor } from '@/hooks/useEditor';
 import { FileT } from '@/lib/api/services/projects';
 import MonacoEditor from '@monaco-editor/react';
-import { useMemo } from 'react';
 import LanguageIcon from '../icons/Icon';
 
 const monacoLanguages: Record<FileT['language'], string> = {
@@ -20,16 +19,6 @@ export default function EditorWindow() {
   );
   const currentFile = files.find(f => f.name === selectedFile);
 
-  const content = useMemo(() => {
-    if (!currentFile) return '';
-    return currentFile.content;
-  }, [currentFile]);
-
-  const language = useMemo(() => {
-    if (!currentFile) return 'js';
-    return currentFile.language;
-  }, [currentFile]);
-
   return (
     <div className="w-full">
       {currentFile && (
@@ -39,7 +28,11 @@ export default function EditorWindow() {
         </b>
       )}
 
-      <Editor content={content} onChange={onFileChange} language={language} />
+      <Editor
+        content={currentFile?.content ?? ''}
+        onChange={onFileChange}
+        language={currentFile?.language}
+      />
     </div>
   );
 }
