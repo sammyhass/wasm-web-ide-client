@@ -31,8 +31,6 @@ axiosClient.interceptors.request.use(
       config.headers['Authorization'] = jwt ? `Bearer ${jwt}` : '';
     }
 
-    // remove any trailing slash
-    console.log(config.url);
     return config;
   },
   error => {

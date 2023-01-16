@@ -4,7 +4,7 @@ import { useProject } from '@/hooks/api/useProject';
 import { useEditor } from '@/hooks/useEditor';
 
 export default function PreviewWindow() {
-  const id = useEditor(s => s.project?.id);
+  const id = useEditor(s => s.projectId);
 
   const wasmPath = useEditor(s => s.wasmPath);
 

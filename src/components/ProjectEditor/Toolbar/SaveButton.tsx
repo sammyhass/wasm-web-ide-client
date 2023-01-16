@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 import { ToolbarButton } from '.';
 
 export function SaveButton() {
-  const project = useEditor(s => s.project);
+  const projectId = useEditor(s => s.projectId);
   const files = useEditor(s => s.files);
 
   const { show } = useToast();
@@ -22,7 +22,7 @@ export function SaveButton() {
   >(['saveProjectFiles'], saveProjectFiles, {
     onSuccess: d => {
       queryClient.setQueryData<ProjectT>(
-        ['project', project?.id],
+        ['project', projectId],
         projectData => {
           return projectData ? { ...projectData, files: d } : undefined;
         }
@@ -33,7 +33,7 @@ export function SaveButton() {
         type: 'success',
       });
     },
-    onError: d => {
+    onError: () => {
       show({
         id: 'project-save-error',
         message: 'There was a problem saving your project',
@@ -43,13 +43,13 @@ export function SaveButton() {
   });
 
   const onClick = useCallback(() => {
-    if (project) {
+    if (projectId) {
       mutate({
-        id: project.id,
+        id: projectId,
         files,
       });
     }
-  }, [files, mutate, project]);
+  }, [files, mutate, projectId]);
 
   return (
     <ToolbarButton

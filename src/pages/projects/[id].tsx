@@ -20,14 +20,15 @@ export default function ProjectOverviewPage(props: Props) {
   const { data, status } = useProject(props.id);
 
   useEffect(() => {
-    if (data && data?.id === props.id) {
+    if (data?.id && data?.id === props.id) {
       initProject(data);
     }
 
     return () => {
       clear();
     };
-  }, [clear, data, initProject, props.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.id, initProject, props.id, clear]);
 
   const title = useMemo(
     () =>

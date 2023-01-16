@@ -7,7 +7,6 @@ const langSort: Record<FileT['language'], number> = {
   css: 2,
   go: 3,
 };
-type ProjectWithoutFiles = Omit<ProjectT, 'files'>;
 type ProjectEditorState = {
   wasmPath?: string;
   setWasmPath: (path: string) => void;
@@ -22,8 +21,7 @@ type ProjectEditorState = {
   initProject: (project: ProjectT) => void;
   clear: () => void;
 
-  setProject: (project: ProjectWithoutFiles | null) => void;
-  project: ProjectWithoutFiles | null;
+  projectId: string | undefined;
 
   showSettings: boolean;
   setShowSettings: (show: boolean) => void;
@@ -32,13 +30,8 @@ type ProjectEditorState = {
 export const useEditor = create<ProjectEditorState>((set, get) => ({
   wasmPath: undefined,
   setWasmPath: (path: string) => set({ wasmPath: path }),
-  setProject: project => {
-    set({
-      project,
-    });
-  },
   files: [],
-  project: null,
+  projectId: undefined,
   setFiles: files => set({ files }),
   selectedFile: undefined,
   setShowSettings: showSettings => set({ showSettings }),
@@ -46,36 +39,29 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
 
   setSelectedFile: name => set({ selectedFile: name }),
   initProject: project => {
-    const { files, ...rest } = project;
+    const { files, id } = project;
     const sortedFiles = files
       ?.sort((a, b) => langSort[a.language] - langSort[b.language])
       .map(f => ({ ...f, content: f.content ?? '' }));
-    console.log(
-      `initialising project ${project.name} with ${sortedFiles?.length} files`
-    );
 
-    set(s => ({
+    set({
       wasmPath: undefined,
-      project: rest,
+      projectId: id,
       files: sortedFiles,
-      lastSaved: sortedFiles,
       showSettings: false,
       selectedFile: !get().selectedFile
         ? files?.[0]?.name ?? undefined
         : get().selectedFile,
-    }));
-
-    console.log(get().files);
+    });
   },
   clear: () =>
-    set(s => ({
+    set({
       files: [],
       showSettings: false,
       selectedFile: undefined,
-      project: null,
-      lastSaved: [],
+      projectId: undefined,
       wasmPath: undefined,
-    })),
+    }),
   onCurrentFileChange: value => {
     set(state => {
       const files = state.files.map(f => {

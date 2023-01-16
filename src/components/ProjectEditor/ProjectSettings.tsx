@@ -3,18 +3,18 @@ import { useEditor } from '@/hooks/useEditor';
 import { deleteProject, ProjectT } from '@/lib/api/services/projects';
 import { Dialog, Transition } from '@headlessui/react';
 import { XCircleIcon } from '@heroicons/react/24/solid';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { PropsWithChildren, useState } from 'react';
 import shallow from 'zustand/shallow';
 
 function ProjectSettings() {
-  const { showSettings, setShowSettings, project } = useEditor(
+  const { showSettings, setShowSettings, projectId } = useEditor(
     state => ({
       showSettings: state.showSettings,
       setShowSettings: state.setShowSettings,
-      project: state.project,
+      projectId: state.projectId,
     }),
     shallow
   );
@@ -41,13 +41,7 @@ function ProjectSettings() {
           </div>
           <hr className={'my-4'} />
           <SettingsSection>
-            <h3 className={'text-xl font-bold'}>Danger Zone</h3>
-            {project && (
-              <SettingsBody
-                id={project?.id}
-                onClose={() => setShowSettings(false)}
-              />
-            )}
+            {projectId && <SettingsBody id={projectId} />}
           </SettingsSection>
         </Dialog.Panel>
       </Dialog>
@@ -55,16 +49,12 @@ function ProjectSettings() {
   );
 }
 
-function SettingsBody({
-  id,
-  onClose,
-}: Pick<ProjectT, 'id'> & {
-  onClose: () => void;
-}) {
+function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
   const { push } = useRouter();
 
   return (
     <div className={'flex flex-col gap-4'}>
+      <h3 className={'text-xl font-bold'}>Danger Zone</h3>
       <DeleteProjectButton id={id} onSuccess={() => push('/projects')} />
     </div>
   );
@@ -83,10 +73,15 @@ function DeleteProjectButton({
 }) {
   const { refetch } = useProjects();
   const [showConfirm, setShowConfirm] = useState(false);
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: () => deleteProject(id),
     onSuccess: () => {
       refetch();
+      queryClient.removeQueries({
+        queryKey: ['project', id],
+      });
+
       onSuccess?.();
     },
   });

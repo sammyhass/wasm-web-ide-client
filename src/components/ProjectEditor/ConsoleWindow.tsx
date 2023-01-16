@@ -14,7 +14,7 @@ type ConsoleT = {
     type: 'console';
     level: LogLevel;
     createdAt: number;
-    args: any[];
+    args: unknown[];
   }[];
   clear: () => void;
   push: (logLevel: LogLevel, message: string) => void;
@@ -139,7 +139,7 @@ export default function ConsoleWindow() {
               >
                 {m.args.map((a, i) => (
                   <span key={i} className="break-normal">
-                    {a}
+                    {new Object(a).toString()}
                   </span>
                 ))}
               </div>

@@ -11,7 +11,7 @@ export default function CompileToWasmButton() {
   const setWasmPath = useEditor(s => s.setWasmPath);
   const pushToConsole = useEditorConsole(s => s.push);
 
-  const project = useEditor(s => s.project);
+  const projectId = useEditor(s => s.projectId);
   const { mutate, isLoading } = useMutation(
     ['compileProject'],
     compileProject,
@@ -53,7 +53,7 @@ export default function CompileToWasmButton() {
         isLoading ? 'loading' : ''
       }`}
       onClick={() => {
-        project?.id && mutate(project?.id);
+        projectId && mutate(projectId);
       }}
     >
       {!isLoading ? <PlayIcon className="w-5 h-5" /> : ''}
