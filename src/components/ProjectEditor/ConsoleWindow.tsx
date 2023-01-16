@@ -127,7 +127,7 @@ export default function ConsoleWindow() {
             </div>
           </div>
           <div
-            className="h-28 max-h-44 min-h-12 overflow-y-auto py-2 px-2 pb-6 "
+            className="h-28 max-h-44 min-h-12 overflow-y-auto py-2 px-2 pb-6"
             ref={messagesRef}
           >
             {messages.map((m, i) => (

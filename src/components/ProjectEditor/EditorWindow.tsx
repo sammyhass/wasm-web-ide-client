@@ -29,7 +29,7 @@ export default function EditorWindow() {
       )}
 
       <FileEditor
-        content={currentFile?.content ?? ''}
+        content={currentFile?.content}
         onChange={onFileChange}
         language={currentFile?.language}
       />
@@ -43,7 +43,7 @@ function FileEditor({
   language,
 }: {
   language?: FileT['language'];
-  content: string;
+  content?: string;
   onChange: (value: string) => void;
 }) {
   return (

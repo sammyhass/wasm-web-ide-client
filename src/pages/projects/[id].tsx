@@ -5,7 +5,7 @@ import Container from '@/layouts/Container';
 import ProtectedPage from '@/layouts/ProtectedPage';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 const ProjectEditor = dynamic(() => import('@/components/ProjectEditor'), {
   ssr: false,
@@ -16,12 +16,18 @@ type Props = {
 };
 export default function ProjectOverviewPage(props: Props) {
   const initProject = useEditor(s => s.initProject);
-  const { data, status } = useProject(props.id, {
-    cacheTime: 0,
-    onSuccess: data => {
+  const clear = useEditor(s => s.clear);
+  const { data, status } = useProject(props.id);
+
+  useEffect(() => {
+    if (data && data?.id === props.id) {
       initProject(data);
-    },
-  });
+    }
+
+    return () => {
+      clear();
+    };
+  }, [clear, data, initProject, props.id]);
 
   const title = useMemo(
     () =>
