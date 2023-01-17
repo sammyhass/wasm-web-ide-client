@@ -1,11 +1,10 @@
 import Navbar from '@/components/Navbar';
 import { useProject } from '@/hooks/api/useProject';
-import { useEditor } from '@/hooks/useEditor';
 import Container from '@/layouts/Container';
 import ProtectedPage from '@/layouts/ProtectedPage';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 
 const ProjectEditor = dynamic(() => import('@/components/ProjectEditor'), {
   ssr: false,
@@ -15,17 +14,7 @@ type Props = {
   id: string | undefined;
 };
 export default function ProjectOverviewPage(props: Props) {
-  const initProject = useEditor(s => s.initProject);
   const { data, status } = useProject(props.id);
-
-  const hasInitialisedProject = useRef(false);
-
-  useEffect(() => {
-    if (!hasInitialisedProject.current && data?.id) {
-      initProject(data);
-      hasInitialisedProject.current = true;
-    }
-  }, [data?.id, initProject, props.id, data]);
 
   const title = useMemo(
     () =>
@@ -42,7 +31,9 @@ export default function ProjectOverviewPage(props: Props) {
       <Navbar title={<h1 className="text-xl font-bold">{title}</h1>} />
 
       {status === 'success' && data && props.id ? (
-        <ProjectEditor />
+        <>
+          <ProjectEditor {...data} />
+        </>
       ) : (
         <Container>
           <div className="flex flex-col items-center justify-center bg-base-200 shadow-md min-h-16 gap-2 py-4">
