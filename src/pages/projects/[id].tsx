@@ -5,7 +5,7 @@ import Container from '@/layouts/Container';
 import ProtectedPage from '@/layouts/ProtectedPage';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 const ProjectEditor = dynamic(() => import('@/components/ProjectEditor'), {
   ssr: false,
@@ -16,19 +16,16 @@ type Props = {
 };
 export default function ProjectOverviewPage(props: Props) {
   const initProject = useEditor(s => s.initProject);
-  const clear = useEditor(s => s.clear);
   const { data, status } = useProject(props.id);
 
-  useEffect(() => {
-    if (data?.id && data?.id === props.id) {
-      initProject(data);
-    }
+  const hasInitialisedProject = useRef(false);
 
-    return () => {
-      clear();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.id, initProject, props.id, clear]);
+  useEffect(() => {
+    if (!hasInitialisedProject.current && data?.id) {
+      initProject(data);
+      hasInitialisedProject.current = true;
+    }
+  }, [data?.id, initProject, props.id, data]);
 
   const title = useMemo(
     () =>
