@@ -4,10 +4,15 @@ import MonacoEditor from '@monaco-editor/react';
 import LanguageIcon from '../icons/Icon';
 
 const monacoLanguages: Record<FileT['language'], string> = {
+  // Code Languages
   html: 'html',
   go: 'go',
   js: 'javascript',
   css: 'css',
+
+  // Uneditable Files
+  wasm: 'txt',
+  mod: 'txt',
 };
 
 export default function EditorWindow() {
