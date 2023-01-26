@@ -7,6 +7,8 @@ const languageSchema = z.union([
   z.literal('css'),
   z.literal('go'),
   z.literal('js'),
+  z.literal('mod'),
+  z.literal('wasm')
 ]);
 
 const fileSchema = z.object({

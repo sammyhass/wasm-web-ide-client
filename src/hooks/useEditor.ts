@@ -6,7 +6,10 @@ const langSort: Record<FileT['language'], number> = {
   js: 1,
   css: 2,
   go: 3,
+  mod: 4,
+  wasm: 5,
 };
+
 type ProjectEditorState = {
   wasmPath?: string;
   setWasmPath: (path: string) => void;
