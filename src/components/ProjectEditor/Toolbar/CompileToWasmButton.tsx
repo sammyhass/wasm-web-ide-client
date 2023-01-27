@@ -17,7 +17,7 @@ export default function CompileToWasmButton() {
     compileProject,
     {
       onSuccess: path => {
-        setWasmPath(API_URL + path);
+        setWasmPath(path);
         show({
           type: 'success',
           message:

@@ -1,7 +1,7 @@
 import { iframeContent } from '@/lib/previews';
-
 import { useProject } from '@/hooks/api/useProject';
 import { useEditor } from '@/hooks/useEditor';
+import { useMemo } from "react";
 
 export default function PreviewWindow() {
   const id = useEditor(s => s.projectId);
@@ -27,12 +27,12 @@ export default function PreviewWindow() {
     .map(f => f.content)
     .join('');
 
-  const srcDoc = iframeContent({
+  const srcDoc = useMemo(() => iframeContent({
     html,
     js,
     css,
     wasmPath,
-  });
+  }), [html, js, css, wasmPath]);
 
   return (
     <>

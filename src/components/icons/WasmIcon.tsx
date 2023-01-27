@@ -5,8 +5,6 @@ export default function WasmIcon(props: SVGProps<SVGSVGElement>) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      width="612"
-      height="612"
       viewBox="0 0 612 612"
       {...props}
     >

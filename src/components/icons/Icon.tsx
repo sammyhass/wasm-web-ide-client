@@ -26,7 +26,7 @@ export default function LanguageIcon({
   const Icon = icons[language];
 
   return (
-    <div className={`w-6 ${className}`}>
+    <div className={`w-6 max-h-fit ${className}`}>
       {Icon ? <Icon /> : <span>{language}</span>}
     </div>
   );
