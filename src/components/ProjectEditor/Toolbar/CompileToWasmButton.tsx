@@ -1,23 +1,32 @@
 import { useToast } from '@/components/Toast';
 import { useEditor } from '@/hooks/useEditor';
-import { ApiErrorResponse, API_URL } from '@/lib/api/axios';
-import { compileProject } from '@/lib/api/services/projects';
+import { ApiErrorResponse } from '@/lib/api/axios';
+import { compileProject, ProjectT } from '@/lib/api/services/projects';
 import { PlayIcon } from '@heroicons/react/24/solid';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEditorConsole } from '../ConsoleWindow';
 
 export default function CompileToWasmButton() {
   const { show } = useToast();
-  const setWasmPath = useEditor(s => s.setWasmPath);
   const pushToConsole = useEditorConsole(s => s.push);
+
+  const qc = useQueryClient();
 
   const projectId = useEditor(s => s.projectId);
   const { mutate, isLoading } = useMutation(
-    ['compileProject'],
+    ['compileProject', projectId],
     compileProject,
     {
       onSuccess: path => {
-        setWasmPath(path);
+        qc.setQueryData<ProjectT>(
+          ['project', projectId],
+          prev =>
+            prev && {
+              ...prev,
+              wasm_path: path,
+            }
+        );
+
         show({
           type: 'success',
           message:

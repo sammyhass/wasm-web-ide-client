@@ -25,7 +25,7 @@ try {
 // Sets up WebAssembly to be run in the browser along with any JS code to be
 // run after the WebAssembly is loaded
 const runWasmCode = (js?: string, src?: string) =>
-  src && src.endsWith('.wasm')
+  !!src
     ? `
   var go = new Go();
 
@@ -36,11 +36,11 @@ const runWasmCode = (js?: string, src?: string) =>
     go.run(wasm);
     ${runJS(js || '')}
   }).catch(e => {
-    console.error("failed to load wasm");
+    console.error("Failed to load WebAssembly file for project.");
   });
 `
     : `
-    console.warn('No WebAssembly file found. Running JS only.');    
+    console.warn('No WebAssembly file found. Running JS only.');
     ${runJS(js || '')}
     `;
 
@@ -59,7 +59,7 @@ export const iframeContent = ({
   <html lang="en">
     <head>
       <meta charset="UTF-8">
-      
+
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>
         ${css}

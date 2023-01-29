@@ -9,7 +9,7 @@ export default function HomePage() {
       <div className="hero-content bg-primary-content shadow-lg rounded-md p-20">
         <div className="flex flex-col items-center gap-10">
           <h1 className=" text-6xl gap-2 flex items-end font-mono p-2">
-            <WasmIcon className="h-28 w-fit" />
+            <WasmIcon className="h-28 min-w-[100px]" />
             <span>IDE</span>
           </h1>
           <h1 className="text-4xl font-bold text-center  text-info-content ">

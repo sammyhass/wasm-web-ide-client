@@ -1,12 +1,9 @@
-import { iframeContent } from '@/lib/previews';
 import { useProject } from '@/hooks/api/useProject';
 import { useEditor } from '@/hooks/useEditor';
-import { useMemo } from "react";
+import { iframeContent } from '@/lib/previews';
 
 export default function PreviewWindow() {
   const id = useEditor(s => s.projectId);
-
-  const wasmPath = useEditor(s => s.wasmPath);
 
   const { data: project } = useProject(id);
 
@@ -27,16 +24,19 @@ export default function PreviewWindow() {
     .map(f => f.content)
     .join('');
 
-  const srcDoc = useMemo(() => iframeContent({
+  const srcDoc = iframeContent({
     html,
     js,
     css,
-    wasmPath,
-  }), [html, js, css, wasmPath]);
+    wasmPath: project?.wasm_path,
+  });
 
   return (
     <>
-      <div className="bg-white flex-1 max-w-4xl min-w-[250px]">
+      <div
+        className="bg-white flex-1 max-w-4xl min-w-[250px]"
+        id="previewWindow"
+      >
         <iframe srcDoc={srcDoc} className="w-full h-full" title="Preview" />
       </div>
     </>

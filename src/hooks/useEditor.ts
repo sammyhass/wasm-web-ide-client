@@ -11,9 +11,6 @@ const langSort: Record<FileT['language'], number> = {
 };
 
 type ProjectEditorState = {
-  wasmPath?: string;
-  setWasmPath: (path: string) => void;
-
   files: FileT[];
   selectedFile: string | undefined;
 
@@ -31,8 +28,6 @@ type ProjectEditorState = {
 };
 
 export const useEditor = create<ProjectEditorState>((set, get) => ({
-  wasmPath: undefined,
-  setWasmPath: (path: string) => set({ wasmPath: path }),
   files: [],
   projectId: undefined,
   setFiles: files => set({ files }),
@@ -48,7 +43,6 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
       .map(f => ({ ...f, content: f.content ?? '' }));
 
     set({
-      wasmPath: undefined,
       projectId: id,
       files: sortedFiles,
       showSettings: false,
@@ -63,7 +57,6 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
       showSettings: false,
       selectedFile: undefined,
       projectId: undefined,
-      wasmPath: undefined,
     }),
   onCurrentFileChange: value => {
     set(state => {

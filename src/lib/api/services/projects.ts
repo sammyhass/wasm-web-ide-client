@@ -23,6 +23,7 @@ const projectSchema = z.object({
   created_at: z.string(),
   files: z.nullable(z.array(fileSchema)),
   user_id: z.string(),
+  wasm_path: z.optional(z.string()),
 });
 
 const projectsArraySchema = z.array(projectSchema);
@@ -119,3 +120,28 @@ export const compileProject = async (id: string): Promise<string> => {
 
   return z.string().parse(data);
 };
+
+
+// export const previewProject = async (id: string): Promise<string> => {
+//   parseId(id);
+//
+//   const { status, data } = await axiosClient.get<string>(
+//     `/projects/${id}/preview`
+//   );
+//
+//   if (status !== 200) {
+//     return Promise.reject(data);
+//   }
+//
+//   const html = z.string().parse(data);
+//
+//   // create a new blob of the data
+//   const blob = new Blob([html], { type: 'text/html' });
+//
+//   // create a blobURL, such that pointing to it will show the html
+//   const blobURL = URL.createObjectURL(blob);
+//
+//   // return the blobURL
+//   return blobURL;
+//
+// }
