@@ -71,12 +71,14 @@ export default function LoginPage() {
       <form className="flex flex-col gap-5 my-5" onSubmit={onSubmit}>
         <FormControl
           id="email"
+          data-testid="email-input"
           label="Email"
           name="email"
           onChange={e => setEmail(e.target.value)}
         />
         <FormControl
           id="password"
+          data-testid="password-input"
           label="Password"
           name="password"
           type="password"
@@ -85,6 +87,7 @@ export default function LoginPage() {
         {mode === 'register' && (
           <FormControl
             id="confirmPassword"
+            data-testid="confirm-password-input"
             label="Confirm Password"
             name="confirmPassword"
             type="password"

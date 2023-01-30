@@ -10,6 +10,7 @@ import { ToolbarButton } from '.';
 export function SaveButton() {
   const projectId = useEditor(s => s.projectId);
   const files = useEditor(s => s.files);
+  const setDirty = useEditor(s => s.setDirty);
 
   const { show } = useToast();
 
@@ -21,7 +22,7 @@ export function SaveButton() {
     { id: string; files: NonNullable<ProjectT['files']> }
   >(['saveProjectFiles'], saveProjectFiles, {
     onSuccess: d => {
-      useEditor.setState(s => ({ dirty: false }));
+      setDirty(false);
       queryClient.setQueryData<ProjectT>(
         ['project', projectId],
         projectData => {
