@@ -39,5 +39,5 @@ export class LoginRegisterPage {
 
 export const createRandomLoginInput = (): LoginInputT => ({
   email: faker.internet.email(),
-  password: faker.internet.password(20),
+  password: faker.internet.password(18),
 });
