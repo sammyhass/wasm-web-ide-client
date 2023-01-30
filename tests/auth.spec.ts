@@ -39,9 +39,7 @@ test('can register', async ({ page }) => {
     credentials.password
   );
 
-  await page.waitForLoadState('networkidle');
-
-  expect(page.url()).toBe(getURL('/projects'));
+  page.waitForURL(getURL('/projects'));
 
   const nav = new Navbar(page);
   const isLoggedIn = await nav.isLoggedIn();
