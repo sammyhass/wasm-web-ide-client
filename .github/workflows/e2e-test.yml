@@ -22,7 +22,7 @@ jobs:
       - name: Run Playwright tests
         run: pnpm dlx playwright test
         env:
-          TEST_URL: ${{ github.event.deployment_status.target_url }}
+          TEST_URL: https://wasm-web-ide-client.vercel.app
           TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
 
