@@ -7,7 +7,7 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "test": ""
+    "test": "pnpm playwright test"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
