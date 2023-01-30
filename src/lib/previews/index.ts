@@ -36,7 +36,7 @@ const runWasmCode = (js?: string, src?: string) =>
     go.run(wasm);
     ${runJS(js || '')}
   }).catch(e => {
-    console.error("Failed to load WebAssembly file for project.");
+    console.error("Failed to load WebAssembly file for project. Try recompiling your project.");
   });
 `
     : `
