@@ -39,7 +39,7 @@ test('can register', async ({ page }) => {
     credentials.password
   );
 
-  page.waitForURL(getURL('/projects'));
+  await page.waitForURL(getURL('/projects'));
 
   const nav = new Navbar(page);
   const isLoggedIn = await nav.isLoggedIn();
