@@ -6,9 +6,11 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "test": ""
   },
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@fontsource/fira-code": "^4.5.12",
     "@fontsource/open-sans": "^4.5.13",
     "@headlessui/react": "^1.7.4",
@@ -21,6 +23,7 @@
     "daisyui": "^2.31.0",
     "date-fns": "^2.29.3",
     "dompurify": "^2.4.0",
+    "dotenv": "^16.0.3",
     "next": "13.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

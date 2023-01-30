@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@faker-js/faker': ^7.6.0
   '@fontsource/fira-code': ^4.5.12
   '@fontsource/open-sans': ^4.5.13
   '@headlessui/react': ^1.7.4
@@ -21,6 +22,7 @@ specifiers:
   daisyui: ^2.31.0
   date-fns: ^2.29.3
   dompurify: ^2.4.0
+  dotenv: ^16.0.3
   eslint: 8.22.0
   eslint-config-next: 13.0.2
   next: 13.0.2
@@ -36,6 +38,7 @@ specifiers:
   zustand: ^4.1.2
 
 dependencies:
+  '@faker-js/faker': 7.6.0
   '@fontsource/fira-code': 4.5.12
   '@fontsource/open-sans': 4.5.13
   '@headlessui/react': 1.7.4_biqbaboplfbrettd7655fr4n2y
@@ -48,6 +51,7 @@ dependencies:
   daisyui: 2.31.0_xkowlklhtk6sfvtndbucb3hfiy
   date-fns: 2.29.3
   dompurify: 2.4.0
+  dotenv: 16.0.3
   next: 13.0.2_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -105,6 +109,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@faker-js/faker/7.6.0:
+    resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
+    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    dev: false
 
   /@fontsource/fira-code/4.5.12:
     resolution: {integrity: sha512-dAVGsgiVR6jslpuXosHH4/Jf8bsAIKL1RWqjVq4WpmxL7CFHfg9hT5bAv/Y3xsEj8kDTibEgpuC3eMfr9kb02g==}
@@ -1039,6 +1048,11 @@ packages:
 
   /dompurify/2.4.0:
     resolution: {integrity: sha512-Be9tbQMZds4a3C6xTmz68NlMfeONA//4dOavl/1rNw50E+/QO0KVpbcU0PcaW0nsQxurXls9ZocqFxk8R2mWEA==}
+    dev: false
+
+  /dotenv/16.0.3:
+    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
     dev: false
 
   /electron-to-chromium/1.4.282:
