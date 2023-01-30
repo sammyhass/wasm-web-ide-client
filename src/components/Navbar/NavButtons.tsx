@@ -24,6 +24,7 @@ export default function NavButtons() {
           </Link>
           <button
             className="btn btn-error btn-outline btn-md"
+            data-testid="logout-button"
             onClick={() => {
               setJwt(null);
               refetch();
@@ -35,7 +36,9 @@ export default function NavButtons() {
         </>
       ) : (
         <Link href="/login">
-          <button className="btn btn-outline btn-md">Login</button>
+          <button className="btn btn-outline btn-md" data-testid="login-button">
+            Login
+          </button>
         </Link>
       )}
     </div>
