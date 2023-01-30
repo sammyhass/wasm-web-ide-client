@@ -4,16 +4,19 @@ import { ApiErrorResponse } from '@/lib/api/axios';
 import { compileProject, ProjectT } from '@/lib/api/services/projects';
 import { PlayIcon } from '@heroicons/react/24/solid';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { useEditorConsole } from '../ConsoleWindow';
 
 export default function CompileToWasmButton() {
   const { show } = useToast();
   const pushToConsole = useEditorConsole(s => s.push);
 
+  const dirty = useEditor(s => s.dirty);
+  const projectId = useEditor(s => s.projectId);
+
   const qc = useQueryClient();
 
-  const projectId = useEditor(s => s.projectId);
-  const { mutate, isLoading } = useMutation(
+  const { mutate: _mutate, isLoading } = useMutation(
     ['compileProject', projectId],
     compileProject,
     {
@@ -56,14 +59,28 @@ export default function CompileToWasmButton() {
     }
   );
 
+  const mutate = useCallback(() => {
+    if (!projectId) return;
+
+    if (dirty) {
+      show({
+        type: 'error',
+        message: 'Please save your project before compiling.',
+        id: 'compile-error',
+      });
+      pushToConsole('error', `[GO] Please save your project before compiling.`);
+      return;
+    }
+
+    _mutate(projectId);
+  }, [projectId, dirty, _mutate, show, pushToConsole]);
+
   return (
     <button
       className={`flex btn btn-circle  btn-success text-white ${
         isLoading ? 'loading' : ''
       }`}
-      onClick={() => {
-        projectId && mutate(projectId);
-      }}
+      onClick={mutate}
     >
       {!isLoading ? <PlayIcon className="w-5 h-5" /> : ''}
     </button>

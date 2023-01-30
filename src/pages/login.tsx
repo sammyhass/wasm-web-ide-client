@@ -104,6 +104,7 @@ export default function LoginPage() {
       <button
         onClick={() => setMode(m => (m === 'login' ? 'register' : 'login'))}
         className={`btn btn-accent w-full btn-sm normal-case`}
+        data-testid={'toggle-mode'}
       >
         {mode === 'login'
           ? 'Need an account? Register here.'

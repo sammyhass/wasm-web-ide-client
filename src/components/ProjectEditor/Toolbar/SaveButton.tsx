@@ -21,6 +21,7 @@ export function SaveButton() {
     { id: string; files: NonNullable<ProjectT['files']> }
   >(['saveProjectFiles'], saveProjectFiles, {
     onSuccess: d => {
+      useEditor.setState(s => ({ dirty: false }));
       queryClient.setQueryData<ProjectT>(
         ['project', projectId],
         projectData => {

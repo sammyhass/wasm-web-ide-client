@@ -29,7 +29,7 @@ function ProjectEditor() {
   const filenames = files.map(f => f.name);
 
   return (
-    <div className="bg-base-200 w-full max-w-screen ">
+    <div className="my-2 w-full max-w-screen">
       <Toolbar />
       <div className="flex flex-col-reverse md:flex-row">
         <div className="relative flex flex-1">

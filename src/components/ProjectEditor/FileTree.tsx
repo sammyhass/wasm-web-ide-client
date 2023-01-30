@@ -45,7 +45,7 @@ function FileTree({
 }) {
   return (
     <div className="flex flex-col gap-2 text-sm relative min-w-fit">
-      <b className="pl-4 font-mono p-2">Project Files</b>
+      <b className="pl-4 p-2">Project Files</b>
       <button
         className="absolute top-0 right-0 p-2"
         onClick={onClose}

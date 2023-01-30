@@ -11,6 +11,8 @@ const langSort: Record<FileT['language'], number> = {
 };
 
 type ProjectEditorState = {
+  dirty: boolean;
+
   files: FileT[];
   selectedFile: string | undefined;
 
@@ -28,6 +30,7 @@ type ProjectEditorState = {
 };
 
 export const useEditor = create<ProjectEditorState>((set, get) => ({
+  dirty: false,
   files: [],
   projectId: undefined,
   setFiles: files => set({ files }),
@@ -66,7 +69,7 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
         }
         return f;
       });
-      return { files };
+      return { files, dirty: true };
     });
   },
 }));
