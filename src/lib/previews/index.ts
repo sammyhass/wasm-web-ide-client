@@ -61,16 +61,16 @@ export const iframeContent = ({
       <meta charset="UTF-8">
 
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <style>
+      <style data-testid="preview-css">
         ${css}
       </style>
       <script src="/wasm_exec_tiny.js"></script>
-      <script type="module" defer>
+      <script type="module" defer data-testid="preview-script">
         ${consoleReassign}
         ${runWasmCode(js, wasmPath)}
       </script>
     </head>
-    <body>
+    <body data-testid="preview-body">
       ${html}
     </body>
   </html>
