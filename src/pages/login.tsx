@@ -114,7 +114,7 @@ export default function LoginPage() {
           : 'Already have an account? Login here.'}
       </button>
       {!!error && (
-        <div className="my-5">
+        <div className="my-5" data-testid="error">
           <Alert
             type="error"
             message={
