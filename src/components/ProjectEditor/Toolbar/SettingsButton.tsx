@@ -7,6 +7,7 @@ export default function SettingsButton() {
 
   return (
     <ToolbarButton
+      data-testid="projects-settings-button"
       icon={<Cog6ToothIcon className="w-5 h-5" />}
       title="Settings"
       onClick={() => setShowSettings(true)}

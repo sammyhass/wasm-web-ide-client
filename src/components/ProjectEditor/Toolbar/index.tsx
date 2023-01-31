@@ -16,9 +16,10 @@ export function ToolbarButton({
   icon,
   title,
   loading,
-  className,
   disabled,
+  className,
   onClick,
+  ...props
 }: {
   icon: React.ReactNode;
   title?: string;
@@ -26,7 +27,7 @@ export function ToolbarButton({
   disabled?: boolean;
   className?: string;
   onClick: () => void;
-}) {
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       className={`btn btn-sm normal-case gap-2 ${loading ? 'loading' : ''} ${
@@ -36,6 +37,7 @@ export function ToolbarButton({
       }`}
       title={title}
       onClick={onClick}
+      {...props}
     >
       {icon}
       {title}

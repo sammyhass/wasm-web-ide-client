@@ -23,6 +23,7 @@ function ProjectSettings() {
     <Transition show={showSettings}>
       <Dialog
         as="div"
+        data-testid="project-settings"
         className={`modal modal-open `}
         onClose={() => setShowSettings(false)}
       >
@@ -34,6 +35,7 @@ function ProjectSettings() {
 
             <button
               className={'btn btn-ghost btn-xs btn-circle'}
+              data-testid="close-settings"
               onClick={() => setShowSettings(false)}
             >
               <XCircleIcon className={'w-6 h-6'} />
@@ -89,6 +91,7 @@ function DeleteProjectButton({
   return (
     <>
       <button
+        data-testid="delete-project-button"
         className={'btn btn-error btn-md w-full'}
         onClick={() => {
           setShowConfirm(true);
@@ -108,7 +111,11 @@ function DeleteProjectButton({
             </p>
           </div>
           <div className="flex gap-2">
-            <button onClick={() => mutate()} className={'btn btn-error btn-md'}>
+            <button
+              onClick={() => mutate()}
+              className={'btn btn-error btn-md'}
+              data-testid="confirm-delete-project-button"
+            >
               Yes
             </button>
             <button
