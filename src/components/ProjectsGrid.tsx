@@ -32,7 +32,9 @@ function ProjectCard({ id, name, created_at }: ProjectT) {
       className="p-10 rounded-lg bg-base-100 cursor-pointer border hover:bg-base-200 shadow-lg transition-all duration-200"
       data-testid="project-card"
     >
-      <h1 className="text-2xl font-bold">{name}</h1>
+      <h1 className="text-2xl font-bold" data-testid="project-title">
+        {name}
+      </h1>
       <p className="text-base-content text-opacity-50">
         Created {formatRelative(new Date(created_at), Date.now())}
       </p>
