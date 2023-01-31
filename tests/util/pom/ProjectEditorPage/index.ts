@@ -73,15 +73,6 @@ export class ProjectEditorPage {
     return await this.editor.inputValue();
   }
 
-  async setEditorValue(value: string) {
-    await this.editor.evaluate(node => {
-      // clear
-      node.setAttribute('value', '');
-    });
-
-    await this.editor.fill(value);
-  }
-
   async save() {
     await this.saveButton.click();
 

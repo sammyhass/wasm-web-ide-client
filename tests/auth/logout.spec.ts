@@ -1,18 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { getTestUser, getURL } from '../util';
-import { LoginRegisterPage } from '../util/pom/LoginRegisterPage';
+import { getURL } from '../util';
+import { loginWithTestUser } from '../util/pom/LoginRegisterPage';
 import { Navbar } from '../util/pom/Navbar';
 
 test('can logout', async ({ page }) => {
-  const credentials = getTestUser();
-
-  await page.goto('/login');
-
-  const pom = new LoginRegisterPage(page);
-
-  await pom.login(credentials.email, credentials.password);
-
-  await page.waitForLoadState('networkidle');
+  await loginWithTestUser(page);
 
   expect(page.url()).toBe(getURL('/projects'));
 

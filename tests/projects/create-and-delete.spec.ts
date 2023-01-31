@@ -12,13 +12,13 @@ import {
 } from '../util/pom/ProjectEditorPage';
 import { ProjectsPage } from '../util/pom/ProjectsPage';
 
-test('can create and delete a project', async ({ page }) => {
+test('create and delete a project', async ({ page }) => {
   await loginWithTestUser(page);
 
   const projectPom = new ProjectsPage(page);
   const name = createRandomProjectName();
 
-  await test.step('create new project', async () => {
+  await test.step('create a new project', async () => {
     await projectPom.newProjectButton.click();
 
     await page.waitForURL(getURL('/projects/new'));
@@ -47,7 +47,7 @@ test('can create and delete a project', async ({ page }) => {
     ).toContain(name);
   });
 
-  await test.step('delete project', async () => {
+  await test.step('delete the project', async () => {
     await projectPom.projectCards
       .getByTestId('project-title')
       .getByText(name)
