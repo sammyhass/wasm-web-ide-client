@@ -33,13 +33,10 @@ const runWasmCode = (js?: string, src?: string) =>
 
   let wasm = null;
 
-
-
-
   WebAssembly.instantiateStreaming(fetch('${src}').then(response => {
     if (!response.ok) {
-      throw new Error('${FAILED_FETCH}');
-      ${js ? runJS(js) : ''}
+      console.warn('${FAILED_FETCH}');
+      ${runJS(js || '')}
     }
     return response.arrayBuffer();
   }), go.importObject).then(___result => {
