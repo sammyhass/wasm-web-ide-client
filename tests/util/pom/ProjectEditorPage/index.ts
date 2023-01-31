@@ -81,6 +81,15 @@ export class ProjectEditorPage {
 
     await this.editor.fill(value);
   }
+
+  async save() {
+    await this.saveButton.click();
+
+    await this.saveButton.getByText('Saving...').waitFor();
+    await this.saveButton.getByText('Save').waitFor();
+
+    await this.previewWindow.previewBody.waitFor();
+  }
 }
 
 export async function waitForProjectPage(page: Page, title: string) {

@@ -99,9 +99,7 @@ test('project editor and previews', async ({ page, browserName }) => {
   });
 
   await test.step('save project and view preview', async () => {
-    await projectEditorPagePom.saveButton.click();
-
-    await page.waitForLoadState('networkidle');
+    await projectEditorPagePom.save();
 
     await projectEditorPagePom.previewWindow.previewWindow
       .locator(`text=${H1_CONTENT}`)
@@ -128,7 +126,7 @@ test('project editor and previews', async ({ page, browserName }) => {
     expect(consoleMessages).toContain(CONSOLE_MESSAGE);
   });
 
-  await test.step('Add JS error and ensure it appears in console', async () => {
+  await test.step('add JS error and ensure it appears in console', async () => {
     await projectEditorPagePom.selectFile('app.js');
 
     expect(await projectEditorPagePom.selectedFile.innerText()).toContain(
@@ -145,10 +143,7 @@ test('project editor and previews', async ({ page, browserName }) => {
 
     expect(await projectEditorPagePom.getEditorValue()).toBe(newContent);
 
-    await projectEditorPagePom.saveButton.click();
-
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await projectEditorPagePom.save();
 
     const consoleMessages = await (
       await projectEditorPagePom.editorConsole.getConsoleMessages()

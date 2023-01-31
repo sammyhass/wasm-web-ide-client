@@ -15,6 +15,7 @@ test('can login', async ({ page }) => {
   await pom.login(testUser.email, testUser.password);
 
   await page.waitForLoadState('networkidle');
+  await page.waitForURL(getURL('/projects'));
   expect(page.url()).toBe(getURL('/projects'));
 
   const nav = new Navbar(page);
@@ -32,6 +33,7 @@ test('cannot login with invalid credentials', async ({ page }) => {
   await pom.login(badCredentials.email, badCredentials.password);
 
   await page.waitForLoadState('networkidle');
+  await pom.error.waitFor();
 
   expect(page.url()).toBe(getURL('/login'));
   expect(await pom.error.isVisible()).toBe(true);

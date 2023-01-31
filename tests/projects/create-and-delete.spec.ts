@@ -65,6 +65,13 @@ test('can create and delete a project', async ({ page }) => {
 
     await page.waitForLoadState('networkidle');
 
+    await projectPom.projectCards
+      .getByTestId('project-title')
+      .getByText(name)
+      .waitFor({
+        state: 'hidden',
+      });
+
     expect(
       await projectPom.projectCards.getByTestId('project-title').allInnerTexts()
     ).not.toContain(name);
