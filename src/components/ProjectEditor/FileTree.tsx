@@ -78,6 +78,7 @@ const FileTreeItem = ({
   selected?: boolean;
 }) => (
   <button
+    data-testid={`file-tree-item-${file.language}`}
     className={`flex font-mono items-center gap-2 text-xs pl-4 pr-12 py-2 ${
       selected ? 'bg-neutral-focus' : ''
     }`}

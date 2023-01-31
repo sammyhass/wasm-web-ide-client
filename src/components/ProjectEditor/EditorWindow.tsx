@@ -25,11 +25,11 @@ export default function EditorWindow() {
   const currentFile = files.find(f => f.name === selectedFile);
 
   return (
-    <div className="w-full">
+    <div className="w-full" data-testid="editor">
       {currentFile && (
         <b className="font-mono flex gap-2 p-2 text-sm">
           <LanguageIcon language={currentFile?.language} className="w-5 h-5" />
-          {selectedFile}
+          <span data-testid="selected-file">{selectedFile}</span>
         </b>
       )}
 
@@ -54,7 +54,6 @@ function FileEditor({
   return (
     <MonacoEditor
       value={content}
-      data-testid="editor"
       options={{
         minimap: { enabled: true },
       }}
