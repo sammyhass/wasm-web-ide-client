@@ -33,7 +33,7 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
-      - name: deploy to report to gh-pages
+      - name: Deploy report to gh-pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:

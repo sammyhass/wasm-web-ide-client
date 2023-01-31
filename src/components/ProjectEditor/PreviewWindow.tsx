@@ -4,19 +4,25 @@ import { iframeContent } from '@/lib/previews';
 import { faker } from '@faker-js/faker';
 import create from 'zustand';
 
-export const usePreviewNonce = create<{
+export const usePreviewWindow = create<{
   nonce: string;
-  new: () => void;
+  newNonce: () => void;
+  useWasm: boolean;
+  enableWasm: (enable: boolean) => void;
 }>(s => ({
   nonce: '',
-  new: () => s({ nonce: faker.random.alphaNumeric(16) }),
+  newNonce: () => s({ nonce: faker.random.alphaNumeric(16) }),
+  useWasm: false,
+  enableWasm: (enable: boolean) => s({ useWasm: enable }),
 }));
+
 export default function PreviewWindow() {
   const id = useEditor(s => s.projectId);
 
   const { data: project } = useProject(id);
 
-  const previewNonce = usePreviewNonce(s => s.nonce);
+  const previewNonce = usePreviewWindow(s => s.nonce);
+  const useWasm = usePreviewWindow(s => s.useWasm);
 
   const saveState = project?.files ?? [];
 
@@ -39,7 +45,7 @@ export default function PreviewWindow() {
     html,
     js,
     css,
-    wasmPath: project?.wasm_path,
+    wasmPath: useWasm ? project?.wasm_path : undefined,
     nonce: previewNonce,
   });
 

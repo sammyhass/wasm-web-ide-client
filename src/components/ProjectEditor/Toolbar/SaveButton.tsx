@@ -6,14 +6,14 @@ import { FolderIcon } from '@heroicons/react/24/solid';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { ToolbarButton } from '.';
-import { usePreviewNonce } from '../PreviewWindow';
+import { usePreviewWindow } from '../PreviewWindow';
 
 export function SaveButton() {
   const projectId = useEditor(s => s.projectId);
   const files = useEditor(s => s.files);
   const setDirty = useEditor(s => s.setDirty);
 
-  const newNonce = usePreviewNonce(s => s.new);
+  const newNonce = usePreviewWindow(s => s.newNonce);
 
   const { show } = useToast();
 

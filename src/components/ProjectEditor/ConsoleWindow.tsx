@@ -137,7 +137,7 @@ export default function ConsoleWindow() {
                 data-testid="console-message"
                 className={`font-mono ${consoleMessageClass(
                   m.level
-                )} break-normal hover:bg-base-200 py-1 max-w-full`}
+                )} break-all hover:bg-base-200 py-1 max-w-full`}
               >
                 {m.args.map((a, i) => (
                   <span key={i} className="break-normal">

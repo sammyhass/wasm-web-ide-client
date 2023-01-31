@@ -6,6 +6,7 @@ import { PlayIcon } from '@heroicons/react/24/solid';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useEditorConsole } from '../ConsoleWindow';
+import { usePreviewWindow } from '../PreviewWindow';
 
 export default function CompileToWasmButton() {
   const { show } = useToast();
@@ -13,6 +14,7 @@ export default function CompileToWasmButton() {
 
   const dirty = useEditor(s => s.dirty);
   const projectId = useEditor(s => s.projectId);
+  const { enableWasm } = usePreviewWindow();
 
   const qc = useQueryClient();
 
@@ -29,6 +31,7 @@ export default function CompileToWasmButton() {
               wasm_path: path,
             }
         );
+        enableWasm(true);
 
         show({
           type: 'success',
@@ -78,6 +81,7 @@ export default function CompileToWasmButton() {
   return (
     <button
       data-testid="compile-project-button"
+      title="Compile project to WASM"
       className={`flex btn btn-circle  btn-success text-white ${
         isLoading ? 'loading' : ''
       }`}

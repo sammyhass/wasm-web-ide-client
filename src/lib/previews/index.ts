@@ -41,7 +41,7 @@ const runWasmCode = (js?: string, src?: string) =>
   });
 `
     : `
-    console.warn('No WebAssembly file found. Running JS only.');
+    console.warn('Running JS only. Click the "Run" button to compile and run your code.')
     ${runJS(js || '')}
     `;
 
