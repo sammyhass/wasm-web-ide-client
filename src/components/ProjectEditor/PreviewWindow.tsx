@@ -1,11 +1,22 @@
 import { useProject } from '@/hooks/api/useProject';
 import { useEditor } from '@/hooks/useEditor';
 import { iframeContent } from '@/lib/previews';
+import { faker } from '@faker-js/faker';
+import create from 'zustand';
 
+export const usePreviewNonce = create<{
+  nonce: string;
+  new: () => void;
+}>(s => ({
+  nonce: '',
+  new: () => s({ nonce: faker.random.alphaNumeric(16) }),
+}));
 export default function PreviewWindow() {
   const id = useEditor(s => s.projectId);
 
   const { data: project } = useProject(id);
+
+  const previewNonce = usePreviewNonce(s => s.nonce);
 
   const saveState = project?.files ?? [];
 
@@ -29,6 +40,7 @@ export default function PreviewWindow() {
     js,
     css,
     wasmPath: project?.wasm_path,
+    nonce: previewNonce,
   });
 
   return (

@@ -29,6 +29,7 @@ const runWasmCode = (js?: string, src?: string) =>
     ? `
   var go = new Go();
 
+
   let wasm = null;
 
   WebAssembly.instantiateStreaming(fetch('${src}'), go.importObject).then(___result => {
@@ -37,7 +38,6 @@ const runWasmCode = (js?: string, src?: string) =>
     ${runJS(js || '')}
   }).catch(e => {
     console.error("Failed to load WebAssembly file for project. Try recompiling your project. Running JS only.");
-
     ${runJS(js || '')}
   });
 `
@@ -51,11 +51,13 @@ export const iframeContent = ({
   css,
   js,
   wasmPath,
+  nonce,
 }: {
   html: string;
   css?: string;
   js?: string;
   wasmPath?: string;
+  nonce?: string;
 }) => `
   <!DOCTYPE html>
   <html lang="en">
@@ -68,6 +70,9 @@ export const iframeContent = ({
       </style>
       <script src="/wasm_exec_tiny.js"></script>
       <script type="module" defer data-testid="preview-script">
+        (() => {
+          const __nonce = '${nonce}';
+        })()
         ${consoleReassign}
         ${runWasmCode(js, wasmPath)}
       </script>
