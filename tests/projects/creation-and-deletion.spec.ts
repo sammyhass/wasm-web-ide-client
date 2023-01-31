@@ -6,6 +6,7 @@ import {
   createRandomProjectName,
   NewProjectPage,
 } from '../util/pom/NewProjectPage';
+import { ProjectEditorPage } from '../util/pom/ProjectEditorPage';
 import { ProjectsPage } from '../util/pom/ProjectsPage';
 
 test.beforeEach(async ({ page }) => {
@@ -62,9 +63,20 @@ test('project creation and deletion', async ({ page }) => {
     expect(await navbar.title.innerText()).toContain(projectName);
   });
 
-  // TODO: implement delete project test
-  // await test.step('can delete project', async () => {
-  // });
+  await test.step('can delete project', async () => {
+    const projectEditorPage = new ProjectEditorPage(page);
+
+    await projectEditorPage.settingsButton.click();
+    await projectEditorPage.settingsModal.deleteProject();
+
+    await page.waitForURL(getURL('/projects'));
+    await page.waitForLoadState('networkidle');
+    expect(
+      await projectsPage.projectCards
+        .getByTestId('project-title')
+        .allInnerTexts()
+    ).not.toContain(projectName);
+  });
 });
 
 async function waitForProjectPage(page: Page, title: string) {
