@@ -30,6 +30,7 @@ function ProjectCard({ id, name, created_at }: ProjectT) {
     <Link
       href={`/projects/${id}`}
       className="p-10 rounded-lg bg-base-100 cursor-pointer border hover:bg-base-200 shadow-lg transition-all duration-200"
+      data-testid="project-card"
     >
       <h1 className="text-2xl font-bold">{name}</h1>
       <p className="text-base-content text-opacity-50">
@@ -45,6 +46,7 @@ function NewProjectCard() {
       href={'/projects/new'}
       passHref
       className="rounded-lg bg-base-100 cursor-pointer border hover:bg-base-200 shadow-lg transition-all duration-200 flex flex-col items-center justify-center group h-60"
+      data-testid="new-project-button"
       tabIndex={0}
     >
       <PlusIcon className="h-10 w-10" />

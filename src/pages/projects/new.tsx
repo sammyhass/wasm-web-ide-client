@@ -56,9 +56,14 @@ export default function NewProjectPage() {
               id="name"
               required
               name="name"
+              data-testid="project-name-input"
             />
           </div>
-          <button className={`btn btn-primary ${loading ? 'loading' : ''}`}>
+          <button
+            className={`btn btn-primary ${loading ? 'loading' : ''}`}
+            data-testid="create-project-button"
+            type="submit"
+          >
             Create Project
           </button>
         </form>
