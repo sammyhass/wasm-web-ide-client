@@ -21,4 +21,4 @@ export class NewProjectPage {
 }
 
 export const createRandomProjectName = (): string =>
-  faker.commerce.productName();
+  `${faker.commerce.productName()}_${faker.random.numeric(3)}`;

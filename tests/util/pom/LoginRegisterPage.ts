@@ -1,6 +1,7 @@
 import { LoginInputT } from '@/lib/api/services/auth';
 import { faker } from '@faker-js/faker';
 import { Locator, Page } from '@playwright/test';
+import { getTestUser, getURL } from '..';
 
 export class LoginRegisterPage {
   readonly page: Page;
@@ -42,3 +43,17 @@ export const createRandomLoginInput = (): LoginInputT => ({
   email: faker.internet.email(),
   password: faker.internet.password(18),
 });
+
+// Login helper function used to setup tests
+export const loginWithTestUser = async (page: Page) => {
+  await page.goto('/login');
+
+  const pom = new LoginRegisterPage(page);
+
+  const testUser = getTestUser();
+
+  await pom.login(testUser.email, testUser.password);
+
+  await page.waitForURL(getURL('/projects'));
+  await page.waitForLoadState('networkidle');
+};

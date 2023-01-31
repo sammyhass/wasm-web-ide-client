@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 
-class SettingsModal {
+export class SettingsModal {
   readonly modal: Locator;
   readonly closeButton: Locator;
 
@@ -22,22 +22,5 @@ class SettingsModal {
   async deleteProject() {
     await this.deleteButton.click();
     await this.confirmDeleteButton.click();
-  }
-}
-
-export class ProjectEditorPage {
-  readonly page: Page;
-
-  readonly settingsModal: SettingsModal;
-  readonly settingsButton: Locator;
-
-  constructor(page: Page) {
-    this.page = page;
-
-    this.settingsModal = new SettingsModal(page);
-
-    this.settingsButton = page.locator(
-      '[data-testid="project-settings-button"]'
-    );
   }
 }
