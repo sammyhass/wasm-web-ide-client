@@ -15,9 +15,9 @@ export default function NewProjectPage() {
   const client = useQueryClient();
 
   const { mutate } = useMutation(['createProject'], createProject, {
-    onSuccess: () => {
+    onSuccess: d => {
       client.invalidateQueries(['projects']);
-      router.push('/projects');
+      router.push(`/projects/${d.id}`);
     },
     onError: err => {
       setError(err as ApiErrorResponse);
