@@ -1,9 +1,12 @@
 import test, { expect, Page } from '@playwright/test';
-import { LoginRegisterPage } from './pom/LoginRegisterPage';
-import { Navbar } from './pom/Navbar';
-import { createRandomProjectName, NewProjectPage } from './pom/NewProjectPage';
-import { ProjectsPage } from './pom/ProjectsPage';
-import { getTestUser, getURL } from './util';
+import { getTestUser, getURL } from '../util';
+import { LoginRegisterPage } from '../util/pom/LoginRegisterPage';
+import { Navbar } from '../util/pom/Navbar';
+import {
+  createRandomProjectName,
+  NewProjectPage,
+} from '../util/pom/NewProjectPage';
+import { ProjectsPage } from '../util/pom/ProjectsPage';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/login');
