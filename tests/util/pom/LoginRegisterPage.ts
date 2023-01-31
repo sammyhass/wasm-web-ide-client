@@ -11,16 +11,17 @@ export class LoginRegisterPage {
   readonly submitButton: Locator;
   readonly toggleMode: Locator;
 
+  readonly error: Locator;
+
   constructor(page: Page) {
     this.page = page;
 
     this.emailInput = page.getByTestId('email-input');
     this.passwordInput = page.getByTestId('password-input');
-
     this.confirmPasswordInput = page.getByTestId('confirm-password-input');
     this.submitButton = page.locator('form').locator('button[type="submit"]');
-
     this.toggleMode = page.getByTestId('toggle-mode');
+    this.error = page.getByTestId('error');
   }
 
   async login(email: string, password: string) {
