@@ -1,7 +1,7 @@
 import Container from '@/layouts/Container';
 import ProtectedPage from '@/layouts/ProtectedPage';
 import { ApiErrorResponse } from '@/lib/api/axios';
-import { createProject } from '@/lib/api/services/projects';
+import { createProject, ProjectT } from '@/lib/api/services/projects';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -16,7 +16,17 @@ export default function NewProjectPage() {
 
   const { mutate } = useMutation(['createProject'], createProject, {
     onSuccess: d => {
-      client.invalidateQueries(['projects']);
+      client.setQueryData<ProjectT[]>(['projects'], prev => {
+        if (prev) {
+          return [...prev, d];
+        } else {
+          return [d];
+        }
+      });
+
+      client.setQueryData<ProjectT>(['project', d.id], d);
+      setLoading(false);
+
       router.push(`/projects/${d.id}`);
     },
     onError: err => {
@@ -34,8 +44,6 @@ export default function NewProjectPage() {
     const name = formData.get('name') as string;
 
     mutate({ name });
-
-    router.push('/projects');
   };
 
   return (
