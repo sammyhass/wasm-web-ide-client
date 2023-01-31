@@ -33,13 +33,7 @@ const runWasmCode = (js?: string, src?: string) =>
 
   let wasm = null;
 
-  const getWasm = async () => {
-    const response = await fetch('${src}');
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch WebAssembly file.');
-    }
-  }
 
 
   WebAssembly.instantiateStreaming(fetch('${src}').then(response => {
