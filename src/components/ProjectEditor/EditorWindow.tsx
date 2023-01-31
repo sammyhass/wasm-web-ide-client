@@ -54,6 +54,7 @@ function FileEditor({
   return (
     <MonacoEditor
       value={content}
+      data-testid="editor"
       options={{
         minimap: { enabled: true },
       }}

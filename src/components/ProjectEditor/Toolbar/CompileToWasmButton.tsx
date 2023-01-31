@@ -77,6 +77,7 @@ export default function CompileToWasmButton() {
 
   return (
     <button
+      data-testid="compile-project-button"
       className={`flex btn btn-circle  btn-success text-white ${
         isLoading ? 'loading' : ''
       }`}
