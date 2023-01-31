@@ -22,8 +22,6 @@ try {
 }
 `;
 
-const FAILED_FETCH = `Failed to fetch WebAssembly file. Running JS only instead. To fix this, try recompiling your project.`;
-
 // Sets up WebAssembly to be run in the browser along with any JS code to be
 // run after the WebAssembly is loaded
 const runWasmCode = (js?: string, src?: string) =>
@@ -33,22 +31,18 @@ const runWasmCode = (js?: string, src?: string) =>
 
   let wasm = null;
 
-  WebAssembly.instantiateStreaming(fetch('${src}').then(response => {
-    if (!response.ok) {
-      console.warn('${FAILED_FETCH}');
-      ${runJS(js || '')}
-    }
-    return response.arrayBuffer();
-  }), go.importObject).then(___result => {
+  WebAssembly.instantiateStreaming(fetch('${src}'), go.importObject).then(___result => {
     wasm = ___result.instance;
     go.run(wasm);
     ${runJS(js || '')}
   }).catch(e => {
-    console.error(e);
+    console.error("Failed to load WebAssembly file for project. Try recompiling your project. Running JS only.");
+
+    ${runJS(js || '')}
   });
 `
     : `
-    console.warn('${FAILED_FETCH}');
+    console.warn('No WebAssembly file found. Running JS only.');
     ${runJS(js || '')}
     `;
 
