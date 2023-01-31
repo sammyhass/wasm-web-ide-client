@@ -20,7 +20,7 @@ const userSchema = z.object({
   email: z.string().email(),
 });
 
-const loginSchema = z.object({
+export const loginSchema = z.object({
   email: z.string().min(5).email(),
   password: z.string().min(8),
 });
