@@ -14,9 +14,6 @@ test.beforeEach(async ({ page }) => {
   const loginPage = new LoginRegisterPage(page);
 
   const credentials = getTestUser();
-  if (!credentials.email || !credentials.password) {
-    throw new Error('Missing test user credentials');
-  }
 
   await loginPage.login(credentials.email, credentials.password);
   await page.waitForLoadState('networkidle');

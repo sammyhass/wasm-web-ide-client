@@ -12,10 +12,6 @@ test('can login', async ({ page }) => {
   await page.goto('/login');
   const pom = new LoginRegisterPage(page);
 
-  if (!testUser.email || !testUser.password) {
-    throw new Error('Missing test user credentials');
-  }
-
   await pom.login(testUser.email, testUser.password);
 
   await page.waitForLoadState('networkidle');
