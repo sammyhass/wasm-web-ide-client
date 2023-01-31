@@ -18,7 +18,7 @@ const runJS = (js: string) => `
 try {
   ${js}
 } catch (e) {
-  console.error(e);
+  console.error(e.message)
 }
 `;
 
@@ -37,8 +37,7 @@ const runWasmCode = (js?: string, src?: string) =>
     go.run(wasm);
     ${runJS(js || '')}
   }).catch(e => {
-    console.error("Failed to load WebAssembly file for project. Try recompiling your project. Running JS only.");
-    ${runJS(js || '')}
+    console.error(e)
   });
 `
     : `
