@@ -129,10 +129,12 @@ export default function ConsoleWindow() {
           <div
             className="h-28 max-h-44 min-h-12 overflow-y-auto py-2 px-2 pb-6"
             ref={messagesRef}
+            data-testid="console-messages"
           >
             {messages.map((m, i) => (
               <div
                 key={`${m.createdAt}-${i}-${m.level}`}
+                data-testid="console-message"
                 className={`font-mono ${consoleMessageClass(
                   m.level
                 )} break-normal hover:bg-base-200 py-1 max-w-full`}
