@@ -1,0 +1,49 @@
+import test, { expect } from '@playwright/test';
+import { LoginRegisterPage } from './pom/LoginRegisterPage';
+import { Navbar } from './pom/Navbar';
+import { createRandomProjectName, NewProjectPage } from './pom/NewProjectPage';
+import { ProjectsPage } from './pom/ProjectsPage';
+import { getTestUser, getURL } from './util';
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/login');
+
+  const loginPage = new LoginRegisterPage(page);
+
+  const credentials = getTestUser();
+  if (!credentials.email || !credentials.password) {
+    throw new Error('Missing test user credentials');
+  }
+
+  await loginPage.login(credentials.email, credentials.password);
+  await page.waitForLoadState('networkidle');
+  expect(page.url()).toBe(getURL('/projects'));
+});
+
+test('can create new project', async ({ page }) => {
+  const projectsPage = new ProjectsPage(page);
+  const projectName = createRandomProjectName();
+
+  await test.step('click new project button', async () => {
+    await projectsPage.newProjectButton.click();
+    await page.waitForURL(getURL('/projects/new'));
+  });
+
+  const newProjectPage = new NewProjectPage(page);
+  await test.step('create new project', async () => {
+    await newProjectPage.createProject(projectName);
+    await page.waitForLoadState('networkidle');
+  });
+
+  await test.step('expect redirect to project page with correct title in navbar', async () => {
+    const regex =
+      /\/projects\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
+
+    await page.waitForURL(url => regex.test(url.href));
+    await page.waitForLoadState('networkidle');
+
+    const navbar = new Navbar(page);
+
+    expect(await navbar.title.innerText()).toContain(projectName);
+  });
+});

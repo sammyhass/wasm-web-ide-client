@@ -7,11 +7,13 @@ export class Navbar {
   readonly loginButton: Locator;
   readonly logoutButton: Locator;
   readonly projectsButton: Locator;
+  readonly title: Locator;
 
   constructor(page: Page) {
     this.loginButton = page.getByTestId('login-button');
     this.logoutButton = page.getByTestId('logout-button');
     this.projectsButton = page.getByTestId('projects-button');
+    this.title = page.getByTestId('navbar-title');
   }
 
   async clickLoginButton() {

@@ -23,6 +23,7 @@ test('can login', async ({ page }) => {
 
   const nav = new Navbar(page);
   const isLoggedIn = await nav.isLoggedIn();
+
   expect(isLoggedIn).toBe(true);
 });
 
