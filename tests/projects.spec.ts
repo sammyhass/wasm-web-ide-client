@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }) => {
   expect(page.url()).toBe(getURL('/projects'));
 });
 
-test('can create new project', async ({ page }) => {
+test('project creation and deletion', async ({ page }) => {
   const projectsPage = new ProjectsPage(page);
   const projectName = createRandomProjectName();
 
