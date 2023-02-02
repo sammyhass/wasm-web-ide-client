@@ -13,6 +13,7 @@ export default async function globalSetup(cfg: FullConfig) {
 
   await loginWithTestUser(page);
 
+  // saving the auth state for the test user so we can reuse it.
   await page.context().storageState({ path: 'authedStorageState.json' });
 
   await browser.close();
