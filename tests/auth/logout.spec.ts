@@ -1,12 +1,15 @@
 import { expect, test } from '@playwright/test';
 import { getURL } from '../util';
-import { loginWithTestUser } from '../util/pom/LoginRegisterPage';
 import { Navbar } from '../util/pom/Navbar';
 
-test('can logout', async ({ page }) => {
-  await loginWithTestUser(page);
+test('can logout', async ({ browser }) => {
+  const page = await browser.newPage({
+    storageState: 'authedStorageState.json',
+  });
 
-  expect(page.url()).toBe(getURL('/projects'));
+  await page.goto(getURL('/projects'));
+
+  await page.waitForLoadState('networkidle');
 
   const nav = new Navbar(page);
 
