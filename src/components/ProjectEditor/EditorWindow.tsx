@@ -27,17 +27,22 @@ export default function EditorWindow() {
   return (
     <div className="w-full" data-testid="editor-window">
       {currentFile && (
-        <b className="font-mono flex gap-2 p-2 text-sm">
-          <LanguageIcon language={currentFile?.language} className="w-5 h-5" />
-          <span data-testid="selected-file">{selectedFile}</span>
-        </b>
+        <>
+          <b className="font-mono flex gap-2 p-2 text-sm">
+            <LanguageIcon
+              language={currentFile?.language}
+              className="w-5 h-5"
+            />
+            <span data-testid="selected-file">{selectedFile}</span>
+          </b>
+          <FileEditor
+            content={currentFile?.content}
+            name={currentFile?.name}
+            onChange={onCurrentFileChange}
+            language={currentFile?.language}
+          />
+        </>
       )}
-
-      <FileEditor
-        content={currentFile?.content}
-        onChange={onCurrentFileChange}
-        language={currentFile?.language}
-      />
     </div>
   );
 }
@@ -45,12 +50,9 @@ export default function EditorWindow() {
 function FileEditor({
   content,
   onChange,
+  name,
   language,
-}: {
-  language?: FileT['language'];
-  content?: string;
-  onChange: (value: string) => void;
-}) {
+}: FileT & { onChange: (value: string) => void }) {
   return (
     <MonacoEditor
       value={content}
@@ -58,6 +60,7 @@ function FileEditor({
         minimap: { enabled: true },
       }}
       height={'80vh'}
+      path={name}
       width={'100%'}
       language={monacoLanguages?.[language ?? 'html']}
       theme="vs-dark"
