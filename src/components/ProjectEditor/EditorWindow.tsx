@@ -12,7 +12,6 @@ const monacoLanguages: Record<FileT['language'], string> = {
 
   // Uneditable Files
   wasm: 'txt',
-  mod: 'txt',
 };
 
 export default function EditorWindow() {

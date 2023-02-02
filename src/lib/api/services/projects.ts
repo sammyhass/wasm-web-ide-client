@@ -7,8 +7,7 @@ const languageSchema = z.union([
   z.literal('css'),
   z.literal('go'),
   z.literal('js'),
-  z.literal('mod'),
-  z.literal('wasm')
+  z.literal('wasm'),
 ]);
 
 const fileSchema = z.object({
@@ -121,27 +120,14 @@ export const compileProject = async (id: string): Promise<string> => {
   return z.string().parse(data);
 };
 
+export const getProjectWatUrl = async (id: string): Promise<string> => {
+  parseId(id);
 
-// export const previewProject = async (id: string): Promise<string> => {
-//   parseId(id);
-//
-//   const { status, data } = await axiosClient.get<string>(
-//     `/projects/${id}/preview`
-//   );
-//
-//   if (status !== 200) {
-//     return Promise.reject(data);
-//   }
-//
-//   const html = z.string().parse(data);
-//
-//   // create a new blob of the data
-//   const blob = new Blob([html], { type: 'text/html' });
-//
-//   // create a blobURL, such that pointing to it will show the html
-//   const blobURL = URL.createObjectURL(blob);
-//
-//   // return the blobURL
-//   return blobURL;
-//
-// }
+  const { status, data } = await axiosClient.get<string>(`/projects/${id}/wat`);
+
+  if (status !== 200) {
+    return Promise.reject(data);
+  }
+
+  return z.string().parse(data);
+};

@@ -6,7 +6,6 @@ const langSort: Record<FileT['language'], number> = {
   js: 1,
   css: 2,
   go: 3,
-  mod: 4,
   wasm: 5,
 };
 
@@ -19,6 +18,7 @@ type ProjectEditorState = {
 
   setSelectedFile: (id: string) => void;
   onCurrentFileChange: (value: string) => void;
+
   setFiles: (files: FileT[]) => void;
 
   initProject: (project: ProjectT) => void;
