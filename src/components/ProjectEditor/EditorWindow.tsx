@@ -16,7 +16,8 @@ const monacoLanguages: Record<FileT['language'], string> = {
 };
 
 export default function EditorWindow() {
-  const { onCurrentFileChange: onFileChange, selectedFile } = useEditor();
+  const onCurrentFileChange = useEditor(s => s.onCurrentFileChange);
+  const selectedFile = useEditor(s => s.selectedFile);
 
   const files = useEditor(
     state => state.files,
@@ -35,7 +36,7 @@ export default function EditorWindow() {
 
       <FileEditor
         content={currentFile?.content}
-        onChange={onFileChange}
+        onChange={onCurrentFileChange}
         language={currentFile?.language}
       />
     </div>

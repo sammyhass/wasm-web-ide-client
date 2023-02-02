@@ -65,13 +65,16 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
     }),
   onCurrentFileChange: value => {
     set(state => {
+      let didChangeFile = false;
       const files = state.files.map(f => {
         if (f.name === state.selectedFile) {
+          didChangeFile = f.content !== value;
           return { ...f, content: value };
         }
         return f;
       });
-      return { files, dirty: true };
+
+      return { files, dirty: didChangeFile ? true : state.dirty };
     });
   },
 }));
