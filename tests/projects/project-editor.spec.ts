@@ -1,6 +1,5 @@
-import { expect, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 import { getURL } from '../util';
-import { loginWithTestUser } from '../util/pom/LoginRegisterPage';
 import { Navbar } from '../util/pom/Navbar';
 import {
   createRandomProjectName,
@@ -22,142 +21,150 @@ const ERROR_MESSAGE = 'Uncaught SyntaxError: Unexpected identifier';
 const JS_ERROR = `throw new Error('${ERROR_MESSAGE}');`;
 const NEW_JS = `console.log('${CONSOLE_MESSAGE}');`;
 
-test('project editor and previews', async ({ page, browserName }) => {
-  test.slow();
+let page: Page;
+let browserName: string;
 
-  await test.step('login', async () => {
-    await loginWithTestUser(page);
+let projectsPagePom: ProjectsPage;
+let projectEditorPom: ProjectEditorPage;
+
+let newProjectName: string;
+
+test.describe.configure({ mode: 'serial' });
+test.beforeAll(async ({ browser, browserName: _browserName }) => {
+  page = await browser.newPage({
+    storageState: 'authedStorageState.json',
   });
 
-  const projectsPagePom = new ProjectsPage(page);
-  const name = createRandomProjectName();
+  await page.goto('/projects');
 
-  await test.step('create a new project', async () => {
-    await projectsPagePom.newProjectButton.click();
+  newProjectName = createRandomProjectName();
+  projectsPagePom = new ProjectsPage(page);
 
-    await page.waitForURL(getURL('/projects/new'));
+  browserName = _browserName;
+});
 
-    expect(page.url()).toBe(getURL('/projects/new'));
+test('create a new project', async () => {
+  await projectsPagePom.newProjectButton.click();
 
-    const newProjectPagePom = new NewProjectPage(page);
+  await page.waitForURL(getURL('/projects/new'));
 
-    await newProjectPagePom.createProject(name);
+  expect(page.url()).toBe(getURL('/projects/new'));
 
-    await page.waitForLoadState('networkidle');
+  const newProjectPagePom = new NewProjectPage(page);
 
-    await waitForProjectPage(page, name);
+  await newProjectPagePom.createProject(newProjectName);
 
-    const navbar = new Navbar(page);
-    const title = await navbar.title.innerText();
-    expect(title).toContain(name);
-  });
+  await page.waitForLoadState('networkidle');
 
-  const projectEditorPagePom = new ProjectEditorPage(page);
-  await test.step('edit the project HTML', async () => {
-    await projectEditorPagePom.selectFile('index.html');
+  await waitForProjectPage(page, newProjectName);
 
-    expect(await projectEditorPagePom.selectedFile.innerText()).toContain(
-      'index.html'
-    );
+  const navbar = new Navbar(page);
+  const title = await navbar.title.innerText();
+  expect(title).toContain(newProjectName);
 
-    await projectEditorPagePom.clearEditor(browserName);
+  projectEditorPom = new ProjectEditorPage(page);
+});
 
-    expect(await projectEditorPagePom.getEditorValue()).toBe('');
+test('edit the project HTML', async () => {
+  await projectEditorPom.selectFile('index.html');
 
-    const newContent = NEW_HTML;
+  expect(await projectEditorPom.selectedFile.innerText()).toContain(
+    'index.html'
+  );
 
-    await projectEditorPagePom.editor.type(newContent);
+  await projectEditorPom.clearEditor(browserName);
 
-    expect(await projectEditorPagePom.getEditorValue()).toBe(newContent);
-  });
+  expect(await projectEditorPom.getEditorValue()).toBe('');
 
-  await test.step('edit the project CSS', async () => {
-    await projectEditorPagePom.selectFile('styles.css');
+  const newContent = NEW_HTML;
 
-    expect(await projectEditorPagePom.selectedFile.innerText()).toContain(
-      'styles.css'
-    );
+  await projectEditorPom.editor.type(newContent);
 
-    await projectEditorPagePom.clearEditor(browserName);
+  expect(await projectEditorPom.getEditorValue()).toBe(newContent);
+});
 
-    expect(await projectEditorPagePom.getEditorValue()).toBe('');
+test('edit the project CSS', async () => {
+  await projectEditorPom.selectFile('styles.css');
 
-    const newContent = NEW_CSS;
+  expect(await projectEditorPom.selectedFile.innerText()).toContain(
+    'styles.css'
+  );
 
-    await projectEditorPagePom.editor.type(newContent);
+  await projectEditorPom.clearEditor(browserName);
 
-    expect(await projectEditorPagePom.getEditorValue()).toBe(newContent);
-  });
+  expect(await projectEditorPom.getEditorValue()).toBe('');
 
-  await test.step('edit the project JavaScript', async () => {
-    await projectEditorPagePom.selectFile('app.js');
+  const newContent = NEW_CSS;
 
-    expect(await projectEditorPagePom.selectedFile.innerText()).toContain(
-      'app.js'
-    );
+  await projectEditorPom.editor.type(newContent);
 
-    await projectEditorPagePom.clearEditor(browserName);
+  expect(await projectEditorPom.getEditorValue()).toBe(newContent);
+});
 
-    expect(await projectEditorPagePom.getEditorValue()).toBe('');
+test('edit the project JavaScript', async () => {
+  await projectEditorPom.selectFile('app.js');
 
-    const newContent = NEW_JS;
+  expect(await projectEditorPom.selectedFile.innerText()).toContain('app.js');
 
-    await projectEditorPagePom.editor.type(newContent);
+  await projectEditorPom.clearEditor(browserName);
 
-    expect(await projectEditorPagePom.getEditorValue()).toBe(newContent);
-  });
+  expect(await projectEditorPom.getEditorValue()).toBe('');
 
-  await test.step('save the project and verify the preview', async () => {
-    await projectEditorPagePom.save();
+  const newContent = NEW_JS;
 
-    await projectEditorPagePom.previewWindow.previewWindow
-      .locator(`text=${H1_CONTENT}`)
-      .waitFor();
+  await projectEditorPom.editor.type(newContent);
 
-    const body = await projectEditorPagePom.previewWindow.getBody();
+  expect(await projectEditorPom.getEditorValue()).toBe(newContent);
+});
 
-    expect(body).toContain(NEW_HTML);
+test('save the project and verify the preview', async () => {
+  await projectEditorPom.save();
 
-    const css = await projectEditorPagePom.previewWindow.getCSS();
+  await projectEditorPom.previewWindow.previewWindow
+    .locator(`text=${H1_CONTENT}`)
+    .waitFor();
 
-    expect(css).toContain(NEW_CSS);
+  const body = await projectEditorPom.previewWindow.getBody();
 
-    const js = await projectEditorPagePom.previewWindow.getJS();
+  expect(body).toContain(NEW_HTML);
 
-    expect(js).toContain(NEW_JS);
-  });
+  const css = await projectEditorPom.previewWindow.getCSS();
 
-  await test.step('check the console for expected JS output', async () => {
-    const consoleMessages = await (
-      await projectEditorPagePom.editorConsole.getConsoleMessages()
-    ).join(', ');
+  expect(css).toContain(NEW_CSS);
 
-    expect(consoleMessages).toContain(CONSOLE_MESSAGE);
-  });
+  const js = await projectEditorPom.previewWindow.getJS();
 
-  await test.step('add a JS error and ensure it appears in the console', async () => {
-    await projectEditorPagePom.selectFile('app.js');
+  expect(js).toContain(NEW_JS);
+});
 
-    expect(await projectEditorPagePom.selectedFile.innerText()).toContain(
-      'app.js'
-    );
+test('check the console for expected JS output', async () => {
+  const consoleMessages = await (
+    await projectEditorPom.editorConsole.getConsoleMessages()
+  ).join(', ');
 
-    await projectEditorPagePom.clearEditor(browserName);
+  expect(consoleMessages).toContain(CONSOLE_MESSAGE);
+});
 
-    expect(await projectEditorPagePom.getEditorValue()).toBe('');
+test('add a JS error and ensure it appears in the console', async () => {
+  await projectEditorPom.selectFile('app.js');
 
-    const newContent = JS_ERROR;
+  expect(await projectEditorPom.selectedFile.innerText()).toContain('app.js');
 
-    await projectEditorPagePom.editor.type(newContent);
+  await projectEditorPom.clearEditor(browserName);
 
-    expect(await projectEditorPagePom.getEditorValue()).toBe(newContent);
+  expect(await projectEditorPom.getEditorValue()).toBe('');
 
-    await projectEditorPagePom.save();
+  const newContent = JS_ERROR;
 
-    const consoleMessages = await (
-      await projectEditorPagePom.editorConsole.getConsoleMessages()
-    ).join(', ');
+  await projectEditorPom.editor.type(newContent);
 
-    expect(consoleMessages).toContain(ERROR_MESSAGE);
-  });
+  expect(await projectEditorPom.getEditorValue()).toBe(newContent);
+
+  await projectEditorPom.save();
+
+  const consoleMessages = await (
+    await projectEditorPom.editorConsole.getConsoleMessages()
+  ).join(', ');
+
+  expect(consoleMessages).toContain(ERROR_MESSAGE);
 });

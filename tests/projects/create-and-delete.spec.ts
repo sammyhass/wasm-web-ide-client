@@ -1,6 +1,5 @@
-import { expect, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 import { getURL } from '../util';
-import { loginWithTestUser } from '../util/pom/LoginRegisterPage';
 import { Navbar } from '../util/pom/Navbar';
 import {
   createRandomProjectName,
@@ -12,68 +11,81 @@ import {
 } from '../util/pom/ProjectEditorPage';
 import { ProjectsPage } from '../util/pom/ProjectsPage';
 
-test('create and delete a project', async ({ page }) => {
-  await loginWithTestUser(page);
+let page: Page;
+let newProjectName: string;
+let projectsPagePom: ProjectsPage;
 
-  const projectPom = new ProjectsPage(page);
-  const name = createRandomProjectName();
-
-  await test.step('create a new project', async () => {
-    await projectPom.newProjectButton.click();
-
-    await page.waitForURL(getURL('/projects/new'));
-    expect(page.url()).toBe(getURL('/projects/new'));
-
-    const newProjectPagePom = new NewProjectPage(page);
-
-    await newProjectPagePom.createProject(name);
-
-    await page.waitForLoadState('networkidle');
-
-    await waitForProjectPage(page, name);
-
-    const navbar = new Navbar(page);
-
-    expect(await navbar.title.innerText()).toContain(name);
+test.describe.configure({ mode: 'serial' });
+test.beforeAll(async ({ browser }) => {
+  page = await browser.newPage({
+    storageState: 'authedStorageState.json',
   });
 
-  await test.step('navigate to projects page and verify project exists', async () => {
-    await page.goto('/projects');
+  await page.goto('/projects');
 
-    await page.waitForLoadState('networkidle');
+  newProjectName = createRandomProjectName();
+  projectsPagePom = new ProjectsPage(page);
+});
 
-    expect(
-      await projectPom.projectCards.getByTestId('project-title').allInnerTexts()
-    ).toContain(name);
-  });
+test('create a project', async () => {
+  await projectsPagePom.newProjectButton.click();
 
-  await test.step('delete the project', async () => {
-    await projectPom.projectCards
+  await page.waitForURL(getURL('/projects/new'));
+  expect(page.url()).toBe(getURL('/projects/new'));
+
+  const newProjectPagePom = new NewProjectPage(page);
+
+  await newProjectPagePom.createProject(newProjectName);
+
+  await page.waitForLoadState('networkidle');
+
+  await waitForProjectPage(page, newProjectName);
+
+  const navbar = new Navbar(page);
+
+  expect(await navbar.title.innerText()).toContain(newProjectName);
+});
+
+test('verify project exists', async () => {
+  await page.goto('/projects');
+
+  await page.waitForLoadState('networkidle');
+
+  expect(
+    await projectsPagePom.projectCards
       .getByTestId('project-title')
-      .getByText(name)
-      .click();
+      .allInnerTexts()
+  ).toContain(newProjectName);
+});
 
-    await waitForProjectPage(page, name);
+test('delete the project', async () => {
+  await projectsPagePom.projectCards
+    .getByTestId('project-title')
+    .getByText(newProjectName)
+    .click();
 
-    const projectEditorPagePom = new ProjectEditorPage(page);
+  await waitForProjectPage(page, newProjectName);
 
-    await projectEditorPagePom.settingsButton.click();
+  const projectEditorPagePom = new ProjectEditorPage(page);
 
-    await projectEditorPagePom.settingsModal.deleteProject();
+  await projectEditorPagePom.settingsButton.click();
 
-    await page.waitForURL(getURL('/projects'));
+  await projectEditorPagePom.settingsModal.deleteProject();
 
-    await page.waitForLoadState('networkidle');
+  await page.waitForURL(getURL('/projects'));
 
-    await projectPom.projectCards
+  await page.waitForLoadState('networkidle');
+
+  await projectsPagePom.projectCards
+    .getByTestId('project-title')
+    .getByText(newProjectName)
+    .waitFor({
+      state: 'hidden',
+    });
+
+  expect(
+    await projectsPagePom.projectCards
       .getByTestId('project-title')
-      .getByText(name)
-      .waitFor({
-        state: 'hidden',
-      });
-
-    expect(
-      await projectPom.projectCards.getByTestId('project-title').allInnerTexts()
-    ).not.toContain(name);
-  });
+      .allInnerTexts()
+  ).not.toContain(newProjectName);
 });
