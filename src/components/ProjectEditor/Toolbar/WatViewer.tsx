@@ -50,7 +50,7 @@ function WatViewer({ projectId }: { projectId: string }) {
     error,
   } = useQuery<string>(
     ['wat', projectId],
-    () => fetch(url!).then(r => r.text()),
+    () => fetch(url as string).then(r => r.text()),
     { enabled: !!url, cacheTime: 0 }
   );
 
