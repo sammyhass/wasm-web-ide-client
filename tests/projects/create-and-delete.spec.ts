@@ -27,7 +27,7 @@ test.beforeAll(async ({ browser }) => {
   projectsPagePom = new ProjectsPage(page);
 });
 
-test('create a project', async () => {
+test('can create a project', async () => {
   await projectsPagePom.newProjectButton.click();
 
   await page.waitForURL(getURL('/projects/new'));
@@ -46,7 +46,7 @@ test('create a project', async () => {
   expect(await navbar.title.innerText()).toContain(newProjectName);
 });
 
-test('verify project exists', async () => {
+test('can see new project exists on project page', async () => {
   await page.goto('/projects');
 
   await page.waitForLoadState('networkidle');
@@ -58,7 +58,7 @@ test('verify project exists', async () => {
   ).toContain(newProjectName);
 });
 
-test('delete the project', async () => {
+test('can delete the project', async () => {
   await projectsPagePom.projectCards
     .getByTestId('project-title')
     .getByText(newProjectName)

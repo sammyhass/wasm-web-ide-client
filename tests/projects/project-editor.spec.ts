@@ -43,7 +43,7 @@ test.beforeAll(async ({ browser, browserName: _browserName }) => {
   browserName = _browserName;
 });
 
-test('create a new project', async () => {
+test('can create a new project', async () => {
   await projectsPagePom.newProjectButton.click();
 
   await page.waitForURL(getURL('/projects/new'));
@@ -65,7 +65,7 @@ test('create a new project', async () => {
   projectEditorPom = new ProjectEditorPage(page);
 });
 
-test('edit the project HTML', async () => {
+test('can edit the project HTML', async () => {
   await projectEditorPom.selectFile('index.html');
 
   expect(await projectEditorPom.selectedFile.innerText()).toContain(
@@ -83,7 +83,7 @@ test('edit the project HTML', async () => {
   expect(await projectEditorPom.getEditorValue()).toBe(newContent);
 });
 
-test('edit the project CSS', async () => {
+test('can edit the project CSS', async () => {
   await projectEditorPom.selectFile('styles.css');
 
   expect(await projectEditorPom.selectedFile.innerText()).toContain(
@@ -101,7 +101,7 @@ test('edit the project CSS', async () => {
   expect(await projectEditorPom.getEditorValue()).toBe(newContent);
 });
 
-test('edit the project JavaScript', async () => {
+test('can edit the project JavaScript', async () => {
   await projectEditorPom.selectFile('app.js');
 
   expect(await projectEditorPom.selectedFile.innerText()).toContain('app.js');
@@ -117,7 +117,7 @@ test('edit the project JavaScript', async () => {
   expect(await projectEditorPom.getEditorValue()).toBe(newContent);
 });
 
-test('save the project and verify the preview', async () => {
+test('can save the project and see changes in preview window', async () => {
   await projectEditorPom.save();
 
   await projectEditorPom.previewWindow.previewWindow
@@ -137,7 +137,7 @@ test('save the project and verify the preview', async () => {
   expect(js).toContain(NEW_JS);
 });
 
-test('check the console for expected JS output', async () => {
+test('can see expected JS output in the console', async () => {
   const consoleMessages = await (
     await projectEditorPom.editorConsole.getConsoleMessages()
   ).join(', ');
@@ -145,7 +145,7 @@ test('check the console for expected JS output', async () => {
   expect(consoleMessages).toContain(CONSOLE_MESSAGE);
 });
 
-test('add a JS error and ensure it appears in the console', async () => {
+test('can view JS error in the console', async () => {
   await projectEditorPom.selectFile('app.js');
 
   expect(await projectEditorPom.selectedFile.innerText()).toContain('app.js');
