@@ -10,7 +10,6 @@ const monacoLanguages: Record<FileT['language'], string> = {
   js: 'javascript',
   css: 'css',
 
-  // Uneditable Files
   wasm: 'txt',
 };
 

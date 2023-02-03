@@ -8,8 +8,8 @@ export default function Toolbar() {
     <div className="flex items-center gap-2 pl-2 mx-1">
       <CompileToWasmButton />
       <SaveButton />
-      <SettingsButton />
       <WatViewerWrapper />
+      <SettingsButton />
     </div>
   );
 }
@@ -17,6 +17,7 @@ export default function Toolbar() {
 export function ToolbarButton({
   icon,
   title,
+  tooltip,
   loading,
   disabled,
   className,
@@ -25,24 +26,27 @@ export function ToolbarButton({
 }: {
   icon: React.ReactNode;
   title?: string;
+  tooltip?: string;
   loading?: boolean;
   disabled?: boolean;
   className?: string;
   onClick: () => void;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button
-      className={`btn btn-sm normal-case gap-2 ${loading ? 'loading' : ''} ${
-        disabled ? 'btn-disabled cursor-none' : ''
-      } ${!!!title ? 'btn-square' : 'min-w-[10em] '} ${
-        className ? className : ''
-      }`}
-      title={title}
-      onClick={onClick}
-      {...props}
-    >
-      {icon}
-      {title}
-    </button>
+    <div className={tooltip ? 'tooltip' : 'relative'} data-tip={tooltip}>
+      <button
+        className={`btn btn-sm gap-2 normal-case ${loading ? 'loading' : ''} ${
+          disabled ? 'btn-disabled cursor-none' : ''
+        } ${!!!title ? 'btn-square' : 'min-w-[10em] '} ${
+          className ? className : ''
+        }`}
+        title={title}
+        onClick={onClick}
+        {...props}
+      >
+        {icon}
+        {title}
+      </button>
+    </div>
   );
 }
