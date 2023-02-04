@@ -41,7 +41,7 @@ const config: PlaywrightTestConfig = {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
 
-    video: 'retain-on-failure',
+    video: 'on',
 
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.TEST_URL,
@@ -49,7 +49,7 @@ const config: PlaywrightTestConfig = {
     screenshot: 'on',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'on',
   },
 
   /* Configure projects for major browsers */
