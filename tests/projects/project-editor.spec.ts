@@ -168,3 +168,11 @@ test('can view JS error in the console', async () => {
 
   expect(consoleMessages).toContain(ERROR_MESSAGE);
 });
+
+test('can delete project', async () => {
+  await projectEditorPom.settingsButton.click();
+
+  await projectEditorPom.settingsModal.deleteProject();
+
+  await page.waitForLoadState('networkidle');
+});
