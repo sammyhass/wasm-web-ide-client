@@ -5,14 +5,14 @@ import Link from 'next/link';
 export default function HomePage() {
   const { user } = useMe();
   return (
-    <div className="hero min-h-[80vh] ">
-      <div className="hero-content bg-primary-content shadow-lg rounded-md p-20">
-        <div className="flex flex-col items-center gap-10">
-          <h1 className=" text-6xl gap-2 flex items-end font-mono p-2">
-            <WasmIcon className="h-28 min-w-[100px]" />
+    <div className="hero md:min-h-[80vh] mt-5">
+      <div className="hero-content bg-primary-content shadow-lg rounded-md sm:p-5 md:p-20">
+        <div className="flex flex-col items-center gap-2 md:gap-10">
+          <h1 className="text-2xl md:text-6xl gap-2 flex items-end font-mono p-2">
+            <WasmIcon className="h-16 w-16 md:h-28 md:w-28" />
             <span>IDE</span>
           </h1>
-          <h1 className="text-4xl font-bold text-center  text-info-content ">
+          <h1 className="text-xl md:text-4xl font-bold text-center  text-info-content ">
             Build crazy fast websites with{' '}
             <a
               className="text-primary hover:text-primary-focus transition-colors"
@@ -26,7 +26,7 @@ export default function HomePage() {
             from the comfort of your browser.
           </h1>
           <Link href={user ? '/projects' : '/login'} passHref>
-            <button className="btn btn-secondary btn-xl btn-wide">
+            <button className="btn btn-secondary md:btn-xl btn-wide">
               Get Started
             </button>
           </Link>
