@@ -41,8 +41,6 @@ const config: PlaywrightTestConfig = {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
 
-    video: 'on',
-
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.TEST_URL,
 
