@@ -14,6 +14,7 @@ const monacoLanguages: Record<FileT['language'], string> = {
 };
 
 export default function EditorWindow() {
+  const projectId = useEditor(s => s.projectId);
   const onCurrentFileChange = useEditor(s => s.onCurrentFileChange);
   const selectedFile = useEditor(s => s.selectedFile);
 
@@ -35,6 +36,7 @@ export default function EditorWindow() {
             <span data-testid="selected-file">{selectedFile}</span>
           </b>
           <FileEditor
+            projectId={projectId}
             content={currentFile?.content}
             name={currentFile?.name}
             onChange={onCurrentFileChange}
@@ -48,10 +50,14 @@ export default function EditorWindow() {
 
 function FileEditor({
   content,
+  projectId,
   onChange,
   name,
   language,
-}: FileT & { onChange: (value: string) => void }) {
+}: FileT & {
+  onChange: (value: string) => void;
+  projectId: string;
+}) {
   return (
     <MonacoEditor
       value={content}
@@ -59,7 +65,7 @@ function FileEditor({
         minimap: { enabled: true },
       }}
       height={'80vh'}
-      path={name}
+      path={`/${projectId}/${name}`}
       width={'100%'}
       language={monacoLanguages?.[language ?? 'html']}
       theme="vs-dark"

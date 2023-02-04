@@ -24,7 +24,7 @@ type ProjectEditorState = {
   initProject: (project: ProjectT) => void;
   clear: () => void;
 
-  projectId: string | undefined;
+  projectId: string;
 
   showSettings: boolean;
   setShowSettings: (show: boolean) => void;
@@ -34,7 +34,7 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
   dirty: false,
   setDirty: dirty => set({ dirty }),
   files: [],
-  projectId: undefined,
+  projectId: '',
   setFiles: files => set({ files }),
   selectedFile: undefined,
   setShowSettings: showSettings => set({ showSettings }),
