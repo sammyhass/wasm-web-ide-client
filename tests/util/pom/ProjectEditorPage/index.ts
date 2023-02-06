@@ -76,8 +76,7 @@ export class ProjectEditorPage {
   async save() {
     await this.saveButton.click();
 
-    await this.saveButton.getByText('Saving...').waitFor();
-    await this.saveButton.getByText('Save').waitFor();
+    await this.page.waitForLoadState('networkidle');
 
     await this.previewWindow.previewBody.waitFor();
   }
