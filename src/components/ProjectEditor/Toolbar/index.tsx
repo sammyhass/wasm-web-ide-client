@@ -1,16 +1,17 @@
 import CompileToWasmButton from '@/components/ProjectEditor/Toolbar/CompileToWasmButton';
+import LoadingSpinner from '../../icons/Spinner';
 import { SaveButton } from './SaveButton';
 import SettingsButton from './SettingsButton';
 import WatViewerWrapper from './WatViewer';
 
 export default function Toolbar() {
   return (
-    <div className="flex items-center gap-2 pl-2 mx-1">
+    <ul className="menu bg-base-300 menu-horizontal w-full">
       <CompileToWasmButton />
       <SaveButton />
       <WatViewerWrapper />
       <SettingsButton />
-    </div>
+    </ul>
   );
 }
 
@@ -33,20 +34,24 @@ export function ToolbarButton({
   onClick: () => void;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <div className={tooltip ? 'tooltip' : 'relative'} data-tip={tooltip}>
+    <li
+      className={`${tooltip ? 'tooltip tolltip- z-10' : 'relative'} ${
+        disabled ? 'disabled' : ''
+      }`}
+      data-tip={tooltip}
+    >
       <button
-        className={`btn btn-sm gap-2 normal-case ${loading ? 'loading' : ''} ${
-          disabled ? 'btn-disabled cursor-none' : ''
-        } ${!!!title ? 'btn-square' : 'min-w-[10em] '} ${
+        className={`flex items-center justify-center gap-2 normal-case  ${
           className ? className : ''
         }`}
+        disabled={disabled}
         title={title}
         onClick={onClick}
         {...props}
       >
-        {icon}
+        {loading ? <LoadingSpinner className="h-5 w-5" /> : icon}
         {title}
       </button>
-    </div>
+    </li>
   );
 }

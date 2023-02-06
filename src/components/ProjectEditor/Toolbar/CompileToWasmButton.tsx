@@ -2,9 +2,10 @@ import { useToast } from '@/components/Toast';
 import { useEditor } from '@/hooks/useEditor';
 import { ApiErrorResponse } from '@/lib/api/axios';
 import { compileProject, ProjectT } from '@/lib/api/services/projects';
-import { PlayIcon } from '@heroicons/react/24/solid';
+import { PlayCircleIcon } from '@heroicons/react/24/solid';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
+import { ToolbarButton } from '.';
 import { useEditorConsole } from '../ConsoleWindow';
 
 export default function CompileToWasmButton() {
@@ -78,15 +79,11 @@ export default function CompileToWasmButton() {
   }, [projectId, dirty, _mutate, show, pushToConsole]);
 
   return (
-    <button
-      data-testid="compile-project-button"
-      title="Compile project to WASM"
-      className={`flex btn btn-circle  btn-success text-white ${
-        isLoading ? 'loading' : ''
-      }`}
+    <ToolbarButton
       onClick={mutate}
-    >
-      {!isLoading ? <PlayIcon className="w-5 h-5" /> : ''}
-    </button>
+      loading={isLoading}
+      title="Compile to WebAssembly"
+      icon={<PlayCircleIcon className="w-5 h-5 text-success" />}
+    />
   );
 }

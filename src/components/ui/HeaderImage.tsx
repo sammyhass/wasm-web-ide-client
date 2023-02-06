@@ -5,7 +5,7 @@ export default function HeaderImage({ className }: { className?: string }) {
   return (
     <Link href="/">
       <button
-        className={`${className} btn btn-outline font-mono min-h-12 btn-md text-xl font-normal animate-none flex items-center `}
+        className={`${className} bg-base-200 btn btn-outline font-mono min-h-12 btn-md text-xl font-normal animate-none flex items-center `}
       >
         <div className="flex gap-1 items-end">
           <WasmIcon className="w-8 h-10" />

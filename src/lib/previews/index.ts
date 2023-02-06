@@ -41,7 +41,7 @@ const runWasmCode = (js?: string, src?: string) =>
   });
 `
     : `
-    console.warn('Running JS only. Click the "Run" button to compile and run your code.')
+    console.warn('Running JS only. Try recompiling your code to include WebAssembly.')
     ${runJS(js || '')}
     `;
 

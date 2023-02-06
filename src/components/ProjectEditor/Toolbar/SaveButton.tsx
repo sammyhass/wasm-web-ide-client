@@ -59,10 +59,10 @@ export function SaveButton() {
 
   return (
     <ToolbarButton
-      title={isLoading ? 'Saving...' : 'Save'}
+      title={'Save'}
       data-testid="save-project-button"
       onClick={onClick}
-      disabled={isLoading}
+      loading={isLoading}
       icon={<FolderIcon className="w-5 h-5" />}
     />
   );
