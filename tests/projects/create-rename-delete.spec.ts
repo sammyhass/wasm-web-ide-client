@@ -63,7 +63,7 @@ test('can rename the project', async () => {
   expect(await navbar.title.innerText()).toContain(newProjectName);
 });
 
-test('can see new project exists on project page', async () => {
+test('can see project exists on project page', async () => {
   await page.goto('/projects');
 
   await page.waitForLoadState('networkidle');
