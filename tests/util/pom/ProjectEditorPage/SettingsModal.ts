@@ -7,6 +7,9 @@ export class SettingsModal {
   readonly deleteButton: Locator;
   readonly confirmDeleteButton: Locator;
 
+  readonly renameButton: Locator;
+  readonly renameInput: Locator;
+
   constructor(page: Page) {
     this.modal = page.locator('[data-testid="project-settings"]');
     this.deleteButton = this.modal.locator(
@@ -17,10 +20,19 @@ export class SettingsModal {
     );
 
     this.closeButton = this.modal.locator('[data-testid="close-settings"]');
+
+    this.renameButton = this.modal.getByTestId('rename-project-button');
+
+    this.renameInput = this.modal.getByTestId('rename-project-input');
   }
 
   async deleteProject() {
     await this.deleteButton.click();
     await this.confirmDeleteButton.click();
+  }
+
+  async renameProject(name: string) {
+    await this.renameInput.fill(name);
+    await this.renameButton.click();
   }
 }

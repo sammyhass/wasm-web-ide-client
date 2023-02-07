@@ -46,6 +46,23 @@ test('can create a project', async () => {
   expect(await navbar.title.innerText()).toContain(newProjectName);
 });
 
+test('can rename the project', async () => {
+  newProjectName = createRandomProjectName();
+  const projectEditorPagePom = new ProjectEditorPage(page);
+
+  await projectEditorPagePom.settingsButton.click();
+
+  await projectEditorPagePom.settingsModal.renameProject(newProjectName);
+
+  await page.waitForLoadState('networkidle');
+
+  const navbar = new Navbar(page);
+
+  await navbar.title.locator(`text=${newProjectName}`).waitFor();
+
+  expect(await navbar.title.innerText()).toContain(newProjectName);
+});
+
 test('can see new project exists on project page', async () => {
   await page.goto('/projects');
 
