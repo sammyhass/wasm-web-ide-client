@@ -13,11 +13,11 @@ export const useRenameProjectMutation = (id: string) => {
         name,
       }),
     onSuccess: project => {
-      qc.setQueryData(['project', id], p =>
+      qc.setQueryData<ProjectT>(['project', id], p =>
         p
           ? {
               ...p,
-              name: project.name,
+              name: project.name ?? p.name,
             }
           : p
       );
