@@ -1,13 +1,15 @@
+import { useProject } from '@/hooks/api/useProject';
 import { useProjects } from '@/hooks/api/useProjects';
 import { useEditor } from '@/hooks/useEditor';
-import { deleteProject, ProjectT } from '@/lib/api/services/projects';
+import { ProjectT } from '@/lib/api/services/projects';
 import { Dialog, Transition } from '@headlessui/react';
 import { XCircleIcon } from '@heroicons/react/24/solid';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useCallback, useState } from 'react';
 import shallow from 'zustand/shallow';
+import { useDeleteProjectMutation } from '../../hooks/api/useDeleteProject';
+import { useRenameProjectMutation } from '../../hooks/api/useRenameProject';
 
 function ProjectSettings() {
   const { showSettings, setShowSettings, projectId } = useEditor(
@@ -28,13 +30,13 @@ function ProjectSettings() {
         onClose={() => setShowSettings(false)}
       >
         <Dialog.Panel className={'modal-box'}>
-          <div className={'flex justify-between'}>
+          <div className={'flex justify-between items-center'}>
             <Dialog.Title as="h1" className={'text-2xl font-bold'}>
               Project Settings
             </Dialog.Title>
 
             <button
-              className={'btn btn-ghost btn-xs btn-circle'}
+              className={'btn btn-ghost btn-circle'}
               data-testid="close-settings"
               onClick={() => setShowSettings(false)}
             >
@@ -42,9 +44,7 @@ function ProjectSettings() {
             </button>
           </div>
           <hr className={'my-4'} />
-          <SettingsSection>
-            {projectId && <SettingsBody id={projectId} />}
-          </SettingsSection>
+          <SettingsBody id={projectId} />
         </Dialog.Panel>
       </Dialog>
     </Transition>
@@ -55,15 +55,29 @@ function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
   const { push } = useRouter();
 
   return (
-    <div className={'flex flex-col gap-4'}>
-      <h3 className={'text-xl font-bold'}>Danger Zone</h3>
-      <DeleteProjectButton id={id} onSuccess={() => push('/projects')} />
+    <div className={'flex flex-col gap-6'}>
+      <SettingsSection title="Rename Project">
+        <RenameProjectForm id={id} />
+      </SettingsSection>
+      <hr className={'my-4'} />
+      <SettingsSection title="Danger Zone">
+        <DeleteProjectButton id={id} onSuccess={() => push('/projects')} />
+      </SettingsSection>
     </div>
   );
 }
 
-function SettingsSection(props: PropsWithChildren) {
-  return <div className="flex flex-col gap-4">{props.children}</div>;
+function SettingsSection(
+  props: PropsWithChildren<{
+    title: string;
+  }>
+) {
+  return (
+    <div className="flex flex-col gap-2">
+      <h3 className="text-xl font-bold">{props.title}</h3>
+      {props.children}
+    </div>
+  );
 }
 
 function DeleteProjectButton({
@@ -75,15 +89,10 @@ function DeleteProjectButton({
 }) {
   const { refetch } = useProjects();
   const [showConfirm, setShowConfirm] = useState(false);
-  const queryClient = useQueryClient();
-  const { mutate } = useMutation({
-    mutationFn: () => deleteProject(id),
+
+  const { mutate } = useDeleteProjectMutation(id, {
     onSuccess: () => {
       refetch();
-      queryClient.removeQueries({
-        queryKey: ['project', id],
-      });
-
       onSuccess?.();
     },
   });
@@ -128,6 +137,53 @@ function DeleteProjectButton({
         </div>
       )}
     </>
+  );
+}
+
+function RenameProjectForm({ id }: { id: string }) {
+  const { data: project } = useProject(id);
+
+  const [name, setName] = useState<string | undefined>(undefined);
+
+  const { mutate, isLoading } = useRenameProjectMutation(id);
+
+  const onSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      if (name) {
+        mutate({ name });
+      }
+
+      setName(undefined);
+    },
+    [mutate, name]
+  );
+
+  return (
+    <form onSubmit={onSubmit} className="flex flex-col gap-2">
+      <div className="form-control">
+        <label className="label">
+          <span className="label-text">Name</span>
+        </label>
+        <input
+          type="text"
+          className="input input-bordered"
+          placeholder="Project Name"
+          defaultValue={project?.name}
+          value={name}
+          onChange={e => setName(e.target.value)}
+          data-testid="rename-project-input"
+        />
+      </div>
+
+      <button
+        className={`btn btn-primary btn-md ${isLoading ? 'loading' : ''}`}
+        type="submit"
+      >
+        Save
+      </button>
+    </form>
   );
 }
 

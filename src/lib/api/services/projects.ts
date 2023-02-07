@@ -131,3 +131,22 @@ export const getProjectWatUrl = async (id: string): Promise<string> => {
 
   return z.string().parse(data);
 };
+
+export const renameProject = async ({
+  id,
+  name,
+}: {
+  id: string;
+  name: string;
+}): Promise<ProjectT> => {
+  parseId(id);
+  const { status, data } = await axiosClient.patch(`/projects/${id}/rename`, {
+    name,
+  });
+
+  if (status !== 200) {
+    return Promise.reject(data);
+  }
+
+  return projectSchema.parse(data);
+};

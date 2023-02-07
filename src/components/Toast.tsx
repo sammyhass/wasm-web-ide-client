@@ -17,7 +17,7 @@ const AlertTypes = [
   'project-save-error',
 ] as const;
 
-type AlertIdentifier = typeof AlertTypes[number];
+type AlertIdentifier = typeof AlertTypes[number] | string;
 
 type Alert = {
   id: string;
