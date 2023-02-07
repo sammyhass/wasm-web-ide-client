@@ -180,6 +180,7 @@ function RenameProjectForm({ id }: { id: string }) {
       <button
         className={`btn btn-primary btn-md ${isLoading ? 'loading' : ''}`}
         type="submit"
+        data-testid="rename-project-button"
       >
         Save
       </button>
