@@ -40,7 +40,6 @@ export const useLogoutMutation = () => {
 export const useMeQuery = (enabled = true) => {
   const qc = useQueryClient();
   const { data, error, isLoading, refetch } = useQuery(['me'], me, {
-    refetchOnWindowFocus: true,
     enabled,
     retryOnMount: false,
     retry: false,
