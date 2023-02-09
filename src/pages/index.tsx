@@ -1,9 +1,9 @@
 import WasmIcon from '@/components/icons/WasmIcon';
-import { useMe } from '@/hooks/useMe';
+import { useMeQuery } from '@/hooks/useMe';
 import Link from 'next/link';
 
 export default function HomePage() {
-  const { user } = useMe();
+  const { data: user } = useMeQuery(false);
   return (
     <div className="hero md:min-h-[80vh] mt-5">
       <div className="hero-content bg-primary-content shadow-lg rounded-md sm:p-5 md:p-20">
