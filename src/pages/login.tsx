@@ -21,17 +21,16 @@ export default function LoginPage() {
   const router = useRouter();
   const { refetch } = useMeQuery(false);
 
-  const { setUser, setJwt } = useMe();
+  const { setJwt } = useMe();
 
   const onSuccess = useCallback(
     async (data: LoginResponseT) => {
       setJwt(data.jwt);
-      setUser(data.user);
 
       await refetch();
       router.push('/projects');
     },
-    [refetch, router, setJwt, setUser]
+    [refetch, router, setJwt]
   );
 
   const onError = (error: ApiErrorResponse | ZodError) => {

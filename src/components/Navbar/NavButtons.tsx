@@ -1,17 +1,11 @@
-import { useMe, useMeQuery } from '@/hooks/useMe';
+import { useLogoutMutation, useMeQuery } from '@/hooks/useMe';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import shallow from 'zustand/shallow';
 
 export default function NavButtons() {
-  const { user, setJwt } = useMe(
-    s => ({
-      setJwt: s.setJwt,
-      user: s.user,
-    }),
-    shallow
-  );
-  const { refetch } = useMeQuery(false);
+  const { data: user } = useMeQuery();
+
+  const logout = useLogoutMutation();
 
   const router = useRouter();
 
@@ -25,11 +19,7 @@ export default function NavButtons() {
           <button
             className="btn btn-error btn-outline btn-md"
             data-testid="logout-button"
-            onClick={() => {
-              setJwt(null);
-              refetch();
-              router.push('/');
-            }}
+            onClick={() => logout.mutate()}
           >
             Logout
           </button>

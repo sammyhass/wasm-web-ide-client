@@ -1,20 +1,17 @@
-import { me, UserT } from '@/lib/api/services/auth';
-import { useQuery } from '@tanstack/react-query';
+import { me } from '@/lib/api/services/auth';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export const useMe = create<{
-  user: UserT | null;
   jwt: string | null;
-  setUser: (user: UserT | null) => void;
   setJwt: (jwt: string | null) => void;
 }>()(
   persist(
     set => ({
-      user: null,
       jwt: null,
       setJwt: jwt => set({ jwt }),
-      setUser: user => set({ user }),
     }),
     {
       name: 'me',
@@ -22,21 +19,40 @@ export const useMe = create<{
   )
 );
 
+export const useLogoutMutation = () => {
+  const router = useRouter();
+  const qc = useQueryClient();
+  return useMutation(
+    ['logout'],
+    () => {
+      useMe.setState({ jwt: null });
+      qc.setQueryData(['me'], null);
+      return Promise.resolve();
+    },
+    {
+      onSuccess: () => {
+        router.push('/login');
+      },
+    }
+  );
+};
+
 export const useMeQuery = (enabled = true) => {
+  const qc = useQueryClient();
   const { data, error, isLoading, refetch } = useQuery(['me'], me, {
-    cacheTime: 60,
+    refetchOnWindowFocus: true,
     enabled,
     retryOnMount: false,
     retry: false,
     onSuccess: user => {
-      if (user) {
-        useMe.setState({ user });
-      } else {
-        useMe.setState({ user: null, jwt: null });
+      if (!user) {
+        useMe.setState({ jwt: null });
+        qc.setQueryData(['me'], null);
       }
     },
     onError: () => {
-      useMe.setState({ user: null, jwt: null });
+      useMe.setState({ jwt: null });
+      qc.setQueryData(['me'], null);
     },
   });
 
