@@ -17,7 +17,20 @@ import '@fontsource/open-sans/700.css';
 
 import { ToastProvider } from '@/components/Toast';
 
+import { Router } from 'next/router';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 import '../styles/globals.css';
+
+Router.events.on('routeChangeStart', () => {
+  NProgress.start();
+});
+Router.events.on('routeChangeError', () => {
+  NProgress.done();
+});
+Router.events.on('routeChangeComplete', () => {
+  NProgress.done();
+});
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   P,

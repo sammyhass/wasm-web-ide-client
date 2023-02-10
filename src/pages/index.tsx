@@ -26,7 +26,7 @@ export default function HomePage() {
             from the comfort of your browser.
           </h1>
           <Link href={user ? '/projects' : '/login'} passHref>
-            <button className="btn btn-secondary md:btn-xl btn-wide">
+            <button className="btn btn-accent md:btn-xl btn-wide">
               Get Started
             </button>
           </Link>

@@ -3,10 +3,13 @@
 @tailwind utilities;
 
 .btn {
-	@apply no-animation
+  @apply no-animation;
 }
 
+#nprogress .bar {
+  @apply bg-primary;
+}
 
 html {
-	overflow-x: hidden;
+  overflow-x: hidden;
 }
