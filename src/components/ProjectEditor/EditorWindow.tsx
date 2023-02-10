@@ -1,6 +1,7 @@
 import { useEditor } from '@/hooks/useEditor';
 import { FileT } from '@/lib/api/services/projects';
-import MonacoEditor from '@monaco-editor/react';
+import { useAssemblyScriptTypes } from '@/lib/monaco/types';
+import MonacoEditor, { useMonaco } from '@monaco-editor/react';
 import LanguageIcon from '../icons/Icon';
 
 const monacoLanguages: Record<FileT['language'], string> = {
@@ -9,7 +10,7 @@ const monacoLanguages: Record<FileT['language'], string> = {
   go: 'go',
   js: 'javascript',
   css: 'css',
-
+  ts: 'typescript',
   wasm: 'txt',
 };
 
@@ -28,10 +29,10 @@ export default function EditorWindow() {
     <div className="w-full" data-testid="editor-window">
       {currentFile && (
         <>
-          <b className="font-mono flex gap-2 p-2 text-sm">
+          <b className="font-mono flex gap-2 p-2 text-sm items-center">
             <LanguageIcon
               language={currentFile?.language}
-              className="w-5 h-5"
+              className="w-8 h-8"
             />
             <span data-testid="selected-file">{selectedFile}</span>
           </b>
@@ -58,6 +59,10 @@ function FileEditor({
   onChange: (value: string) => void;
   projectId: string;
 }) {
+  const monaco = useMonaco();
+
+  useAssemblyScriptTypes(monaco);
+
   return (
     <MonacoEditor
       value={content}

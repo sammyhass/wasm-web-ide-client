@@ -8,7 +8,18 @@ const languageSchema = z.union([
   z.literal('go'),
   z.literal('js'),
   z.literal('wasm'),
+  z.literal('ts'),
 ]);
+const projectLangs = ['Go', 'AssemblyScript'];
+
+export const projectLanguage = z.union([
+  z.literal('Go'),
+  z.literal('AssemblyScript'),
+]);
+
+export const transformProjectLanguage = projectLanguage.transform(v =>
+  projectLangs.indexOf(v)
+);
 
 const fileSchema = z.object({
   name: z.string(),
@@ -23,6 +34,7 @@ const projectSchema = z.object({
   files: z.nullable(z.array(fileSchema)),
   user_id: z.string(),
   wasm_path: z.optional(z.string()),
+  language: projectLanguage,
 });
 
 const projectsArraySchema = z.array(projectSchema);
@@ -32,11 +44,19 @@ export type FileT = z.output<typeof fileSchema>;
 
 const parseId = (id: string) => z.string().uuid().parse(id);
 
+const createProjectDto = z.object({
+  name: z.string(),
+  language: projectLanguage,
+});
+type createProjectDto = z.input<typeof createProjectDto>;
+
 export const createProject = async ({
   name,
-}: Pick<ProjectT, 'name'>): Promise<ProjectT> => {
+  language,
+}: createProjectDto): Promise<ProjectT> => {
   const { data, status } = await axiosClient.post('/projects', {
     name,
+    language,
   });
 
   if (status !== 200) {

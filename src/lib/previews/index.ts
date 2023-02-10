@@ -24,7 +24,7 @@ try {
 
 // Sets up WebAssembly to be run in the browser along with any JS code to be
 // run after the WebAssembly is loaded
-const runWasmCode = (js?: string, src?: string) =>
+const runGoWasmCode = (js?: string, src?: string, isGo = true) =>
   !!src
     ? `
   var go = new Go();
@@ -34,7 +34,7 @@ const runWasmCode = (js?: string, src?: string) =>
 
   WebAssembly.instantiateStreaming(fetch('${src}'), go.importObject).then(___result => {
     wasm = ___result.instance;
-    go.run(wasm);
+    ${isGo ? 'go.run(wasm);' : ''}
     ${runJS(js || '')}
   }).catch(e => {
     console.error(e)
@@ -51,11 +51,13 @@ export const iframeContent = ({
   js,
   wasmPath,
   nonce,
+  useGo = true,
 }: {
   html: string;
   css?: string;
   js?: string;
   wasmPath?: string;
+  useGo?: boolean;
   nonce?: string;
 }) => `
   <!DOCTYPE html>
@@ -67,13 +69,14 @@ export const iframeContent = ({
       <style data-testid="preview-css">
         ${css}
       </style>
-      <script src="/wasm_exec_tiny.js"></script>
+      ${useGo ? `<script src="/wasm_exec_tiny.js"></script>` : ``}
+
       <script type="module" defer data-testid="preview-script">
         (() => {
           const __nonce = '${nonce}';
         })()
         ${consoleReassign}
-        ${runWasmCode(js, wasmPath)}
+        ${runGoWasmCode(js, wasmPath, useGo)}
       </script>
     </head>
     <body data-testid="preview-body">

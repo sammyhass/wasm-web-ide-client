@@ -7,6 +7,7 @@ const langSort: Record<FileT['language'], number> = {
   css: 2,
   go: 3,
   wasm: 5,
+  ts: 4,
 };
 
 type ProjectEditorState = {
@@ -51,9 +52,7 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
       projectId: id,
       files: sortedFiles,
       showSettings: false,
-      selectedFile: !get().selectedFile
-        ? files?.[0]?.name ?? undefined
-        : get().selectedFile,
+      selectedFile: sortedFiles?.[0]?.name ?? undefined,
     });
   },
   clear: () =>

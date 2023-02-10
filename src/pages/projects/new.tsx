@@ -1,14 +1,24 @@
 import Container from '@/layouts/Container';
 import ProtectedPage from '@/layouts/ProtectedPage';
 import { ApiErrorResponse } from '@/lib/api/axios';
-import { createProject, ProjectT } from '@/lib/api/services/projects';
+import {
+  createProject,
+  projectLanguage,
+  ProjectT,
+} from '@/lib/api/services/projects';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { z } from 'zod';
+
+type LangT = z.input<typeof projectLanguage>;
 
 export default function NewProjectPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiErrorResponse>();
+
+  const [selectedLang, setSelectedLang] = useState<LangT>('Go');
+  const [name, setName] = useState('');
 
   const router = useRouter();
 
@@ -35,16 +45,23 @@ export default function NewProjectPage() {
     },
   });
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  const onSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
+      setLoading(true);
 
-    const name = formData.get('name') as string;
+      if (!!!name || !selectedLang) {
+        return;
+      }
 
-    mutate({ name });
-  };
+      mutate({
+        name,
+        language: selectedLang,
+      });
+    },
+    [mutate, name, selectedLang]
+  );
 
   return (
     <ProtectedPage>
@@ -62,10 +79,27 @@ export default function NewProjectPage() {
               placeholder="Project Name"
               className="input input-bordered"
               id="name"
+              onChange={e => setName(e.target.value)}
+              value={name}
               required
               name="name"
               data-testid="project-name-input"
             />
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Language</span>
+            </label>
+            <select
+              className="select select-bordered w-full"
+              name="language"
+              id="language"
+              data-testid="project-language-select"
+              onChange={e => setSelectedLang(e.target.value as LangT)}
+            >
+              <option value={'Go' as LangT}>Go</option>
+              <option value={'AssemblyScript' as LangT}>AssemblyScript</option>
+            </select>
           </div>
           <button
             className={`btn btn-primary ${loading ? 'loading' : ''}`}
@@ -74,6 +108,17 @@ export default function NewProjectPage() {
           >
             Create Project
           </button>
+
+          {error && (
+            <div className="alert alert-error">
+              <div className="alert-title">Error</div>
+              <p>
+                {error.info?.map((e, i) => (
+                  <span key={i}>{e}</span>
+                ))}
+              </p>
+            </div>
+          )}
         </form>
       </Container>
     </ProtectedPage>

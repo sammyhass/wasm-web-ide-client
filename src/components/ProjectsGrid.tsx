@@ -2,6 +2,7 @@ import { ProjectT } from '@/lib/api/services/projects';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { formatRelative } from 'date-fns';
 import Link from 'next/link';
+import LanguageIcon from './icons/Icon';
 
 export default function ProjectsGrid(props: {
   projects?: ProjectT[];
@@ -25,13 +26,17 @@ export default function ProjectsGrid(props: {
   );
 }
 
-function ProjectCard({ id, name, created_at }: ProjectT) {
+function ProjectCard({ id, name, created_at, language }: ProjectT) {
   return (
     <Link
       href={`/projects/${id}`}
-      className="p-10 rounded-lg bg-base-100 cursor-pointer border hover:bg-base-200 shadow-lg transition-all duration-200"
+      className="p-10 rounded-lg bg-base-100 cursor-pointer border hover:bg-base-200 shadow-lg transition-all duration-200 relative"
       data-testid="project-card"
     >
+      <LanguageIcon
+        className="absolute bottom-4 right-4 w-12 h-12"
+        language={language === 'AssemblyScript' ? 'ts' : 'go'}
+      />
       <h1 className="text-2xl font-bold" data-testid="project-title">
         {name}
       </h1>
