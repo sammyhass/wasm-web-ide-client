@@ -45,26 +45,26 @@ function FileTree({
 }) {
   return (
     <div
-      className="flex flex-col gap-2 text-sm relative min-w-fit "
+      className="flex flex-col text-sm relative min-w-fit"
       data-testid="file-tree"
     >
-      <b className="pl-4 p-2">Project Files</b>
-      <button
-        className="absolute top-0 right-0 p-2"
-        onClick={onClose}
-        title="Close"
-      >
-        <ArrowLeftIcon className="w-5 h-5" />
-      </button>
-      {fileNames?.map(f => (
-        <FileTreeItem
-          onClick={() => selectFile(f)}
-          selected={f === selectedFile}
-          name={f}
-          key={f}
-          language={f.split('.').pop() as FileT['language']}
-        />
-      ))}
+      <div className="flex items-center gap-2 pl-4 pr-2 h-12">
+        <b className="flex-1">Project Files</b>
+        <button onClick={onClose} title="Close">
+          <ArrowLeftIcon className="w-5 h-5" />
+        </button>
+      </div>
+      <div className="flex flex-col gap-2">
+        {fileNames?.map(f => (
+          <FileTreeItem
+            onClick={() => selectFile(f)}
+            selected={f === selectedFile}
+            name={f}
+            key={f}
+            language={f.split('.').pop() as FileT['language']}
+          />
+        ))}
+      </div>
     </div>
   );
 }
