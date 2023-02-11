@@ -4,21 +4,19 @@ import ProtectedPage from '@/layouts/ProtectedPage';
 import { ApiErrorResponse } from '@/lib/api/axios';
 import {
   createProject,
-  projectLanguage,
+  ProjectLangT,
   ProjectT,
 } from '@/lib/api/services/projects';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
-import { z } from 'zod';
-
-type LangT = z.input<typeof projectLanguage>;
 
 export default function NewProjectPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiErrorResponse>();
 
-  const [selectedLang, setSelectedLang] = useState<LangT>('AssemblyScript');
+  const [selectedLang, setSelectedLang] =
+    useState<ProjectLangT>('AssemblyScript');
   const [name, setName] = useState('');
 
   const router = useRouter();
@@ -112,8 +110,8 @@ function LanguageSelect({
   selected,
   onChange,
 }: {
-  selected: LangT;
-  onChange: (lang: LangT) => void;
+  selected: ProjectLangT;
+  onChange: (lang: ProjectLangT) => void;
 }) {
   return (
     <div className="form-control">
@@ -143,13 +141,14 @@ function LangItem({
   onClick,
   recommended,
 }: {
-  lang: LangT;
+  lang: ProjectLangT;
   selected: boolean;
   onClick: () => void;
   recommended?: boolean;
 }) {
   return (
     <button
+      data-testid={`lang-item-${lang}`}
       className={`btn btn-lg btn-ghost ${
         selected ? 'btn-active' : ''
       } justify-start items-center gap-4`}

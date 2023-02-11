@@ -10,16 +10,11 @@ const languageSchema = z.union([
   z.literal('wasm'),
   z.literal('ts'),
 ]);
-const projectLangs = ['Go', 'AssemblyScript'];
-
 export const projectLanguage = z.union([
   z.literal('Go'),
   z.literal('AssemblyScript'),
 ]);
-
-export const transformProjectLanguage = projectLanguage.transform(v =>
-  projectLangs.indexOf(v)
-);
+export type ProjectLangT = z.output<typeof projectLanguage>;
 
 const fileSchema = z.object({
   name: z.string(),
