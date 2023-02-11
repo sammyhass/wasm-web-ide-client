@@ -67,7 +67,9 @@ function FileEditor({
     <MonacoEditor
       value={content}
       options={{
-        minimap: { enabled: true },
+        minimap: { enabled: false },
+        scrollBeyondLastLine: false,
+        wordWrap: 'on',
       }}
       height={'80vh'}
       path={`/${projectId}/${name}`}
