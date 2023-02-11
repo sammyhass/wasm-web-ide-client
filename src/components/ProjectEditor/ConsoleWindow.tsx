@@ -81,6 +81,7 @@ export default function ConsoleWindow() {
 
   useEffect(() => {
     const listener = (e: MessageEvent) => {
+      if (e.origin !== window.location.origin) return;
       if (e.data.type === 'console') {
         handleMessage(e);
       }

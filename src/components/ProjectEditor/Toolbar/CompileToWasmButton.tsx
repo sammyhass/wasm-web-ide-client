@@ -22,8 +22,8 @@ export default function CompileToWasmButton() {
     compileProject,
     {
       onSuccess: path => {
-        qc.invalidateQueries(['watUrl', projectId]);
-        qc.invalidateQueries(['wat', projectId]);
+        qc.removeQueries(['wat', projectId]);
+        qc.removeQueries(['watUrl', projectId]);
         qc.setQueryData<ProjectT>(
           ['project', projectId],
           prev =>
