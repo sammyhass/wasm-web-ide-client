@@ -74,7 +74,7 @@ function WatViewer({ projectId }: { projectId: string }) {
   const { data: wat, status } = useQuery<string>(
     ['wat', projectId],
     () => fetch(url as string).then(r => r.text()),
-    { enabled: !!url, cacheTime: 0 }
+    { enabled: !!url }
   );
 
   return (
