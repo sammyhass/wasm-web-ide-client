@@ -18,7 +18,7 @@ export default function NewProjectPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiErrorResponse>();
 
-  const [selectedLang, setSelectedLang] = useState<LangT>('Go');
+  const [selectedLang, setSelectedLang] = useState<LangT>('AssemblyScript');
   const [name, setName] = useState('');
 
   const router = useRouter();
