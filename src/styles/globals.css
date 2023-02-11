@@ -10,6 +10,10 @@
   @apply bg-primary;
 }
 
+#nprogress .spinner {
+  @apply hidden;
+}
+
 html {
   overflow-x: hidden;
 }

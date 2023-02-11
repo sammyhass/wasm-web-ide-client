@@ -5,6 +5,7 @@ export class NewProjectPage {
   readonly page: Page;
 
   readonly nameInput: Locator;
+  readonly languageSelect: Locator;
   readonly submitButton: Locator;
 
   constructor(page: Page) {
@@ -12,6 +13,7 @@ export class NewProjectPage {
 
     this.nameInput = page.getByTestId('project-name-input');
     this.submitButton = page.getByTestId('create-project-button');
+    this.languageSelect = page.getByTestId('project-language-select');
   }
 
   async createProject(name: string) {

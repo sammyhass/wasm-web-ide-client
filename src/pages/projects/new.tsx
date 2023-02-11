@@ -1,3 +1,4 @@
+import LanguageIcon from '@/components/icons/Icon';
 import Container from '@/layouts/Container';
 import ProtectedPage from '@/layouts/ProtectedPage';
 import { ApiErrorResponse } from '@/lib/api/axios';
@@ -26,13 +27,7 @@ export default function NewProjectPage() {
 
   const { mutate } = useMutation(['createProject'], createProject, {
     onSuccess: d => {
-      client.setQueryData<ProjectT[]>(['projects'], prev => {
-        if (prev) {
-          return [...prev, d];
-        } else {
-          return [d];
-        }
-      });
+      client.refetchQueries(['projects']);
 
       client.setQueryData<ProjectT>(['project', d.id], d);
       setLoading(false);
@@ -86,21 +81,9 @@ export default function NewProjectPage() {
               data-testid="project-name-input"
             />
           </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Language</span>
-            </label>
-            <select
-              className="select select-bordered w-full"
-              name="language"
-              id="language"
-              data-testid="project-language-select"
-              onChange={e => setSelectedLang(e.target.value as LangT)}
-            >
-              <option value={'Go' as LangT}>Go</option>
-              <option value={'AssemblyScript' as LangT}>AssemblyScript</option>
-            </select>
-          </div>
+
+          <LanguageSelect selected={selectedLang} onChange={setSelectedLang} />
+
           <button
             className={`btn btn-primary ${loading ? 'loading' : ''}`}
             data-testid="create-project-button"
@@ -122,5 +105,64 @@ export default function NewProjectPage() {
         </form>
       </Container>
     </ProtectedPage>
+  );
+}
+
+function LanguageSelect({
+  selected,
+  onChange,
+}: {
+  selected: LangT;
+  onChange: (lang: LangT) => void;
+}) {
+  return (
+    <div className="form-control">
+      <label className="label">
+        <span className="label-text">Language</span>
+      </label>
+      <div className="flex flex-col gap-2">
+        <LangItem
+          lang="AssemblyScript"
+          selected={selected === 'AssemblyScript'}
+          onClick={() => onChange('AssemblyScript')}
+          recommended
+        />
+        <LangItem
+          lang="Go"
+          selected={selected === 'Go'}
+          onClick={() => onChange('Go')}
+        />
+      </div>
+    </div>
+  );
+}
+
+function LangItem({
+  lang,
+  selected,
+  onClick,
+  recommended,
+}: {
+  lang: LangT;
+  selected: boolean;
+  onClick: () => void;
+  recommended?: boolean;
+}) {
+  return (
+    <button
+      className={`btn btn-lg btn-ghost ${
+        selected ? 'btn-active' : ''
+      } justify-start items-center gap-4`}
+      onClick={onClick}
+      type="button"
+    >
+      <LanguageIcon language={lang === 'AssemblyScript' ? 'ts' : 'go'} />
+      <div className="flex flex-col gap-1 text-left items-start">
+        <span className="font-bold normal-case">{lang}</span>
+        {recommended && (
+          <span className="text-xs text-gray-500">Recommended</span>
+        )}
+      </div>
+    </button>
   );
 }
