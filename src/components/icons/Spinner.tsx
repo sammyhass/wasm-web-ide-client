@@ -1,6 +1,6 @@
 export default function LoadingSpinner({ className }: { className?: string }) {
   return (
-    <div role={'status'} className={className}>
+    <div role={'status'} className={className} data-testid="loading-spinner">
       <svg
         aria-hidden="true"
         className="w-5 h-5 text-gray-200 animate-spin fill-primary"
