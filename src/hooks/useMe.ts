@@ -1,19 +1,20 @@
 import { me, UserT } from '@/lib/api/services/auth';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export const useMe = create<{
-  user: UserT | null;
   jwt: string | null;
-  setUser: (user: UserT | null) => void;
   setJwt: (jwt: string | null) => void;
+  user: UserT | null;
+  setUser: (user: UserT | null) => void;
 }>()(
   persist(
     set => ({
-      user: null,
       jwt: null,
       setJwt: jwt => set({ jwt }),
+      user: null,
       setUser: user => set({ user }),
     }),
     {
@@ -21,6 +22,24 @@ export const useMe = create<{
     }
   )
 );
+
+export const useLogoutMutation = () => {
+  const router = useRouter();
+  const qc = useQueryClient();
+  return useMutation(
+    ['logout'],
+    () => {
+      useMe.setState({ jwt: null });
+      qc.setQueryData(['me'], null);
+      return Promise.resolve();
+    },
+    {
+      onSuccess: () => {
+        router.push('/login');
+      },
+    }
+  );
+};
 
 export const useMeQuery = (enabled = true) => {
   const { data, error, isLoading, refetch } = useQuery(['me'], me, {
