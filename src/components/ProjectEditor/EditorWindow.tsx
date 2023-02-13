@@ -1,6 +1,6 @@
 import { useEditor } from '@/hooks/useEditor';
-import { FileT } from '@/lib/api/services/projects';
-import { useAssemblyScriptTypes } from '@/lib/monaco/types';
+import { FileT, ProjectLangT } from '@/lib/api/services/projects';
+import { useMonacoSetup } from '@/lib/monaco/assemblyscript';
 import MonacoEditor, { useMonaco } from '@monaco-editor/react';
 import LanguageIcon from '../icons/Icon';
 
@@ -14,15 +14,24 @@ const monacoLanguages: Record<FileT['language'], string> = {
   wasm: 'txt',
 };
 
-export default function EditorWindow() {
+export default function EditorWindow({
+  projectLanguage,
+}: {
+  projectLanguage: ProjectLangT;
+}) {
   const projectId = useEditor(s => s.projectId);
   const onCurrentFileChange = useEditor(s => s.onCurrentFileChange);
   const selectedFile = useEditor(s => s.selectedFile);
+
+  const monaco = useMonaco();
+
+  useMonacoSetup(monaco ?? undefined, projectLanguage);
 
   const files = useEditor(
     state => state.files,
     (a, b) => JSON.stringify(a) === JSON.stringify(b)
   );
+
   const currentFile = files.find(f => f.name === selectedFile);
 
   return (
@@ -59,10 +68,6 @@ function FileEditor({
   onChange: (value: string) => void;
   projectId: string;
 }) {
-  const monaco = useMonaco();
-
-  useAssemblyScriptTypes(monaco);
-
   return (
     <MonacoEditor
       value={content}

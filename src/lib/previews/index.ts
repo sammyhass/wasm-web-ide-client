@@ -22,19 +22,30 @@ try {
 }
 `;
 
+// Sets up the WebAssembly memory to be used by the WebAssembly code
+// If the code is Go, we need to instantiate the Go object, otherwise we can
+// just instantiate the WebAssembly memory
+const instantiateMemory = (isGo = true) => `
+  const memory = ${
+    isGo ? `new Go()` : `new WebAssembly.Memory({ initial: 10, maximum: 256 })`
+  };
+`;
+
 // Sets up WebAssembly to be run in the browser along with any JS code to be
 // run after the WebAssembly is loaded
-const runGoWasmCode = (js?: string, src?: string, isGo = true) =>
+const runWasm = (js?: string, src?: string, isGo = true) =>
   !!src
     ? `
-  var go = new Go();
-
 
   let wasm = null;
 
-  WebAssembly.instantiateStreaming(fetch('${src}'), go.importObject).then(___result => {
+  ${instantiateMemory(isGo)}
+
+  WebAssembly.instantiateStreaming(fetch('${src}'), ${
+        isGo ? 'memory.importObject' : '{ env: { memory } }'
+      }).then(___result => {
     wasm = ___result.instance;
-    ${isGo ? 'go.run(wasm);' : ''}
+    ${isGo ? 'memory.run(wasm);' : ''}
     ${runJS(js || '')}
   }).catch(e => {
     console.error(e)
@@ -76,7 +87,7 @@ export const iframeContent = ({
           const __nonce = '${nonce}';
         })()
         ${consoleReassign}
-        ${runGoWasmCode(js, wasmPath, useGo)}
+        ${runWasm(js, wasmPath, useGo)}
       </script>
     </head>
     <body data-testid="preview-body">

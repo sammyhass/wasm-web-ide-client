@@ -18,13 +18,13 @@ export default function ProjectEditorWrapper(project: ProjectT) {
   }
 
   if (hasInitialisedProject) {
-    return <ProjectEditor />;
+    return <ProjectEditor language={project.language} />;
   }
 
   return null;
 }
 
-function ProjectEditor() {
+function ProjectEditor({ language }: { language: ProjectT['language'] }) {
   const { files, selectedFile, setSelectedFile } = useEditor();
   const filenames = files.map(f => f.name);
 
@@ -39,7 +39,7 @@ function ProjectEditor() {
             selectedFile={selectedFile}
           />
           <div className="w-full relative">
-            <EditorWindow />
+            <EditorWindow projectLanguage={language} />
             <ConsoleWindow />
           </div>
         </div>

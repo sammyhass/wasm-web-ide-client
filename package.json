@@ -44,6 +44,7 @@
     "autoprefixer": "^10.4.7",
     "eslint": "8.22.0",
     "eslint-config-next": "13.0.2",
+    "monaco-editor": "^0.35.0",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",

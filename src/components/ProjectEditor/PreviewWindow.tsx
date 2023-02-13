@@ -42,6 +42,7 @@ export default function PreviewWindow() {
     css,
     wasmPath: project?.wasm_path,
     nonce: previewNonce,
+    useGo: project?.language === 'Go',
   });
 
   return (

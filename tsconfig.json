@@ -34,6 +34,7 @@
     "**/*.cjs",
     "**/*.mjs",
     "server-local.js",
+    "public/*.d.ts"
   ],
   "exclude": [
     "node_modules",
