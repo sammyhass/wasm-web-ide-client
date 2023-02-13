@@ -29,7 +29,7 @@ export const useLogoutMutation = () => {
   return useMutation(
     ['logout'],
     () => {
-      useMe.setState({ jwt: null });
+      useMe.setState({ jwt: null, user: null });
       qc.setQueryData(['me'], null);
       return Promise.resolve();
     },
