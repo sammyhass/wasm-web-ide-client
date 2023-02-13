@@ -1,4 +1,5 @@
 import { useToast } from '@/components/Toast';
+import { useProject } from '@/hooks/api/useProject';
 import { useEditor } from '@/hooks/useEditor';
 import { ApiErrorResponse } from '@/lib/api/axios';
 import { compileProject, ProjectT } from '@/lib/api/services/projects';
@@ -14,6 +15,9 @@ export default function CompileToWasmButton() {
 
   const dirty = useEditor(s => s.dirty);
   const projectId = useEditor(s => s.projectId);
+
+  const { data } = useProject(projectId);
+  const language = data?.language;
 
   const qc = useQueryClient();
 
@@ -42,7 +46,7 @@ export default function CompileToWasmButton() {
 
         pushToConsole(
           'info',
-          `[GO] Your project has been compiled successfully.`
+          `[${language}]: Your project has been compiled successfully.`
         );
       },
       onError: e => {
@@ -54,7 +58,7 @@ export default function CompileToWasmButton() {
 
         const errs = (e as ApiErrorResponse).info?.join(' ').split('\n');
         for (const err of errs ?? []) {
-          pushToConsole('error', `[GO] ${(err as string).trim()}`);
+          pushToConsole('error', `[${language}] ${(err as string).trim()}`);
         }
 
         console.error(errs);

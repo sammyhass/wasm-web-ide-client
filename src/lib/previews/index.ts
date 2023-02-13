@@ -31,6 +31,15 @@ const instantiateMemory = (isGo = true) => `
   };
 `;
 
+const getAssemblyScriptImports = () => `{
+  env: {
+    abort: () => console.error('abort'),
+    trace: (msg, num) => console.log('trace', msg, num),
+    memory,
+  },
+}
+`;
+
 // Sets up WebAssembly to be run in the browser along with any JS code to be
 // run after the WebAssembly is loaded
 const runWasm = (js?: string, src?: string, isGo = true) =>
@@ -42,7 +51,7 @@ const runWasm = (js?: string, src?: string, isGo = true) =>
   ${instantiateMemory(isGo)}
 
   WebAssembly.instantiateStreaming(fetch('${src}'), ${
-        isGo ? 'memory.importObject' : '{ env: { memory } }'
+        isGo ? 'memory.importObject' : getAssemblyScriptImports()
       }).then(___result => {
     wasm = ___result.instance;
     ${isGo ? 'memory.run(wasm);' : ''}

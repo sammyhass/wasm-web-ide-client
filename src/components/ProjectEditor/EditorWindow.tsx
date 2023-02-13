@@ -1,6 +1,6 @@
 import { useEditor } from '@/hooks/useEditor';
 import { FileT, ProjectLangT } from '@/lib/api/services/projects';
-import { useMonacoSetup } from '@/lib/monaco/assemblyscript';
+import { MonacoSetupProvider } from '@/lib/monaco/assemblyscript';
 import MonacoEditor, { useMonaco } from '@monaco-editor/react';
 import LanguageIcon from '../icons/Icon';
 
@@ -24,8 +24,6 @@ export default function EditorWindow({
   const selectedFile = useEditor(s => s.selectedFile);
 
   const monaco = useMonaco();
-
-  useMonacoSetup(monaco ?? undefined, projectLanguage);
 
   const files = useEditor(
     state => state.files,
@@ -54,6 +52,10 @@ export default function EditorWindow({
           />
         </>
       )}
+      <MonacoSetupProvider
+        monaco={monaco ?? undefined}
+        language={projectLanguage}
+      />
     </div>
   );
 }
