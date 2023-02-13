@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { Navbar } from '../Navbar';
+import { LoadingSpinner } from '../Spinner';
 import { EditorConsole } from './EditorConsole';
 import { PreviewWindow } from './PreviewWindow';
 import { SettingsModal } from './SettingsModal';
@@ -74,9 +75,14 @@ export class ProjectEditorPage {
   }
 
   async save() {
+    const spinner = new LoadingSpinner(this.saveButton);
+
     await this.saveButton.click();
+    await spinner.waitFor();
 
     await this.page.waitForLoadState('networkidle');
+
+    await spinner.waitForToBeHidden();
 
     await this.previewWindow.previewBody.waitFor();
   }

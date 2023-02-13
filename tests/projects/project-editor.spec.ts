@@ -162,6 +162,10 @@ test('can view JS error in the console', async () => {
 
   await projectEditorPom.save();
 
+  projectEditorPom.editorConsole.consoleMessages
+    .getByText(ERROR_MESSAGE)
+    .waitFor();
+
   const consoleMessages = await (
     await projectEditorPom.editorConsole.getConsoleMessages()
   ).join(', ');
