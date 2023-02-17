@@ -2,12 +2,11 @@ name: Playwright Tests
 on:
   deployment_status:
   schedule:
-    - cron: 0 0 * * *
+    - cron: '0 0 * * *'
 
 jobs:
   test:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
-
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' || github.event_name == 'schedule'
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
