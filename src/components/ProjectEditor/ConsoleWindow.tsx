@@ -98,12 +98,6 @@ export default function ConsoleWindow() {
     };
   }, [handleMessage, mustScroll, scrollToBottom]);
 
-  useEffect(() => {
-    return () => {
-      clear();
-    };
-  }, [clear]);
-
   return (
     <div className="flex flex-col gap-2 text-sm absolute bottom-0 pb-2 w-full bg-opacity-60 bg-base-300 backdrop-blur-md">
       {show ? (

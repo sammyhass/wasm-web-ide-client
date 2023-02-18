@@ -1,6 +1,8 @@
 import { useEditor } from '@/hooks/useEditor';
+import { useWindowDimensions } from '@/hooks/util/useDimensions';
 import { ProjectT } from '@/lib/api/services/projects';
-import { useRef } from 'react';
+import { Resizable } from 're-resizable';
+import { Fragment, PropsWithChildren, useMemo, useRef } from 'react';
 import ConsoleWindow from './ConsoleWindow';
 import EditorWindow from './EditorWindow';
 import FileTree from './FileTree';
@@ -18,32 +20,65 @@ export default function ProjectEditorWrapper(project: ProjectT) {
   }
 
   if (hasInitialisedProject) {
-    return <ProjectEditor language={project.language} />;
+    return <ProjectEditor />;
   }
 
   return null;
 }
 
-function ProjectEditor({ language }: { language: ProjectT['language'] }) {
+function ResizableWindow({ children }: PropsWithChildren) {
+  return (
+    <Resizable
+      bounds={'parent'}
+      defaultSize={{
+        width: '500px',
+        height: '100%',
+      }}
+      minWidth={'300px'}
+      maxWidth={'100%'}
+      enable={{
+        left: false,
+        right: true,
+      }}
+    >
+      {children}
+    </Resizable>
+  );
+}
+
+function ProjectEditor() {
   const { files, selectedFile, setSelectedFile } = useEditor();
   const filenames = files.map(f => f.name);
+
+  const { width } = useWindowDimensions();
+
+  const isMobile = width < 768;
+
+  const ParentComponent = useMemo(() => {
+    if (isMobile) return Fragment;
+    return ResizableWindow;
+  }, [isMobile]);
 
   return (
     <div className="w-full max-w-screen">
       <Toolbar />
-      <div className="flex flex-col-reverse md:flex-row">
-        <div className="relative flex flex-1">
-          <FileTree
-            files={filenames}
-            selectFile={setSelectedFile}
-            selectedFile={selectedFile}
-          />
-          <div className="w-full relative">
-            <EditorWindow projectLanguage={language} />
-            <ConsoleWindow />
-          </div>
+      <div className="flex flex-col md:flex-row ">
+        <FileTree
+          files={filenames}
+          selectFile={setSelectedFile}
+          selectedFile={selectedFile}
+        />
+        <div className="flex flex-col-reverse md:flex-row w-full overflow-hidden mr-1">
+          <ParentComponent>
+            <hr className="md:hidden" />
+            <div className="w-full relative">
+              <EditorWindow />
+              <ConsoleWindow />
+            </div>
+          </ParentComponent>
+
+          <PreviewWindow />
         </div>
-        <PreviewWindow />
       </div>
       <ProjectSettings />
     </div>

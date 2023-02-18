@@ -1,5 +1,5 @@
 import { useEditor } from '@/hooks/useEditor';
-import { FileT, ProjectLangT } from '@/lib/api/services/projects';
+import { FileT } from '@/lib/api/services/projects';
 import { MonacoSetupProvider } from '@/lib/monaco/assemblyscript';
 import MonacoEditor, { useMonaco } from '@monaco-editor/react';
 import LanguageIcon from '../icons/Icon';
@@ -14,12 +14,9 @@ const monacoLanguages: Record<FileT['language'], string> = {
   wasm: 'txt',
 };
 
-export default function EditorWindow({
-  projectLanguage,
-}: {
-  projectLanguage: ProjectLangT;
-}) {
+export default function EditorWindow() {
   const projectId = useEditor(s => s.projectId);
+  const projectLanguage = useEditor(s => s.projectLanguage);
   const onCurrentFileChange = useEditor(s => s.onCurrentFileChange);
   const selectedFile = useEditor(s => s.selectedFile);
 

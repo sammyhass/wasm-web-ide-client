@@ -23,10 +23,11 @@ export default function FileTreeWrapper({
     />
   ) : (
     <button
-      className="top-0 left-0 p-2"
+      className="top-0 left-0 p-2 flex items-center gap-2 md:inline"
       onClick={() => setShow(true)}
       title="Open File Tree"
     >
+      <b className="md:hidden">Show File Tree</b>
       <ArrowRightIcon className="w-5 h-5" />
     </button>
   );

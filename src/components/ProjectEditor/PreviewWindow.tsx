@@ -47,10 +47,7 @@ export default function PreviewWindow() {
 
   return (
     <>
-      <div
-        className="bg-white flex-1 max-w-4xl min-w-[250px]"
-        id="previewWindow"
-      >
+      <div className="bg-white min-w-[40px] w-full block" id="previewWindow">
         <iframe
           srcDoc={srcDoc}
           className="w-full h-full"

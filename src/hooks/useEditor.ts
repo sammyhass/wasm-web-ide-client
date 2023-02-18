@@ -1,4 +1,4 @@
-import { FileT, ProjectT } from '@/lib/api/services/projects';
+import { FileT, ProjectLangT, ProjectT } from '@/lib/api/services/projects';
 import create from 'zustand';
 
 const langSort: Record<FileT['language'], number> = {
@@ -26,6 +26,7 @@ type ProjectEditorState = {
   clear: () => void;
 
   projectId: string;
+  projectLanguage: ProjectLangT | undefined;
 
   showSettings: boolean;
   setShowSettings: (show: boolean) => void;
@@ -40,6 +41,7 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
   selectedFile: undefined,
   setShowSettings: showSettings => set({ showSettings }),
   showSettings: false,
+  projectLanguage: undefined,
 
   setSelectedFile: name => set({ selectedFile: name }),
   initProject: project => {
@@ -50,6 +52,7 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
 
     set({
       projectId: id,
+      projectLanguage: project.language,
       files: sortedFiles,
       showSettings: false,
       selectedFile: sortedFiles?.[0]?.name ?? undefined,
@@ -60,6 +63,7 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
       files: [],
       showSettings: false,
       selectedFile: undefined,
+      projectLanguage: undefined,
       projectId: undefined,
     }),
   onCurrentFileChange: value => {
