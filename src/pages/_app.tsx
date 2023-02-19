@@ -7,9 +7,6 @@ import type { AppProps, AppType } from 'next/app';
 import Head from 'next/head';
 import { ReactElement, ReactNode } from 'react';
 
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-
-// Fonts
 import '@fontsource/fira-code/400.css';
 import '@fontsource/fira-code/700.css';
 import '@fontsource/open-sans/400.css';
@@ -17,6 +14,7 @@ import '@fontsource/open-sans/700.css';
 
 import { ToastProvider } from '@/components/Toast';
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from 'next/router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';

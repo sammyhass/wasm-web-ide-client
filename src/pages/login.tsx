@@ -21,6 +21,8 @@ export default function LoginPage() {
   const router = useRouter();
   const { refetch } = useMeQuery(false);
 
+  const redirectTo = router.query.next as string | undefined;
+
   const { setJwt } = useMe();
 
   const onSuccess = useCallback(
@@ -28,9 +30,9 @@ export default function LoginPage() {
       setJwt(data.jwt);
 
       await refetch();
-      router.push('/projects');
+      router.push(redirectTo ? decodeURIComponent(redirectTo) : '/projects');
     },
-    [refetch, router, setJwt]
+    [redirectTo, refetch, router, setJwt]
   );
 
   const onError = (error: ApiErrorResponse | ZodError) => {

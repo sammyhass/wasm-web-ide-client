@@ -1,15 +1,19 @@
 import { useProject } from '@/hooks/api/useProject';
 import { useProjects } from '@/hooks/api/useProjects';
+import { useProjectSharing } from '@/hooks/api/useToggleShareProject';
 import { useEditor } from '@/hooks/useEditor';
 import { ProjectT } from '@/lib/api/services/projects';
 import { Dialog, Transition } from '@headlessui/react';
 import { XCircleIcon } from '@heroicons/react/24/solid';
+import { useQueryClient } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { PropsWithChildren, useCallback, useState } from 'react';
+import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
 import shallow from 'zustand/shallow';
 import { useDeleteProjectMutation } from '../../hooks/api/useDeleteProject';
 import { useRenameProjectMutation } from '../../hooks/api/useRenameProject';
+import LoadingSpinner from '../icons/Spinner';
 
 function ProjectSettings() {
   const { showSettings, setShowSettings, projectId } = useEditor(
@@ -59,6 +63,7 @@ function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
       <SettingsSection title="Rename Project">
         <RenameProjectForm id={id} />
       </SettingsSection>
+      <ShareProjectToggleSection id={id} />
       <hr className={'my-4'} />
       <SettingsSection title="Danger Zone">
         <DeleteProjectButton id={id} onSuccess={() => push('/projects')} />
@@ -141,7 +146,9 @@ function DeleteProjectButton({
 }
 
 function RenameProjectForm({ id }: { id: string }) {
-  const { data: project } = useProject(id);
+  const { data: project } = useProject(id, {
+    enabled: false,
+  });
 
   const [name, setName] = useState<string | undefined>(undefined);
 
@@ -185,6 +192,69 @@ function RenameProjectForm({ id }: { id: string }) {
         Save
       </button>
     </form>
+  );
+}
+
+function ShareProjectToggleSection({ id }: { id: string }) {
+  const { isLoading, mutate, error, reset } = useProjectSharing(id);
+
+  const qc = useQueryClient();
+
+  const { data: project } = useProject(id);
+
+  const shareCode = project?.share_code;
+
+  const forkUri = useMemo(() => `/projects/fork/${shareCode}`, [shareCode]);
+
+  const forkUrl = useMemo(() => {
+    return `${window.location.origin}${forkUri}`;
+  }, [forkUri]);
+
+  return (
+    <SettingsSection title={`${shareCode ? 'Disable' : 'Enable'} Sharing`}>
+      <div className="flex flex-col gap-2 relative">
+        <>
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <LoadingSpinner />
+            </div>
+          )}
+          <button
+            className={`alert text-left items-stretch
+            hover:bg-base-300 active:bg-base-300 transitions-colors relative
+           ${isLoading ? 'disabled opacity-50' : ''}`}
+            disabled={isLoading}
+            onClick={() => mutate(!shareCode)}
+            data-testid="share-project-button"
+          >
+            <span className="label-text flex flex-col">
+              Sharing : {shareCode ? 'Enabled' : 'Disabled'}
+            </span>
+            <input
+              type="checkbox"
+              className="toggle toggle-secondary"
+              disabled={isLoading}
+              checked={!!shareCode}
+              readOnly
+            />
+          </button>
+          {error && (
+            <div className="alert alert-error">
+              <p>Something went wrong. Please try again.</p>
+            </div>
+          )}
+          {shareCode && (
+            <p className="text-sm text-gray-500 p-1 text-center">
+              Anyone with the link can create a fork of your project.
+              <br />
+              <Link href={forkUri} className="link">
+                {forkUrl}
+              </Link>
+            </p>
+          )}
+        </>
+      </div>
+    </SettingsSection>
   );
 }
 

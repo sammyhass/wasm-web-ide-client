@@ -42,14 +42,12 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
   setShowSettings: showSettings => set({ showSettings }),
   showSettings: false,
   projectLanguage: undefined,
-
   setSelectedFile: name => set({ selectedFile: name }),
   initProject: project => {
     const { files, id } = project;
     const sortedFiles = files
       ?.sort((a, b) => langSort[a.language] - langSort[b.language])
       .map(f => ({ ...f, content: f.content ?? '' }));
-
     set({
       projectId: id,
       projectLanguage: project.language,

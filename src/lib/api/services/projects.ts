@@ -30,6 +30,7 @@ const projectSchema = z.object({
   user_id: z.string(),
   wasm_path: z.optional(z.string()),
   language: projectLanguage,
+  share_code: z.optional(z.string()),
 });
 
 const projectsArraySchema = z.array(projectSchema);
@@ -158,6 +159,51 @@ export const renameProject = async ({
   const { status, data } = await axiosClient.patch(`/projects/${id}/rename`, {
     name,
   });
+
+  if (status !== 200) {
+    return Promise.reject(data);
+  }
+
+  return projectSchema.parse(data);
+};
+
+const toggleShareSchema = z.object({
+  shared: z.boolean(),
+  shareCode: z.string().optional(),
+});
+
+export const toggleShareProject = async (params: {
+  id: string;
+  share: boolean;
+}) => {
+  const { status, data } = await axiosClient.patch(
+    `/projects/${params.id}/share`,
+    {
+      shared: params.share,
+    }
+  );
+
+  if (status !== 200) {
+    return Promise.reject(data);
+  }
+
+  return toggleShareSchema.parse(data);
+};
+
+export const getSharedProject = async (shareCode: string) => {
+  const { status, data } = await axiosClient.get(`/projects/fork/${shareCode}`);
+
+  if (status !== 200) {
+    return Promise.reject(data);
+  }
+
+  return projectSchema.parse(data);
+};
+
+export const forkProject = async (shareCode: string) => {
+  const { status, data } = await axiosClient.post(
+    `/projects/fork/${shareCode}`
+  );
 
   if (status !== 200) {
     return Promise.reject(data);
