@@ -61,7 +61,12 @@ function ProjectSettings() {
   );
 }
 
-const SETTINGS_TABS = ['General', 'Sharing', 'Editor', 'Danger Zone'] as const;
+export const SETTINGS_TABS = [
+  'General',
+  'Sharing',
+  'Editor',
+  'Danger Zone',
+] as const;
 function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
   const { push } = useRouter();
 
@@ -76,6 +81,7 @@ function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
                   className={`tab tab-lg tab-rounded  ${
                     selected ? 'tab-active' : ''
                   }`}
+                  data-testid={`settings-tab ${selected ? 'selected' : ''}`}
                 >
                   {tab}
                 </button>
