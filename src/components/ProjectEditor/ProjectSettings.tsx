@@ -73,7 +73,10 @@ function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
   return (
     <div className={'flex flex-col gap-6'}>
       <Tab.Group>
-        <Tab.List className={'tabs tabs-boxed justify-between px-0'}>
+        <Tab.List
+          data-testid="settings-tabs"
+          className={'tabs tabs-boxed justify-between px-0'}
+        >
           {SETTINGS_TABS.map(tab => (
             <Tab as={Fragment} key={tab}>
               {({ selected }) => (
