@@ -48,7 +48,7 @@ function ResizableWindow({ children }: PropsWithChildren) {
 
 function ProjectEditor() {
   const { files, selectedFile, setSelectedFile } = useEditor();
-  const filenames = files.map(f => f.name);
+  const filenames = files?.map(f => f.name);
 
   const { width } = useWindowDimensions();
 

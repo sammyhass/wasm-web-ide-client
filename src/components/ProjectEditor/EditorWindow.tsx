@@ -28,7 +28,7 @@ export default function EditorWindow() {
     (a, b) => JSON.stringify(a) === JSON.stringify(b)
   );
 
-  const currentFile = files.find(f => f.name === selectedFile);
+  const currentFile = files?.find(f => f.name === selectedFile);
 
   return (
     <div className="w-full border-r" data-testid="editor-window">

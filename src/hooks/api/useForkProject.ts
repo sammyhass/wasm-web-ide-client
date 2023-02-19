@@ -8,7 +8,7 @@ export const useForkProject = (id: string) => {
     mutationFn: () => forkProject(id),
     onSuccess: data => {
       qc.setQueryData<ProjectT>(['project', data.id], data);
-      qc.invalidateQueries(['projects']);
+      qc.refetchQueries(['projects']);
     },
   });
 };
