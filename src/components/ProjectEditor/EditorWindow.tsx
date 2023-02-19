@@ -1,4 +1,5 @@
 import { useEditor } from '@/hooks/useEditor';
+import { useEditorSettings } from '@/hooks/useEditorSettings';
 import { FileT } from '@/lib/api/services/projects';
 import { MonacoSetupProvider } from '@/lib/monaco/assemblyscript';
 import MonacoEditor, { useMonaco } from '@monaco-editor/react';
@@ -30,7 +31,7 @@ export default function EditorWindow() {
   const currentFile = files.find(f => f.name === selectedFile);
 
   return (
-    <div className="w-full" data-testid="editor-window">
+    <div className="w-full border-r" data-testid="editor-window">
       {currentFile && (
         <>
           <b className="font-mono flex gap-2 p-2 text-sm items-center">
@@ -67,19 +68,25 @@ function FileEditor({
   onChange: (value: string) => void;
   projectId: string;
 }) {
+  const fontSize = useEditorSettings(s => s.fontSize);
+  const theme = useEditorSettings(s => s.theme);
+  const wordWrap = useEditorSettings(s => s.wordWrap);
+  const minimapEnabled = useEditorSettings(s => s.minimapEnabled);
+
   return (
     <MonacoEditor
       value={content}
       options={{
-        minimap: { enabled: false },
+        minimap: { enabled: minimapEnabled },
         scrollBeyondLastLine: false,
-        wordWrap: 'on',
+        wordWrap: wordWrap ?? 'on',
+        fontSize: fontSize ?? 16,
       }}
       height={'80vh'}
       path={`/${projectId}/${name}`}
       width={'100%'}
       language={monacoLanguages?.[language ?? 'html']}
-      theme="vs-dark"
+      theme={theme}
       onChange={v => {
         onChange(v || '');
       }}

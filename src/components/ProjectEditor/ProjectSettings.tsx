@@ -2,14 +2,20 @@ import { useProject } from '@/hooks/api/useProject';
 import { useProjects } from '@/hooks/api/useProjects';
 import { useProjectSharing } from '@/hooks/api/useToggleShareProject';
 import { useEditor } from '@/hooks/useEditor';
+import { useEditorSettings } from '@/hooks/useEditorSettings';
 import { ProjectT } from '@/lib/api/services/projects';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, Tab, Transition } from '@headlessui/react';
 import { XCircleIcon } from '@heroicons/react/24/solid';
-import { useQueryClient } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import {
+  Fragment,
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import shallow from 'zustand/shallow';
 import { useDeleteProjectMutation } from '../../hooks/api/useDeleteProject';
 import { useRenameProjectMutation } from '../../hooks/api/useRenameProject';
@@ -55,19 +61,52 @@ function ProjectSettings() {
   );
 }
 
+const SETTINGS_TABS = ['General', 'Sharing', 'Editor', 'Danger Zone'] as const;
 function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
   const { push } = useRouter();
 
   return (
     <div className={'flex flex-col gap-6'}>
-      <SettingsSection title="Rename Project">
-        <RenameProjectForm id={id} />
-      </SettingsSection>
-      <ShareProjectToggleSection id={id} />
-      <hr className={'my-4'} />
-      <SettingsSection title="Danger Zone">
-        <DeleteProjectButton id={id} onSuccess={() => push('/projects')} />
-      </SettingsSection>
+      <Tab.Group>
+        <Tab.List className={'tabs tabs-boxed justify-between px-0'}>
+          {SETTINGS_TABS.map(tab => (
+            <Tab as={Fragment} key={tab}>
+              {({ selected }) => (
+                <button
+                  className={`tab tab-lg tab-rounded  ${
+                    selected ? 'tab-active' : ''
+                  }`}
+                >
+                  {tab}
+                </button>
+              )}
+            </Tab>
+          ))}
+        </Tab.List>
+        <Tab.Panels>
+          <Tab.Panel>
+            <SettingsSection title="General">
+              <h3 className="text-md font-bold">Rename Project</h3>
+              <RenameProjectForm id={id} />
+            </SettingsSection>
+          </Tab.Panel>
+          <Tab.Panel>
+            <ShareProjectToggleSection id={id} />
+          </Tab.Panel>
+          <Tab.Panel>
+            <EditorSettings />
+          </Tab.Panel>
+
+          <Tab.Panel>
+            <SettingsSection title="Danger Zone">
+              <DeleteProjectButton
+                id={id}
+                onSuccess={() => push('/projects')}
+              />
+            </SettingsSection>
+          </Tab.Panel>
+        </Tab.Panels>
+      </Tab.Group>
     </div>
   );
 }
@@ -75,11 +114,16 @@ function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
 function SettingsSection(
   props: PropsWithChildren<{
     title: string;
+    description?: string;
   }>
 ) {
   return (
     <div className="flex flex-col gap-2">
       <h3 className="text-xl font-bold">{props.title}</h3>
+      {props.description && (
+        <p className={'text-sm text-gray-500'}>{props.description}</p>
+      )}
+      <hr className={'my-4'} />
       {props.children}
     </div>
   );
@@ -196,9 +240,7 @@ function RenameProjectForm({ id }: { id: string }) {
 }
 
 function ShareProjectToggleSection({ id }: { id: string }) {
-  const { isLoading, mutate, error, reset } = useProjectSharing(id);
-
-  const qc = useQueryClient();
+  const { isLoading, mutate, error } = useProjectSharing(id);
 
   const { data: project } = useProject(id);
 
@@ -211,7 +253,10 @@ function ShareProjectToggleSection({ id }: { id: string }) {
   }, [forkUri]);
 
   return (
-    <SettingsSection title={`${shareCode ? 'Disable' : 'Enable'} Sharing`}>
+    <SettingsSection
+      title={'Project Sharing'}
+      description="Sharing your project allows anyone to fork it and build on it."
+    >
       <div className="flex flex-col gap-2 relative">
         <>
           {isLoading && (
@@ -258,6 +303,118 @@ function ShareProjectToggleSection({ id }: { id: string }) {
   );
 }
 
+function EditorSettings() {
+  const {
+    theme,
+    fontSize,
+    minimapEnabled,
+    wordWrap,
+    setTheme,
+    setFontSize,
+    setMinimapEnabled,
+    reset,
+    setWordWrap,
+  } = useEditorSettings(
+    s => ({
+      theme: s.theme,
+      fontSize: s.fontSize,
+      minimapEnabled: s.minimapEnabled,
+      wordWrap: s.wordWrap,
+      setTheme: s.setTheme,
+      setFontSize: s.setFontSize,
+      setMinimapEnabled: s.setMinimap,
+      setWordWrap: s.setWordWrap,
+      reset: s.reset,
+    }),
+    shallow
+  );
+
+  return (
+    <SettingsSection
+      title="Editor Settings"
+      description="Customize the look and feel of the editor."
+    >
+      <div className="flex flex-col gap-4">
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Theme</span>
+          </label>
+          <select
+            className="select select-bordered w-full"
+            value={theme}
+            onChange={e => setTheme(e.target.value)}
+            data-testid="editor-theme-select"
+          >
+            <option value="vs-light">Light</option>
+            <option value="vs-dark">Dark</option>
+          </select>
+        </div>
+
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Font Size</span>
+          </label>
+          <div className="flex gap-2 justify-between items-center">
+            <input
+              type="range"
+              min="10"
+              max="30"
+              value={fontSize}
+              className="range range-primary"
+              onChange={e => setFontSize(e.target.valueAsNumber)}
+            />
+            <b>{fontSize}px</b>
+          </div>
+        </div>
+        <button
+          className="form-control flex-row justify-between items-center"
+          onClick={() => {
+            setMinimapEnabled(!minimapEnabled);
+          }}
+        >
+          <label className="label">
+            <span className="label-text">
+              Minimap: {minimapEnabled ? 'Enabled' : 'Disabled'}
+            </span>
+          </label>
+          <input
+            type="checkbox"
+            className="toggle toggle-primary"
+            checked={minimapEnabled}
+            readOnly
+          />
+        </button>
+        <button
+          className="form-control flex-row justify-between items-center cursor-pointer"
+          onClick={() => {
+            setWordWrap(wordWrap === 'on' ? 'off' : 'on');
+          }}
+        >
+          <label className="label">
+            <span className="label-text">
+              Word Wrap: {wordWrap == 'on' ? 'Enabled' : 'Disabled'}
+            </span>
+          </label>
+          <input
+            type="checkbox"
+            className="toggle toggle-primary"
+            checked={wordWrap === 'on'}
+            onChange={e => setWordWrap(e.target.checked ? 'on' : 'off')}
+          />
+        </button>
+        <div className="form-control">
+          <button
+            className="btn btn-primary btn-md"
+            onClick={reset}
+            data-testid="reset-editor-settings-button"
+          >
+            Reset Editor Settings
+          </button>
+        </div>
+      </div>
+    </SettingsSection>
+  );
+}
 export default dynamic(() => Promise.resolve(ProjectSettings), {
   ssr: false,
 });

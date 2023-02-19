@@ -99,7 +99,9 @@ export default function ConsoleWindow() {
   }, [handleMessage, mustScroll, scrollToBottom]);
 
   return (
-    <div className="flex flex-col gap-2 text-sm absolute bottom-0 pb-2 w-full bg-opacity-60 bg-base-300 backdrop-blur-md">
+    <div
+      className={`flex flex-col gap-2 text-sm absolute right-[1px] bottom-0 pb-2 w-full bg-opacity-60 bg-base-200 backdrop-blur-md`}
+    >
       {show ? (
         <div>
           <div className="flex gap-2 items-center my-2 px-2">
