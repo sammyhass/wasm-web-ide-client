@@ -132,7 +132,7 @@ export const ToastProvider = () => {
   }, [alerts.length, pop]);
 
   return (
-    <div className="toast toast-bottom toast-end">
+    <div className="toast toast-bottom toast-end" data-testid="toast">
       {alerts.map(alert => (
         <Alert key={alert.id} {...alert} onHide={hide} />
       ))}

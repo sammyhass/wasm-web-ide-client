@@ -3,7 +3,7 @@ import { useWindowDimensions } from '@/hooks/util/useDimensions';
 import { ProjectT } from '@/lib/api/services/projects';
 import { Resizable } from 're-resizable';
 import { Fragment, PropsWithChildren, useMemo, useRef } from 'react';
-import ConsoleWindow from './ConsoleWindow';
+import ConsoleWindow, { useEditorConsole } from './ConsoleWindow';
 import EditorWindow from './EditorWindow';
 import FileTree from './FileTree';
 import PreviewWindow from './PreviewWindow';
@@ -13,8 +13,10 @@ import Toolbar from './Toolbar';
 export default function ProjectEditorWrapper(project: ProjectT) {
   const hasInitialisedProject = useRef(false);
   const initProject = useEditor(s => s.initProject);
+  const clearConsole = useEditorConsole(s => s.clear);
 
   if (!hasInitialisedProject.current) {
+    clearConsole();
     initProject(project);
     hasInitialisedProject.current = true;
   }
