@@ -26,11 +26,11 @@ export default function WatViewerWrapper() {
         onClick={() => setShow(true)}
         icon={<EyeIcon className="w-5 h-5" />}
         title="View WAT"
+        data-testid="wat-viewer-button"
       />
 
       <Dialog
         as="div"
-        data-testid="wat-viewer"
         className={`modal ${show ? 'modal-open' : ''} `}
         onClose={() => setShow(false)}
         open={show}
@@ -78,7 +78,7 @@ function WatViewer({ projectId }: { projectId: string }) {
   );
 
   return (
-    <div>
+    <div data-testid="wat-viewer">
       {status === 'loading' && <div>Loading...</div>}
       {status === 'success' && !!wat && (
         <Editor
