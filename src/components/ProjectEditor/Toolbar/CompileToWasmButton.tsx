@@ -84,6 +84,7 @@ export default function CompileToWasmButton() {
 
   return (
     <ToolbarButton
+      data-testid="compile-to-wasm-button"
       onClick={mutate}
       loading={isLoading}
       title="Compile to WebAssembly"

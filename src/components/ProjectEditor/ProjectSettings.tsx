@@ -20,6 +20,7 @@ import shallow from 'zustand/shallow';
 import { useDeleteProjectMutation } from '../../hooks/api/useDeleteProject';
 import { useRenameProjectMutation } from '../../hooks/api/useRenameProject';
 import LoadingSpinner from '../icons/Spinner';
+import { Alert } from '../Toast';
 
 function ProjectSettings() {
   const { showSettings, setShowSettings, projectId } = useEditor(
@@ -95,7 +96,6 @@ function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
         <Tab.Panels>
           <Tab.Panel>
             <SettingsSection title="General">
-              <h3 className="text-md font-bold">Rename Project</h3>
               <RenameProjectForm id={id} />
             </SettingsSection>
           </Tab.Panel>
@@ -224,7 +224,7 @@ function RenameProjectForm({ id }: { id: string }) {
     <form onSubmit={onSubmit} className="flex flex-col gap-2">
       <div className="form-control">
         <label className="label">
-          <span className="label-text">Name</span>
+          <span className="label-text">Project Name</span>
         </label>
         <input
           type="text"
@@ -249,7 +249,7 @@ function RenameProjectForm({ id }: { id: string }) {
 }
 
 function ShareProjectToggleSection({ id }: { id: string }) {
-  const { isLoading, mutate, error } = useProjectSharing(id);
+  const { isLoading, mutate, error, reset } = useProjectSharing(id);
 
   const { data: project } = useProject(id);
 
@@ -293,9 +293,12 @@ function ShareProjectToggleSection({ id }: { id: string }) {
             />
           </button>
           {error && (
-            <div className="alert alert-error">
-              <p>Something went wrong. Please try again.</p>
-            </div>
+            <Alert
+              type="error"
+              onHide={reset}
+              message={'Something went wrong. Please try again later.'}
+              id="share-project-error"
+            />
           )}
           {shareCode && (
             <p className="text-sm text-gray-500 p-1 text-center">
