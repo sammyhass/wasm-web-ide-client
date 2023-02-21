@@ -1,16 +1,16 @@
 import { useLogoutMutation, useMeQuery } from '@/hooks/useMe';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 export default function NavButtons() {
   const { data: user } = useMeQuery();
 
   const logout = useLogoutMutation();
 
-  const router = useRouter();
-
   return (
     <div className="flex gap-2">
+      <Link href="/playground">
+        <button className="btn btn-outline btn-info btn-md">Playground</button>
+      </Link>
       {user ? (
         <>
           <Link href="/projects">

@@ -13,7 +13,7 @@ export default function HomePage() {
             <span>IDE</span>
           </h1>
           <h1 className="text-xl md:text-4xl font-bold text-center  text-info-content ">
-            Build crazy fast websites with{' '}
+            Build websites with{' '}
             <a
               className="text-primary hover:text-primary-focus transition-colors"
               href="https://webassembly.org/"
@@ -25,11 +25,19 @@ export default function HomePage() {
             </a>{' '}
             from the comfort of your browser.
           </h1>
-          <Link href={user ? '/projects' : '/login'} passHref>
-            <button className="btn btn-accent md:btn-xl btn-wide">
-              Get Started
-            </button>
-          </Link>
+
+          <div className="btn-group-vertical btn-group items-center gap-5">
+            <Link href={user ? '/projects' : '/login'} passHref>
+              <button className="btn btn-accent md:btn-xl btn-wide">
+                Get Started
+              </button>
+            </Link>
+            <Link href="/playground">
+              <button className="btn btn-info btn-md text-white">
+                Check out the WebContainers Playground
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
