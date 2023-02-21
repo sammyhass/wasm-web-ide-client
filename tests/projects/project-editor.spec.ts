@@ -54,8 +54,6 @@ test('can create a new project', async () => {
 
   await newProjectPagePom.createProject(newProjectName);
 
-  await page.waitForLoadState('networkidle');
-
   await waitForProjectPage(page, newProjectName);
 
   const navbar = new Navbar(page);
@@ -177,8 +175,6 @@ test('cleanup: can delete project', async () => {
   await projectEditorPom.settingsButton.click();
 
   await projectEditorPom.settingsModal.deleteProject();
-
-  await page.waitForLoadState('networkidle');
 
   await page.waitForURL(getURL('/projects'));
 });

@@ -37,8 +37,6 @@ test('can create a project', async () => {
 
   await newProjectPagePom.createProject(newProjectName);
 
-  await page.waitForLoadState('networkidle');
-
   await waitForProjectPage(page, newProjectName);
 
   const navbar = new Navbar(page);
