@@ -1,5 +1,6 @@
 import WasmIcon from '@/components/icons/WasmIcon';
 import { FileT } from '@/lib/api/services/projects';
+import { DocumentIcon } from '@heroicons/react/24/outline';
 import type { FC } from 'react';
 import AssemblyScriptIcon from './AssemblyScriptIcon';
 import CssIcon from './CSSIcon';
@@ -32,7 +33,7 @@ export default function LanguageIcon({
       className={`min-w-[2em] max-h-fit ${className}`}
       title={`${language} icon`}
     >
-      {Icon ? <Icon /> : <span>{language}</span>}
+      {Icon ? <Icon /> : <DocumentIcon />}
     </div>
   );
 }

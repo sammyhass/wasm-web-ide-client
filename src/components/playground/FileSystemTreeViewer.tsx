@@ -1,7 +1,9 @@
+import { FileT } from '@/lib/api/services/projects';
 import { isDirectoryNode, isFileNode } from '@/lib/webcontainers/util';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 import { DirectoryNode, FileNode, FileSystemTree } from '@webcontainer/api';
 import { useState } from 'react';
+import LanguageIcon from '../icons/Icon';
 
 export default function FileSystemTreeWrapper({
   tree,
@@ -99,6 +101,10 @@ function FileNodeViewer({
       }`}
       onClick={() => onSelect(path)}
     >
+      <LanguageIcon
+        language={path.split('.').pop() as FileT['language']}
+        className="h-5 w-5 min-w-0"
+      />
       <span>{path}</span>
     </button>
   );
