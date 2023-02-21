@@ -1,4 +1,5 @@
 import {
+  QueryFilters,
   useMutation,
   UseMutationOptions,
   useQuery,
@@ -73,6 +74,17 @@ const setup = async (logger: (chunk: string) => void) => {
   });
   const startProcess = await startServer(startLogger);
   if (startProcess !== 0) throw new Error('Failed to start server');
+};
+
+export const destroyContainer = () => {
+  queryClient.removeQueries([
+    ['webcontainer'],
+    {
+      predicate: ({ queryKey: [key] }) => key === 'readFile',
+    } as QueryFilters,
+  ]);
+  container?.teardown();
+  container = null;
 };
 
 export const useBuildAssemblyScript = (logger?: (chunk: string) => void) =>

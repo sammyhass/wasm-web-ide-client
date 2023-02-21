@@ -7,7 +7,8 @@ import { useFileReader } from '@/lib/webcontainers/files/reader';
 import { useDebouncedWriter } from '@/lib/webcontainers/files/writer';
 import { useMonaco } from '@monaco-editor/react';
 import dynamic from 'next/dynamic';
-import { Fragment, useMemo, useRef, useState } from 'react';
+import { Fragment, useMemo, useRef } from 'react';
+import create from 'zustand';
 import LanguageIcon from '../icons/Icon';
 import LoadingSpinner from '../icons/Spinner';
 import { ResizableWindow } from '../ProjectEditor';
@@ -26,10 +27,27 @@ const FileEditor = dynamic(
   }
 );
 
+const usePlaygroundEditor = create<{
+  url: string;
+  setUrl: (url: string) => void;
+
+  selectedFile: string;
+  setSelectedFile: (file: string) => void;
+}>(set => ({
+  url: '',
+  setUrl: url => set({ url }),
+
+  selectedFile: 'index.html',
+  setSelectedFile: (file: string) => set({ selectedFile: file }),
+}));
+
 export default function PlaygroundEditor() {
   const previewRef = useRef<HTMLIFrameElement>(null);
 
-  const [selectedFile, setSelectedFile] = useState<string>('index.html');
+  const url = usePlaygroundEditor(s => s.url);
+  const setUrl = usePlaygroundEditor(s => s.setUrl);
+  const selectedFile = usePlaygroundEditor(s => s.selectedFile);
+  const setSelectedFile = usePlaygroundEditor(s => s.setSelectedFile);
 
   const { write, isLoading } = useDebouncedWriter(selectedFile, 500);
   const { data: currentFileContent } = useFileReader(selectedFile);
@@ -45,11 +63,8 @@ export default function PlaygroundEditor() {
     onSuccess: c => {
       clearConsole();
       setupContainer();
-
       c?.on('server-ready', (port, url) => {
-        if (previewRef.current) {
-          previewRef.current.src = url;
-        }
+        setUrl(url);
       });
     },
   });
@@ -120,6 +135,7 @@ export default function PlaygroundEditor() {
           <iframe
             ref={previewRef}
             className="min-w-[40px]  w-full block h-full bg-white"
+            src={url}
           />
         </div>
       </div>

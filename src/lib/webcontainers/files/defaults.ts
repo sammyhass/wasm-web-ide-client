@@ -42,7 +42,9 @@ export const publicIndexHtml = `
   <script src="/lib/setup-preview.js"></script>
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <h1>Hello World!</h1>
+  </div>
   <script src="/out/module.js" type="module"></script>
   <script type="module" src="/main.js" defer></script>
 </body>
