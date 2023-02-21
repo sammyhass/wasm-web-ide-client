@@ -5,11 +5,9 @@ import { useState } from 'react';
 
 export default function FileSystemTreeWrapper({
   tree,
+  selectedPath,
   onSelect,
-}: {
-  onSelect: (path: string) => void;
-  tree: FileSystemTree;
-}) {
+}: FileSystemTreeViewerProps) {
   const [show, setShow] = useState(true);
   return show ? (
     <div className="flex flex-col">
@@ -19,7 +17,11 @@ export default function FileSystemTreeWrapper({
           <ArrowLeftIcon className="w-5 h-5" />
         </button>
       </div>
-      <FileSystemTreeViewer tree={tree} onSelect={onSelect} />
+      <FileSystemTreeViewer
+        tree={tree}
+        onSelect={onSelect}
+        selectedPath={selectedPath}
+      />
     </div>
   ) : (
     <button
@@ -33,19 +35,36 @@ export default function FileSystemTreeWrapper({
   );
 }
 
+type FileSystemTreeViewerProps = {
+  onSelect: (path: string) => void;
+  selectedPath: string;
+  tree: FileSystemTree;
+  parentPath?: string;
+};
+
 function FileSystemTreeViewer({
   tree,
+  selectedPath,
   onSelect,
-}: {
-  onSelect: (path: string) => void;
-  tree: FileSystemTree;
-}) {
+  parentPath = '/',
+}: FileSystemTreeViewerProps) {
   const renderNode = (node: FileNode | DirectoryNode, path: string) => {
     if (isFileNode(node)) {
-      return <FileNodeViewer path={path} onSelect={onSelect} key={path} />;
+      return (
+        <FileNodeViewer
+          path={path}
+          onSelect={onSelect}
+          key={path}
+          isSelected={
+            selectedPath ===
+            `${parentPath === '/' ? '' : `${parentPath}/`}${path}`
+          }
+        />
+      );
     } else if (isDirectoryNode(node)) {
       return (
         <DirectoryNodeViewer
+          selectedPath={selectedPath}
           path={path}
           node={node}
           onSelect={onSelect}
@@ -56,7 +75,7 @@ function FileSystemTreeViewer({
   };
 
   return (
-    <ul className="font-mono list-none px-2 text-sm gap-2 flex flex-col h-full min-w-[250px]">
+    <ul className="font-mono list-none px-2 text-sm gap-2 flex flex-col h-full w-full md:w-[270px]">
       {Object.entries(tree).map(([name, node]) => {
         return renderNode(node, name);
       })}
@@ -67,13 +86,17 @@ function FileSystemTreeViewer({
 function FileNodeViewer({
   path,
   onSelect,
+  isSelected,
 }: {
   path: string;
   onSelect: (path: string) => void;
+  isSelected: boolean;
 }) {
   return (
     <button
-      className="flex items-center p-1  gap-2 hover:bg-base-200 w-full"
+      className={`flex items-center p-2  gap-2 hover:bg-base-200 w-full ${
+        isSelected ? 'bg-base-200' : ''
+      }`}
       onClick={() => onSelect(path)}
     >
       <span>{path}</span>
@@ -85,10 +108,12 @@ function DirectoryNodeViewer({
   path,
   node,
   onSelect,
+  selectedPath,
 }: {
   path: string;
   node: DirectoryNode;
   onSelect: (path: string) => void;
+  selectedPath: string;
 }) {
   const [show, setShow] = useState(false);
   return (
@@ -107,8 +132,10 @@ function DirectoryNodeViewer({
         </button>
         {show && (
           <FileSystemTreeViewer
+            parentPath={path}
             onSelect={p => onSelect(`${path}/${p}`)}
             tree={node.directory}
+            selectedPath={selectedPath}
           />
         )}
       </>

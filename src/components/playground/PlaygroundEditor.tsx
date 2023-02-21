@@ -3,6 +3,7 @@ import { FileT } from '@/lib/api/services/projects';
 import { useMonacoAssemblyScriptSetup } from '@/lib/monaco/assemblyscript';
 import { useContainer, useSetupContainer } from '@/lib/webcontainers';
 import { filesystem } from '@/lib/webcontainers/files/defaults';
+import { useDirListing } from '@/lib/webcontainers/files/dir';
 import { useFileReader } from '@/lib/webcontainers/files/reader';
 import { useDebouncedWriter } from '@/lib/webcontainers/files/writer';
 import { useMonaco } from '@monaco-editor/react';
@@ -40,6 +41,9 @@ const usePlaygroundEditor = create<{
   selectedFile: 'index.html',
   setSelectedFile: (file: string) => set({ selectedFile: file }),
 }));
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { lib: _, ...files } = filesystem;
 
 export default function PlaygroundEditor() {
   const previewRef = useRef<HTMLIFrameElement>(null);
@@ -88,8 +92,7 @@ export default function PlaygroundEditor() {
 
   useMonacoAssemblyScriptSetup(monaco ?? undefined);
 
-  const { lib: _, ...files } = filesystem;
-
+  const { data: tree } = useDirListing();
   return (
     <>
       <ul className="menu max-w-fit menu-horizontal">
@@ -99,7 +102,8 @@ export default function PlaygroundEditor() {
       <div className="flex flex-col md:flex-row h-full">
         {' '}
         <FileSystemTreeViewer
-          tree={files}
+          tree={tree ?? {}}
+          selectedPath={selectedFile}
           onSelect={path => {
             isLoading ? undefined : setSelectedFile(path);
           }}
@@ -134,16 +138,12 @@ export default function PlaygroundEditor() {
           </ParentComponent>
           <iframe
             ref={previewRef}
-            className="min-w-[40px]  w-full block h-full bg-white"
+            className="w-full block h-full bg-white"
             src={url}
           />
         </div>
       </div>
       <PlaygroundSettings />
-      {/* <MonacoSetupProvider
-        language="AssemblyScript"
-        monaco={monaco ?? undefined}
-      /> */}
     </>
   );
 }

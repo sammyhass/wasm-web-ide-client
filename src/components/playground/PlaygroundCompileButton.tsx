@@ -1,4 +1,5 @@
 import { useBuildAssemblyScript } from '@/lib/webcontainers';
+import { useDirListing } from '@/lib/webcontainers/files/dir';
 import { useFileReader } from '@/lib/webcontainers/files/reader';
 import { PlayCircleIcon } from '@heroicons/react/24/solid';
 import { useMonaco } from '@monaco-editor/react';
@@ -21,6 +22,8 @@ export default function PlaygroundCompileButton() {
     },
   });
 
+  const { refetch: refetchFileTree } = useDirListing();
+
   const { refetch: refetchWat } = useFileReader('out/module.wat');
   const { refetch: refetchBindings } = useFileReader('out/module.js');
 
@@ -30,6 +33,7 @@ export default function PlaygroundCompileButton() {
         refetchBindings();
         refetchTypings();
         refetchWat();
+        refetchFileTree();
       },
     });
   };

@@ -157,7 +157,7 @@ export default function ConsoleWindow() {
                   m.level,
                   isDark ? 'dark' : 'light'
                 )} break-all py-1 max-w-full ${
-                  isDark ? 'hover:bg-base-200' : 'hover:bg-slate-100 '
+                  isDark ? 'hover:bg-base-200' : 'hover:bg-slate-100'
                 }`}
               >
                 {m.args.map((a, i) => (

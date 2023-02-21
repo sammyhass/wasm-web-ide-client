@@ -111,22 +111,7 @@ export const filesystem = {
   },
   out: {
     directory: {
-      'module.wasm': {
-        file: {
-          contents: '',
-        },
-      },
-      'module.wat': {
-        file: {
-          contents: '',
-        },
-      },
       'module.js': {
-        file: {
-          contents: '',
-        },
-      },
-      'module.d.ts': {
         file: {
           contents: '',
         },
