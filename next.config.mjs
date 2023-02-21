@@ -2,7 +2,7 @@ const config = {
   async headers() {
     return [
       {
-        source: '/playground',
+        source: '/:path*',
         headers: [
           {
             key: 'Cross-Origin-Embedder-Policy',
