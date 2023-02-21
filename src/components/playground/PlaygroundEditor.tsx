@@ -17,6 +17,7 @@ import ConsoleWindow, {
   useEditorConsole,
 } from '../ProjectEditor/ConsoleWindow';
 import SettingsButton from '../ProjectEditor/Toolbar/SettingsButton';
+import DownloadButton from './DownloadButton';
 import FileSystemTreeViewer from './FileSystemTreeViewer';
 import CompileButton from './PlaygroundCompileButton';
 import { PlaygroundSettings } from './PlaygroundSettings';
@@ -97,6 +98,7 @@ export default function PlaygroundEditor() {
     <>
       <ul className="menu max-w-fit menu-horizontal">
         <CompileButton />
+        <DownloadButton />
         <SettingsButton />
       </ul>
       <div className="flex flex-col md:flex-row h-full">

@@ -11,10 +11,12 @@ export const packageJson = {
     preview: 'vite preview',
     'build-assemblyscript':
       'asc assemblyscript/index.ts --bindings esm --runtime stub --outFile out/module.wasm --textFile out/module.wat',
+    zip: 'bestzip ./project.zip styles.css index.html package.json main.js out lib',
   },
   devDependencies: {
     vite: '^4.1.0',
     assemblyscript: 'latest',
+    bestzip: 'latest',
   },
 };
 
@@ -67,7 +69,6 @@ for (let i = 0; i < 10; i++) {
 root.appendChild(output);
 
 console.log('Hello from main.js');
-
 `;
 
 export const filesystem = {
@@ -104,7 +105,7 @@ export const filesystem = {
     directory: {
       'setup-preview.js': {
         file: {
-          contents: `${consoleReassign}\n${errorHandler}`,
+          contents: `/* This script sets up the preview window to it can interact with the editor. Feel free to remove this if you dont need it anymore. */\n${consoleReassign}\n${errorHandler}`,
         },
       },
     },
