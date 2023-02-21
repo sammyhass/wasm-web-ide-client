@@ -1,15 +1,12 @@
-const consoleReassign = `
+export const consoleReassign = `
 const postMessageToParent = (type, data) => {
   window.parent.postMessage({ type, data }, '*');
 };
 
 ${['log', 'error', 'warn', 'info', 'debug']
   .map(
-    method => `
-      console.${method} = (...args) => {
-        postMessageToParent('console', ['${method}', '[JS]', args]);
-      };
-    `
+    method =>
+      `console.${method} = (...args) => {\n\n\tpostMessageToParent('console', ['${method}', '[JS]', args]);};`
   )
   .join('')}
 `;

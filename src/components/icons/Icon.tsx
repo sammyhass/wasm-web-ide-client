@@ -11,6 +11,8 @@ const icons: Record<FileT['language'], FC> = {
   go: GoIcon,
   html: HtmlIcon,
   css: CssIcon,
+  json: JavaScriptIcon,
+  wat: WasmIcon,
   js: JavaScriptIcon,
   wasm: WasmIcon,
   ts: AssemblyScriptIcon,

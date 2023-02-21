@@ -4,6 +4,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/solid';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import strip from 'strip-color';
 import create from 'zustand';
 
 type LogLevel = 'log' | 'error' | 'warn' | 'info' | 'debug';
@@ -23,6 +24,18 @@ type ConsoleT = {
   _setMustScroll: (mustScroll: boolean) => void;
 };
 
+function joinRecursive(arr: unknown[]): string {
+  return arr
+    .map(arg => {
+      if (Array.isArray(arg)) {
+        return joinRecursive(arg);
+      }
+
+      return arg;
+    })
+    .join(' ');
+}
+
 export const useEditorConsole = create<ConsoleT>((set, get) => ({
   _messages: [],
   mustScroll: true,
@@ -34,7 +47,7 @@ export const useEditorConsole = create<ConsoleT>((set, get) => ({
         {
           type: 'console',
           level: logLevel,
-          args: [message],
+          args: [strip(message)],
           createdAt: Date.now(),
         },
       ],
@@ -54,7 +67,7 @@ export const useEditorConsole = create<ConsoleT>((set, get) => ({
       console.log(...e.data);
     }
 
-    get().push(method as LogLevel, args.join(' '));
+    get().push(method as LogLevel, joinRecursive(args));
   },
 }));
 
@@ -81,8 +94,8 @@ export default function ConsoleWindow() {
 
   useEffect(() => {
     const listener = (e: MessageEvent) => {
-      if (e.origin !== window.location.origin) return;
       if (e.data.type === 'console') {
+        console.log(e.data);
         handleMessage(e);
       }
     };
@@ -124,7 +137,7 @@ export default function ConsoleWindow() {
             </div>
           </div>
           <div
-            className="h-28 max-h-44 min-h-12 overflow-y-auto py-2 px-2 pb-6"
+            className="h-48 max-h-52 min-h-12 overflow-y-auto py-2 px-2 pb-6"
             ref={messagesRef}
             data-testid="console-messages"
           >
@@ -148,7 +161,10 @@ export default function ConsoleWindow() {
       ) : (
         <button
           className=" p-2 flex items-center gap-2 text-sm w-full"
-          onClick={() => setShow(true)}
+          onClick={() => {
+            setShow(true);
+            scrollToBottom();
+          }}
           title="Show Console"
         >
           <ArrowUpIcon className="w-5 h-5" />

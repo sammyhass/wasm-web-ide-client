@@ -13,6 +13,8 @@ const monacoLanguages: Record<FileT['language'], string> = {
   css: 'css',
   ts: 'typescript',
   wasm: 'txt',
+  json: 'json',
+  wat: 'txt',
 };
 
 export default function EditorWindow() {
@@ -58,7 +60,7 @@ export default function EditorWindow() {
   );
 }
 
-function FileEditor({
+export function FileEditor({
   content,
   projectId,
   onChange,
@@ -78,7 +80,6 @@ function FileEditor({
       value={content}
       options={{
         minimap: { enabled: minimapEnabled },
-        scrollBeyondLastLine: false,
         wordWrap: wordWrap ?? 'on',
         fontSize: fontSize ?? 16,
       }}

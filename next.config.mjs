@@ -1,24 +1,28 @@
-// @ts-check
-import { env } from "./src/env/server.mjs";
-
-/**
- * Don't be scared of the generics here.
- * All they do is to give us autocompletion when using this.
- *
- * @template {import('next').NextConfig} T
- * @param {T} config - A generic parameter that flows through to the return type
- * @constraint {{import('next').NextConfig}}
- */
-function defineNextConfig(config) {
-  return config;
-}
-
-export default defineNextConfig({
+const config = {
+  async headers() {
+    return [
+      {
+        source: '/playground',
+        headers: [
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp',
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
+          },
+        ],
+      },
+    ];
+  },
   reactStrictMode: true,
   swcMinify: true,
   // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
   i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
+    locales: ['en'],
+    defaultLocale: 'en',
   },
-});
+};
+
+export default config;

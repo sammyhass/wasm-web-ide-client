@@ -315,7 +315,7 @@ function ShareProjectToggleSection({ id }: { id: string }) {
   );
 }
 
-function EditorSettings() {
+export function EditorSettings() {
   const {
     theme,
     fontSize,

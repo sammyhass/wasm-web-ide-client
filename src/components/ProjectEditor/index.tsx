@@ -28,7 +28,7 @@ export default function ProjectEditorWrapper(project: ProjectT) {
   return null;
 }
 
-function ResizableWindow({ children }: PropsWithChildren) {
+export function ResizableWindow({ children }: PropsWithChildren) {
   return (
     <Resizable
       bounds={'parent'}
@@ -37,6 +37,7 @@ function ResizableWindow({ children }: PropsWithChildren) {
         height: '100%',
       }}
       minWidth={'300px'}
+      minHeight={'100%'}
       maxWidth={'100%'}
       enable={{
         left: false,

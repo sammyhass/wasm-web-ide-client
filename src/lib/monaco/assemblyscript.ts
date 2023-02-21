@@ -20,7 +20,7 @@ const getAssemblyScriptTypes = async () => {
 
 export const useMonacoAssemblyScriptSetup = (
   monaco?: Monaco,
-  projectLanguage?: ProjectLangT
+  projectLanguage: ProjectLangT = 'AssemblyScript'
 ) => {
   useQuery(['assemblyscript-types'], getAssemblyScriptTypes, {
     enabled: projectLanguage === 'AssemblyScript' && !!monaco,
