@@ -1,3 +1,4 @@
+import { useEditorSettings } from '@/hooks/useEditorSettings';
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -73,6 +74,7 @@ export const useEditorConsole = create<ConsoleT>((set, get) => ({
 
 export default function ConsoleWindow() {
   const [show, setShow] = useState(true);
+  const theme = useEditorSettings(s => s.theme);
   const messages = useEditorConsole(state => state._messages);
   const handleMessage = useEditorConsole(state => state.handleMessage);
   const clear = useEditorConsole(state => state.clear);
@@ -111,9 +113,15 @@ export default function ConsoleWindow() {
     };
   }, [handleMessage, mustScroll, scrollToBottom]);
 
+  const isDark = theme.includes('dark');
+
   return (
     <div
-      className={`flex flex-col gap-2 text-sm absolute right-[1px] bottom-0 pb-2 w-full bg-opacity-60 bg-base-200 backdrop-blur-md`}
+      className={`flex flex-col gap-2 text-sm absolute bottom-0 pb-2 w-full  ${
+        isDark
+          ? 'bg-opacity-60 bg-base-200 backdrop-blur-md'
+          : 'bg-white border-t border-base-300 shadow-inner text-black'
+      }`}
     >
       {show ? (
         <div>
@@ -146,8 +154,11 @@ export default function ConsoleWindow() {
                 key={`${m.createdAt}-${i}-${m.level}`}
                 data-testid="console-message"
                 className={`font-mono ${consoleMessageClass(
-                  m.level
-                )} break-all hover:bg-base-200 py-1 max-w-full`}
+                  m.level,
+                  isDark ? 'dark' : 'light'
+                )} break-all py-1 max-w-full ${
+                  isDark ? 'hover:bg-base-200' : 'hover:bg-slate-100 '
+                }`}
               >
                 {m.args.map((a, i) => (
                   <span key={i} className="break-normal">
@@ -175,10 +186,10 @@ export default function ConsoleWindow() {
   );
 }
 
-const consoleMessageClass = (level: LogLevel) => {
+const consoleMessageClass = (level: LogLevel, theme: 'dark' | 'light') => {
   switch (level) {
     case 'log':
-      return 'text-neutral-content';
+      return theme === 'dark' ? 'text-neutral-content' : 'text-black';
     case 'error':
       return 'text-error';
     case 'warn':
