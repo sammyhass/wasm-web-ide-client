@@ -1,9 +1,8 @@
-import { FileT } from '@/lib/api/services/projects';
 import { isDirectoryNode, isFileNode } from '@/lib/webcontainers/util';
+import { DocumentIcon } from '@heroicons/react/24/outline';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 import { DirectoryNode, FileNode, FileSystemTree } from '@webcontainer/api';
 import { useState } from 'react';
-import LanguageIcon from '../icons/Icon';
 
 export default function FileSystemTreeWrapper({
   tree,
@@ -96,15 +95,12 @@ function FileNodeViewer({
 }) {
   return (
     <button
-      className={`flex items-center p-2  gap-2 hover:bg-base-200 w-full ${
+      className={`flex items-center py-2  gap-2 hover:bg-base-200 w-full ${
         isSelected ? 'bg-base-200' : ''
       }`}
       onClick={() => onSelect(path)}
     >
-      <LanguageIcon
-        language={path.split('.').pop() as FileT['language']}
-        className="h-5 w-5 min-w-0"
-      />
+      <DocumentIcon className="w-5 h-5" />
       <span>{path}</span>
     </button>
   );
@@ -126,7 +122,7 @@ function DirectoryNodeViewer({
     <li className="flex flex-col gap-2">
       <>
         <button
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 hover:bg-base-200 w-full py-2"
           onClick={() => setShow(!show)}
         >
           <ArrowRightIcon
