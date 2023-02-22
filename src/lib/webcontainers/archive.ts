@@ -7,9 +7,18 @@ const exportProject = async (
   container: WebContainer,
   w?: WritableStream<string>
 ) => {
-  const processOut = await container?.spawn('npm', ['run', 'zip']);
-  w && processOut?.output?.pipeTo(w);
+  const processOut = await container?.spawn('npx', [
+    'bestzip',
+    './project.zip',
+    'styles.css',
+    'index.html',
+    'package.json',
+    'main.js',
+    'out',
+    'lib',
+  ]);
 
+  w && processOut?.output?.pipeTo(w);
   const exit = await processOut.exit;
   if (exit !== 0) {
     throw new Error('Failed to export project');

@@ -11,12 +11,10 @@ export const packageJson = {
     preview: 'vite preview',
     'build-assemblyscript':
       'asc assemblyscript/index.ts --bindings esm --runtime stub --outFile out/module.wasm --textFile out/module.wat',
-    zip: 'bestzip ./project.zip styles.css index.html package.json main.js out lib',
   },
   devDependencies: {
     vite: '^4.1.0',
     assemblyscript: 'latest',
-    bestzip: 'latest',
   },
 };
 
