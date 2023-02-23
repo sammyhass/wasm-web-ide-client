@@ -1,43 +1,50 @@
-import {
-  QueryFilters,
-  useMutation,
-  UseMutationOptions,
-  useQuery,
-  UseQueryOptions,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { FileSystemTree, WebContainer } from '@webcontainer/api';
 import { queryClient } from '../api/queryClient';
 import { filesystem } from './files/defaults';
 import { isFileNode, visitFileTree } from './util';
 
-let container: WebContainer | null = null;
+declare global {
+  interface Window {
+    webcontainer: WebContainer | undefined;
+  }
+}
+
+const boot = async () => {
+  if (typeof window === undefined || window.webcontainer) {
+    return;
+  }
+
+  window.webcontainer = await WebContainer.boot();
+};
+
+const getContainer = () => {
+  if (!window.webcontainer) {
+    throw new Error('WebContainer not booted');
+  }
+  return window.webcontainer;
+};
 
 const buildAssemblyScript = async (w?: WritableStream) => {
-  const container = await getContainer();
+  const container = getContainer();
   const processOut = await container?.spawn('npm', [
     'run',
     'build-assemblyscript',
   ]);
+
   w && processOut?.output?.pipeTo(w);
 
   return processOut.exit;
 };
 
-const getContainer = async () => {
-  if (container) return container;
-  container = await WebContainer.boot();
-
-  return container;
-};
-
 const bootFiles = async (files: FileSystemTree) => {
-  const container = await getContainer();
+  const container = getContainer();
   await container?.mount(files);
   return container;
 };
 
 const installDependencies = async (w?: WritableStream<string>) => {
-  const container = await getContainer();
+  const container = getContainer();
   const processOut = await container?.spawn('npm', ['install']);
   w && processOut?.output?.pipeTo(w);
 
@@ -45,7 +52,7 @@ const installDependencies = async (w?: WritableStream<string>) => {
 };
 
 const startServer = async (w?: WritableStream<string>) => {
-  const container = await getContainer();
+  const container = getContainer();
   const processOut = await container?.spawn('npm', ['run', 'dev']);
   w && processOut?.output?.pipeTo(w);
   return processOut?.exit;
@@ -77,14 +84,8 @@ const setup = async (logger: (chunk: string) => void) => {
 };
 
 export const destroyContainer = () => {
-  queryClient.removeQueries([
-    ['webcontainer'],
-    {
-      predicate: ({ queryKey: [key] }) => key === 'readFile',
-    } as QueryFilters,
-  ]);
-  container?.teardown();
-  container = null;
+  window.webcontainer?.teardown();
+  window.webcontainer = undefined;
 };
 
 export const useBuildAssemblyScript = (logger?: (chunk: string) => void) =>
@@ -98,26 +99,26 @@ export const useBuildAssemblyScript = (logger?: (chunk: string) => void) =>
     )
   );
 
-export const useContainer = (
-  opts: UseQueryOptions<WebContainer | undefined, unknown> = {}
-) =>
-  useQuery<WebContainer | undefined>(['webcontainer'], () => getContainer(), {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    ...opts,
-  });
+export const useSetup = (logger: (chunk: string) => void) =>
+  useMutation(() => setup(logger));
 
-export const useSetupContainer = (
-  opts: UseMutationOptions<unknown, unknown> = {},
-  logger?: (chunk: string) => void
+export const useContainer = (
+  options?: UseQueryOptions<WebContainer | undefined>
 ) =>
-  useMutation(
-    ['setup-webcontainer'],
-    () => {
-      return setup(logger || (() => void 0));
+  useQuery<WebContainer | undefined>(
+    ['useContainer'],
+    async () => {
+      await boot();
+      if (!window.webcontainer) {
+        throw new Error('WebContainer not booted');
+      }
+      return window.webcontainer;
     },
     {
-      ...opts,
+      enabled: typeof window !== 'undefined',
+      retryOnMount: true,
+      initialData:
+        typeof window !== 'undefined' ? window.webcontainer : undefined,
+      ...options,
     }
   );

@@ -1,7 +1,7 @@
 import { useWindowDimensions } from '@/hooks/util/useDimensions';
 import { FileT } from '@/lib/api/services/projects';
 import { useMonacoAssemblyScriptSetup } from '@/lib/monaco/assemblyscript';
-import { useContainer, useSetupContainer } from '@/lib/webcontainers';
+import { useContainer, useSetup } from '@/lib/webcontainers';
 import { filesystem } from '@/lib/webcontainers/files/defaults';
 import { useDirListing } from '@/lib/webcontainers/files/dir';
 import { useFileReader } from '@/lib/webcontainers/files/reader';
@@ -17,6 +17,7 @@ import ConsoleWindow, {
   useEditorConsole,
 } from '../ProjectEditor/ConsoleWindow';
 import SettingsButton from '../ProjectEditor/Toolbar/SettingsButton';
+import DependencyManager from './DependencyManager';
 import DownloadButton from './DownloadButton';
 import FileSystemTreeViewer from './FileSystemTreeViewer';
 import CompileButton from './PlaygroundCompileButton';
@@ -35,12 +36,18 @@ const usePlaygroundEditor = create<{
 
   selectedFile: string;
   setSelectedFile: (file: string) => void;
+
+  hasMounted: boolean;
+  setHasMounted: (hasMounted: boolean) => void;
 }>(set => ({
   url: '',
   setUrl: url => set({ url }),
 
   selectedFile: 'index.html',
   setSelectedFile: (file: string) => set({ selectedFile: file }),
+
+  hasMounted: false,
+  setHasMounted: (hasMounted: boolean) => set({ hasMounted }),
 }));
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -54,22 +61,24 @@ export default function PlaygroundEditor() {
   const selectedFile = usePlaygroundEditor(s => s.selectedFile);
   const setSelectedFile = usePlaygroundEditor(s => s.setSelectedFile);
 
+  const hasMounted = usePlaygroundEditor(s => s.hasMounted);
+  const setHasMounted = usePlaygroundEditor(s => s.setHasMounted);
+
   const { write, isLoading } = useDebouncedWriter(selectedFile, 500);
   const { data: currentFileContent } = useFileReader(selectedFile);
 
   const pushMessage = useEditorConsole(s => s.push);
   const clearConsole = useEditorConsole(s => s.clear);
 
-  const { mutate: setupContainer } = useSetupContainer(undefined, chunk => {
-    pushMessage('log', chunk);
-  });
+  const { mutate } = useSetup(c => pushMessage('log', c));
 
   useContainer({
     onSuccess: c => {
-      clearConsole();
-      setupContainer();
+      mutate();
+
       c?.on('server-ready', (port, url) => {
         setUrl(url);
+        setHasMounted(true);
       });
     },
   });
@@ -98,6 +107,7 @@ export default function PlaygroundEditor() {
     <>
       <ul className="menu max-w-fit menu-horizontal">
         <CompileButton />
+        <DependencyManager />
         <DownloadButton />
         <SettingsButton />
       </ul>

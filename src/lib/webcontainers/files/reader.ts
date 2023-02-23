@@ -19,6 +19,7 @@ export const useFileReader = (
       return createFileReader(container, path)();
     },
     {
+      enabled: !!container,
       ...opts,
     }
   );

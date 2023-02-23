@@ -120,7 +120,7 @@ function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
   );
 }
 
-function SettingsSection(
+export function SettingsSection(
   props: PropsWithChildren<{
     title: string;
     description?: string;
