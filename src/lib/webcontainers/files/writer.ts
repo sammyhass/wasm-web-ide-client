@@ -12,7 +12,6 @@ export const useFileWriter = (path: string) => {
 
   const queryCache = useQueryClient();
   return useMutation(
-    ['writeFile', path],
     async (value: string) => {
       if (!container) return;
 
@@ -35,25 +34,21 @@ export const useDebouncedWriter = (filename: string, timeout = 500) => {
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const debouncedWrite = (content: string) => {
-    setLoading(true);
+  const debouncedWrite = (value: string) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
+    setLoading(true);
+
     timeoutRef.current = setTimeout(() => {
-      write(content, {
+      write(value, {
         onSuccess: () => {
           setLoading(false);
         },
       });
+      timeoutRef.current = null;
     }, timeout);
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
   };
 
   return {

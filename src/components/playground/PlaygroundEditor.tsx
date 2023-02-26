@@ -143,11 +143,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
               <FileEditor
                 content={currentFileContent || ''}
                 language={currentFileLanguage}
-                onChange={v => {
-                  v.trim() === currentFileContent?.trim()
-                    ? undefined
-                    : write(v);
-                }}
+                onChange={write}
                 name={selectedFile}
                 projectId={'playground'}
               />
