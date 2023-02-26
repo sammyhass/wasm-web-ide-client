@@ -1,7 +1,11 @@
-import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { FileSystemTree, WebContainer } from '@webcontainer/api';
 import { queryClient } from '../api/queryClient';
-import { filesystem } from './files/defaults';
 import { isFileNode, visitFileTree } from './util';
 
 declare global {
@@ -58,9 +62,12 @@ const startServer = async (w?: WritableStream<string>) => {
   return processOut?.exit;
 };
 
-const setup = async (logger: (chunk: string) => void) => {
-  await bootFiles(filesystem);
-  visitFileTree(filesystem, (path, node) => {
+const setup = async (
+  files: FileSystemTree,
+  logger: (chunk: string) => void
+) => {
+  await bootFiles(files);
+  visitFileTree(files, (path, node) => {
     if (isFileNode(node)) {
       queryClient.setQueryData(['readFile', path], node.file.contents);
     }
@@ -99,8 +106,10 @@ export const useBuildAssemblyScript = (logger?: (chunk: string) => void) =>
     )
   );
 
-export const useSetup = (logger: (chunk: string) => void) =>
-  useMutation(() => setup(logger));
+export const useSetup = (
+  logger: (chunk: string) => void,
+  opts?: UseMutationOptions<void, unknown, FileSystemTree>
+) => useMutation((files: FileSystemTree) => setup(files, logger), opts);
 
 export const useContainer = (
   options?: UseQueryOptions<WebContainer | undefined>

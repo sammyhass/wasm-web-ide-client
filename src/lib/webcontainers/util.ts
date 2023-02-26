@@ -24,10 +24,29 @@ function visitNode(
     }
   }
 }
-// Lets you visit all the nodes in a tree
+
+export function findNode(
+  tree: FileSystemTree,
+  pred: (path: string, node: FileNode | DirectoryNode) => boolean,
+  path = ''
+): { path: string; node: FileNode | DirectoryNode } | undefined {
+  for (const [name, node] of Object.entries(tree)) {
+    if (pred(`${path}/${name}`, node))
+      return {
+        path: `${path}/${name}`.replace(/^\//, ''),
+        node,
+      };
+    if (isDirectoryNode(node)) {
+      const found = findNode(node.directory, pred, `${path}/${name}`);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+
 export function visitFileTree(
   tree: FileSystemTree,
-  cb: (path: string, node: FileNode | DirectoryNode) => void
+  cb: (path: string, node: FileNode | DirectoryNode) => void | false // false to stop
 ) {
   for (const [name, node] of Object.entries(tree)) {
     visitNode(node, cb, name);

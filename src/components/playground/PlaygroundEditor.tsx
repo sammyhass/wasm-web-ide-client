@@ -2,11 +2,12 @@ import { useWindowDimensions } from '@/hooks/util/useDimensions';
 import { FileT } from '@/lib/api/services/projects';
 import { useMonacoAssemblyScriptSetup } from '@/lib/monaco/assemblyscript';
 import { useContainer, useSetup } from '@/lib/webcontainers';
-import { filesystem } from '@/lib/webcontainers/files/defaults';
 import { useDirListing } from '@/lib/webcontainers/files/dir';
 import { useFileReader } from '@/lib/webcontainers/files/reader';
 import { useDebouncedWriter } from '@/lib/webcontainers/files/writer';
+import { findNode, isFileNode } from '@/lib/webcontainers/util';
 import { useMonaco } from '@monaco-editor/react';
+import { FileSystemTree } from '@webcontainer/api';
 import dynamic from 'next/dynamic';
 import { Fragment, useMemo, useRef } from 'react';
 import create from 'zustand';
@@ -20,6 +21,7 @@ import SettingsButton from '../ProjectEditor/Toolbar/SettingsButton';
 import DependencyManager from './DependencyManager';
 import DownloadButton from './DownloadButton';
 import FileSystemTreeViewer from './FileSystemTreeViewer';
+import LinkGeneratorWrapper from './LinkGenerator';
 import CompileButton from './PlaygroundCompileButton';
 import { PlaygroundSettings } from './PlaygroundSettings';
 
@@ -36,24 +38,15 @@ const usePlaygroundEditor = create<{
 
   selectedFile: string;
   setSelectedFile: (file: string) => void;
-
-  hasMounted: boolean;
-  setHasMounted: (hasMounted: boolean) => void;
 }>(set => ({
   url: '',
   setUrl: url => set({ url }),
 
-  selectedFile: 'index.html',
+  selectedFile: '',
   setSelectedFile: (file: string) => set({ selectedFile: file }),
-
-  hasMounted: false,
-  setHasMounted: (hasMounted: boolean) => set({ hasMounted }),
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { lib: _, ...files } = filesystem;
-
-export default function PlaygroundEditor() {
+export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
   const previewRef = useRef<HTMLIFrameElement>(null);
 
   const url = usePlaygroundEditor(s => s.url);
@@ -61,24 +54,33 @@ export default function PlaygroundEditor() {
   const selectedFile = usePlaygroundEditor(s => s.selectedFile);
   const setSelectedFile = usePlaygroundEditor(s => s.setSelectedFile);
 
-  const hasMounted = usePlaygroundEditor(s => s.hasMounted);
-  const setHasMounted = usePlaygroundEditor(s => s.setHasMounted);
-
-  const { write, isLoading } = useDebouncedWriter(selectedFile, 500);
+  const { write, isLoading: writeLoading } = useDebouncedWriter(
+    selectedFile,
+    500
+  );
   const { data: currentFileContent } = useFileReader(selectedFile);
 
   const pushMessage = useEditorConsole(s => s.push);
-  const clearConsole = useEditorConsole(s => s.clear);
 
   const { mutate } = useSetup(c => pushMessage('log', c));
 
-  useContainer({
+  const { isLoading: containerLoading } = useContainer({
     onSuccess: c => {
-      mutate();
+      const firstFile = findNode(mount, (path, node) => {
+        if (isFileNode(node)) {
+          return true;
+        }
+        return false;
+      });
+
+      if (firstFile) {
+        setSelectedFile(firstFile.path);
+      }
+
+      mutate(mount);
 
       c?.on('server-ready', (port, url) => {
         setUrl(url);
-        setHasMounted(true);
       });
     },
   });
@@ -103,12 +105,14 @@ export default function PlaygroundEditor() {
   useMonacoAssemblyScriptSetup(monaco ?? undefined);
 
   const { data: tree } = useDirListing();
+
   return (
     <>
-      <ul className="menu max-w-fit menu-horizontal">
+      <ul className="menu max-w-fit menu-horizontal group">
         <CompileButton />
         <DependencyManager />
         <DownloadButton />
+        <LinkGeneratorWrapper />
         <SettingsButton />
       </ul>
       <div className="flex flex-col md:flex-row h-full">
@@ -117,7 +121,7 @@ export default function PlaygroundEditor() {
           tree={tree ?? {}}
           selectedPath={selectedFile}
           onSelect={path => {
-            isLoading ? undefined : setSelectedFile(path);
+            writeLoading ? undefined : setSelectedFile(path);
           }}
         />
         <div className="flex flex-col-reverse md:flex-row w-full overflow-hidden mr-1">
@@ -128,7 +132,7 @@ export default function PlaygroundEditor() {
                   <LanguageIcon language={currentFileLanguage} />
                   <b>{selectedFile}</b>
                 </div>
-                {isLoading && (
+                {(writeLoading || containerLoading) && (
                   <div className="flex items-center gap-2 p-2">
                     Loading...
                     <LoadingSpinner />
@@ -139,9 +143,11 @@ export default function PlaygroundEditor() {
               <FileEditor
                 content={currentFileContent || ''}
                 language={currentFileLanguage}
-                onChange={v =>
-                  v.trim() === currentFileContent?.trim() ? undefined : write(v)
-                }
+                onChange={v => {
+                  v.trim() === currentFileContent?.trim()
+                    ? undefined
+                    : write(v);
+                }}
                 name={selectedFile}
                 projectId={'playground'}
               />
@@ -149,6 +155,7 @@ export default function PlaygroundEditor() {
             </div>
           </ParentComponent>
           <iframe
+            title="Preview Window"
             ref={previewRef}
             className="w-full block h-full bg-white"
             src={url}
