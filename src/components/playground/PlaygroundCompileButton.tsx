@@ -1,4 +1,4 @@
-import { useBuildAssemblyScript } from '@/lib/webcontainers';
+import { useBuildAssemblyScript } from '@/lib/webcontainers/assemblyscript';
 import { useDirListing } from '@/lib/webcontainers/files/dir';
 import { useFileReader } from '@/lib/webcontainers/files/reader';
 import { PlayCircleIcon } from '@heroicons/react/24/solid';

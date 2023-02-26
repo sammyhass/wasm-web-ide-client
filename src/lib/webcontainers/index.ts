@@ -29,18 +29,6 @@ const getContainer = () => {
   return window.webcontainer;
 };
 
-const buildAssemblyScript = async (w?: WritableStream) => {
-  const container = getContainer();
-  const processOut = await container?.spawn('npm', [
-    'run',
-    'build-assemblyscript',
-  ]);
-
-  w && processOut?.output?.pipeTo(w);
-
-  return processOut.exit;
-};
-
 const bootFiles = async (files: FileSystemTree) => {
   const container = getContainer();
   await container?.mount(files);
@@ -94,17 +82,6 @@ export const destroyContainer = () => {
   window.webcontainer?.teardown();
   window.webcontainer = undefined;
 };
-
-export const useBuildAssemblyScript = (logger?: (chunk: string) => void) =>
-  useMutation(() =>
-    buildAssemblyScript(
-      new WritableStream({
-        write(chunk) {
-          logger && logger(chunk);
-        },
-      })
-    )
-  );
 
 export const useSetup = (
   logger: (chunk: string) => void,
