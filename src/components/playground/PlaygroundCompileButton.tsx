@@ -15,9 +15,9 @@ export default function PlaygroundCompileButton() {
 
   const { refetch: refetchTypings } = useFileReader('out/module.d.ts', {
     onSuccess: data => {
-      monaco?.languages.typescript.javascriptDefaults.addExtraLib(data);
-      console.log(
-        monaco?.languages.typescript.javascriptDefaults.getExtraLibs()
+      monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+        data,
+        'file:///playground/out/module.d.ts'
       );
     },
   });
