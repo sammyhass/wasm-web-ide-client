@@ -124,7 +124,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
             writeLoading ? undefined : setSelectedFile(path);
           }}
         />
-        <div className="flex flex-col-reverse md:flex-row w-full overflow-hidden mr-1">
+        <div className="flex flex-col-reverse md:flex-row w-full mr-1">
           <ParentComponent>
             <div className="w-full relative h-full">
               <div className="flex items-center justify-between">
