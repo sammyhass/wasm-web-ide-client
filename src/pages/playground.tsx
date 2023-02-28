@@ -62,7 +62,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async ({
 
   return {
     props: {
-      files: tree,
+      files: { ...tree, lib: filesystem.lib },
     },
   };
 };
