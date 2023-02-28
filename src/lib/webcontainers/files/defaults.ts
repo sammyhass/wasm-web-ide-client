@@ -45,7 +45,6 @@ export const publicIndexHtml = `
   <div id="app">
     <h1>Hello World!</h1>
   </div>
-  <script src="/out/module.js" type="module"></script>
   <script type="module" src="/main.js" defer></script>
 </body>
 </html>
