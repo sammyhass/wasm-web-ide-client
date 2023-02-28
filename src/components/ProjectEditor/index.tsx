@@ -71,7 +71,7 @@ function ProjectEditor() {
           selectFile={setSelectedFile}
           selectedFile={selectedFile}
         />
-        <div className="flex flex-col-reverse md:flex-row w-full overflow-hidden mr-1">
+        <div className="flex flex-col-reverse md:flex-row w-full mr-1">
           <ParentComponent>
             <hr className="md:hidden" />
             <div className="w-full relative">
