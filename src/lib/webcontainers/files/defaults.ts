@@ -9,8 +9,7 @@ export const packageJson = {
     dev: 'vite',
     build: 'vite build',
     preview: 'vite preview',
-    'build-assemblyscript':
-      'asc assemblyscript/index.ts --bindings esm --runtime stub --outFile out/module.wasm --textFile out/module.wat',
+    'build-assemblyscript': 'asc --config asconfig.json',
   },
   devDependencies: {
     vite: '^4.1.0',
@@ -49,6 +48,16 @@ export const publicIndexHtml = `
 </body>
 </html>
 `;
+
+export const defaultAsConfig = {
+  entries: ['assemblyscript/index.ts'],
+  options: {
+    runtime: 'stub',
+    bindings: 'esm',
+    textFile: 'out/module.wat',
+    outFile: 'out/module.wasm',
+  },
+};
 
 export const mainJs = `
 import { fib } from './out/module.js';
@@ -89,6 +98,12 @@ export const filesystem = {
       contents: 'html { font-family: sans-serif; }',
     },
   },
+  'asconfig.json': {
+    file: {
+      contents: JSON.stringify(defaultAsConfig, null, 2),
+    },
+  },
+
   assemblyscript: {
     directory: {
       'index.ts': {

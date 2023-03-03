@@ -19,7 +19,7 @@ export default function HomePage() {
               href="https://webassembly.org/"
               referrerPolicy="no-referrer"
               target="_blank"
-              rel="noreferrer"
+              rel="noreferrer noopener"
             >
               WebAssembly
             </a>{' '}

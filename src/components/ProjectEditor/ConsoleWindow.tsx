@@ -4,8 +4,8 @@ import {
   ArrowUpIcon,
   XMarkIcon,
 } from '@heroicons/react/24/solid';
+import Ansi from 'ansi-to-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import strip from 'strip-color';
 import create from 'zustand';
 
 type LogLevel = 'log' | 'error' | 'warn' | 'info' | 'debug';
@@ -48,7 +48,7 @@ export const useEditorConsole = create<ConsoleT>((set, get) => ({
         {
           type: 'console',
           level: logLevel,
-          args: [strip(message)],
+          args: [message],
           createdAt: Date.now(),
         },
       ],
@@ -84,7 +84,6 @@ export default function ConsoleWindow() {
 
   const scrollToBottom = useCallback(() => {
     if (messagesRef.current) {
-      // smooth scroll to bottom
       messagesRef.current.scrollTo({
         top: messagesRef.current.scrollHeight,
         behavior: 'smooth',
@@ -162,7 +161,7 @@ export default function ConsoleWindow() {
               >
                 {m.args.map((a, i) => (
                   <span key={i} className="break-normal">
-                    {new Object(a).toString()}
+                    <Ansi>{new Object(a).toString()}</Ansi>
                   </span>
                 ))}
               </div>
