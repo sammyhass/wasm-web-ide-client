@@ -10,6 +10,7 @@ const exportProject = async (
   const processOut = await container?.spawn('npx', [
     'bestzip',
     './project.zip',
+    'asconfig.json',
     'styles.css',
     'index.html',
     'package.json',
