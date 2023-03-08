@@ -5,9 +5,11 @@ import { PlayCircleIcon } from '@heroicons/react/24/solid';
 import { useMonaco } from '@monaco-editor/react';
 import { useEditorConsole } from '../ProjectEditor/ConsoleWindow';
 import { ToolbarButton } from '../ProjectEditor/Toolbar';
+import { useToast } from '../Toast';
 
 export default function PlaygroundCompileButton() {
   const { push } = useEditorConsole();
+  const show = useToast(s => s.show);
   const { mutate: _mutate, isLoading } = useBuildAssemblyScript(c =>
     push('log', c)
   );
@@ -34,6 +36,19 @@ export default function PlaygroundCompileButton() {
         refetchTypings();
         refetchWat();
         refetchFileTree();
+        show({
+          id: 'playground-compile-success',
+          message: 'AssemblyScript successfully compiled to WebAssembly',
+          type: 'success',
+        });
+      },
+      onError: () => {
+        show({
+          id: 'playground-compile-fail',
+          message:
+            'Compilation failed, check the console for error information',
+          type: 'error',
+        });
       },
     });
   };

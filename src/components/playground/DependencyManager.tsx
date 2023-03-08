@@ -1,14 +1,11 @@
 import { useFileReader } from '@/lib/webcontainers/files/reader';
-import { Dialog } from '@headlessui/react';
 import {
   ArrowDownOnSquareStackIcon,
-  FolderIcon,
   Square3Stack3DIcon,
 } from '@heroicons/react/24/solid';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useEditorConsole } from '../ProjectEditor/ConsoleWindow';
-import { ToolbarButton } from '../ProjectEditor/Toolbar';
 
 const installDependency = async (
   dependency: string,
@@ -143,8 +140,8 @@ function InstallDependencyForm() {
             type="text"
             value={dependency}
             onChange={e => setDependency(e.target.value)}
-            placeholder="react"
-            className="input input-bordered flex-1 "
+            placeholder="e.g. lodash"
+            className="input input-bordered flex-1 outline-1 focus:outline-primary"
           />
           <button
             type="submit"
@@ -159,7 +156,7 @@ function InstallDependencyForm() {
   );
 }
 
-function DependencyManager() {
+export default function DependencyManager() {
   const deps = useInstalledDependencies();
 
   const [selectedDependencies, setSelectedDependencies] = useState<string[]>(
@@ -231,32 +228,6 @@ function DependencyManager() {
         </>
       )}
       <InstallDependencyForm />
-    </>
-  );
-}
-
-export default function DependencyManagerWrapper() {
-  const [show, setShow] = useState(false);
-  return (
-    <>
-      <ToolbarButton
-        icon={<FolderIcon className="h-5 w-5" />}
-        onClick={() => setShow(!show)}
-        title="Manage Dependencies"
-      />
-      <Dialog
-        open={show}
-        onClose={() => setShow(false)}
-        className={`modal ${show ? 'modal-open' : ''}`}
-      >
-        <Dialog.Panel className={'modal-box'}>
-          <Dialog.Title className={'text-xl'} as="h2">
-            Manage Dependencies
-          </Dialog.Title>
-          <hr className="my-4" />
-          <DependencyManager />
-        </Dialog.Panel>
-      </Dialog>
     </>
   );
 }

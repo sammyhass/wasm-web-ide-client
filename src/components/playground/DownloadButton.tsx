@@ -1,7 +1,5 @@
 import { useExportProject } from '@/lib/webcontainers/archive';
-import { ArrowDownCircleIcon } from '@heroicons/react/24/solid';
 import { useRef } from 'react';
-import { ToolbarButton } from '../ProjectEditor/Toolbar';
 
 export default function DownloadButton() {
   const downloadRef = useRef<HTMLAnchorElement>(null);
@@ -22,12 +20,15 @@ export default function DownloadButton() {
 
   return (
     <>
-      <ToolbarButton
+      <button
         onClick={() => mutate()}
         title="Download Project"
-        loading={isLoading}
-        icon={<ArrowDownCircleIcon className="w-5 h-5" />}
-      />
+        className={`btn btn-primary ${
+          isLoading ? 'loading' : ''
+        } normal-case w-full`}
+      >
+        Download Project as ZIP
+      </button>
       <a
         id="download"
         ref={downloadRef}

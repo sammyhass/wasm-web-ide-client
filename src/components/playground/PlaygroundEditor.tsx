@@ -18,10 +18,7 @@ import ConsoleWindow, {
   useEditorConsole,
 } from '../ProjectEditor/ConsoleWindow';
 import SettingsButton from '../ProjectEditor/Toolbar/SettingsButton';
-import DependencyManager from './DependencyManager';
-import DownloadButton from './DownloadButton';
 import FileSystemTreeViewer from './FileSystemTreeViewer';
-import LinkGeneratorWrapper from './LinkGenerator';
 import CompileButton from './PlaygroundCompileButton';
 import { PlaygroundSettings } from './PlaygroundSettings';
 
@@ -110,9 +107,6 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
     <>
       <ul className="menu max-w-fit menu-horizontal group">
         <CompileButton />
-        <DependencyManager />
-        <DownloadButton />
-        <LinkGeneratorWrapper />
         <SettingsButton />
       </ul>
       <div className="flex flex-col md:flex-row h-full">
