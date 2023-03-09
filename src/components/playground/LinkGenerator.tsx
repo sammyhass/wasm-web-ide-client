@@ -108,7 +108,7 @@ export default function LinkGenerator() {
             Click the link below to copy it to your clipboard.
           </p>
           <button
-            className="relative break-words text-left hover:underline text-xs"
+            className="relative break-words bg-base-300 p-3 rounded-md hover:underline text-xs"
             onClick={copyToClipboard}
           >
             <code>{link}</code>

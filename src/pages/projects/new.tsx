@@ -123,7 +123,6 @@ function LanguageSelect({
           lang="AssemblyScript"
           selected={selected === 'AssemblyScript'}
           onClick={() => onChange('AssemblyScript')}
-          recommended
         />
         <LangItem
           lang="Go"
@@ -139,12 +138,10 @@ function LangItem({
   lang,
   selected,
   onClick,
-  recommended,
 }: {
   lang: ProjectLangT;
   selected: boolean;
   onClick: () => void;
-  recommended?: boolean;
 }) {
   return (
     <button
@@ -158,9 +155,6 @@ function LangItem({
       <LanguageIcon language={lang === 'AssemblyScript' ? 'ts' : 'go'} />
       <div className="flex flex-col gap-1 text-left items-start">
         <span className="font-bold normal-case">{lang}</span>
-        {recommended && (
-          <span className="text-xs text-gray-500">Recommended</span>
-        )}
       </div>
     </button>
   );
