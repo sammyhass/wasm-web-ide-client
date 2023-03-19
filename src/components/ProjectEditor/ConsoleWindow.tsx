@@ -94,6 +94,12 @@ export default function ConsoleWindow() {
   }, [setMustScroll]);
 
   useEffect(() => {
+    return () => {
+      clear();
+    };
+  }, [clear]);
+
+  useEffect(() => {
     const listener = (e: MessageEvent) => {
       if (e.data.type === 'console') {
         console.log(e.data);
