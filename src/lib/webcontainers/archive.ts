@@ -7,16 +7,11 @@ const exportProject = async (
   container: WebContainer,
   w?: WritableStream<string>
 ) => {
+  const allFiles = await container.fs.readdir('/');
   const processOut = await container?.spawn('npx', [
     'bestzip',
     './project.zip',
-    'asconfig.json',
-    'styles.css',
-    'index.html',
-    'package.json',
-    'main.js',
-    'out',
-    'lib',
+    ...allFiles.filter(f => f !== 'node_modules'),
   ]);
 
   w && processOut?.output?.pipeTo(w);

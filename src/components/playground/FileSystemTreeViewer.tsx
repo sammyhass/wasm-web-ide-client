@@ -12,8 +12,8 @@ export default function FileSystemTreeWrapper({
 }: FileSystemTreeViewerProps) {
   const [show, setShow] = useState(true);
   return show ? (
-    <div className="flex flex-col">
-      <div className="flex items-center gap-2 pl-4 pr-2 h-12">
+    <div className="flex flex-col relative">
+      <div className="flex items-center gap-2 pl-4 pr-2 h-12 ">
         <b className="flex-1">Files</b>
         <button onClick={() => setShow(false)} title="Close">
           <ArrowLeftIcon className="w-5 h-5" />
@@ -43,7 +43,7 @@ type FileSystemTreeViewerProps = {
   selectedPath: string;
   tree: FileSystemTree;
   parentPath?: string;
-  onContextMenu?: (path: string) => void;
+  onContextMenu?: (path: string, node: DirectoryNode | FileNode) => void;
 };
 
 function FileSystemTreeViewer({
@@ -60,7 +60,7 @@ function FileSystemTreeViewer({
           path={path}
           onSelect={onSelect}
           key={path}
-          onContextMenu={onContextMenu}
+          onContextMenu={() => onContextMenu?.(path, node)}
           isSelected={
             selectedPath ===
             `${parentPath === '/' ? '' : `${parentPath}/`}${path}`
@@ -128,7 +128,7 @@ export function DirectoryNodeViewer({
   path: string;
   node: DirectoryNode;
   onSelect: (path: string) => void;
-  onContextMenu?: (path: string) => void;
+  onContextMenu?: (path: string, node: DirectoryNode | FileNode) => void;
   selectedPath: string;
 }) {
   const [show, setShow] = useState(false);
@@ -140,7 +140,7 @@ export function DirectoryNodeViewer({
           onClick={() => setShow(!show)}
           onContextMenu={e => {
             e.preventDefault();
-            onContextMenu?.(path);
+            onContextMenu?.(path, node);
           }}
         >
           <ArrowRightIcon
@@ -155,7 +155,7 @@ export function DirectoryNodeViewer({
             parentPath={path}
             onSelect={p => onSelect(`${path}/${p}`)}
             tree={node.directory}
-            onContextMenu={onContextMenu}
+            onContextMenu={(p, n) => onContextMenu?.(`${path}/${p}`, n)}
             selectedPath={selectedPath}
           />
         )}

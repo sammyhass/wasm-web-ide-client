@@ -7,7 +7,7 @@ import { useFileReader } from '@/lib/webcontainers/files/reader';
 import { useDebouncedWriter } from '@/lib/webcontainers/files/writer';
 import { findNode, isFileNode } from '@/lib/webcontainers/util';
 import { useMonaco } from '@monaco-editor/react';
-import { FileSystemTree } from '@webcontainer/api';
+import { DirectoryNode, FileNode, FileSystemTree } from '@webcontainer/api';
 import dynamic from 'next/dynamic';
 import { Fragment, useMemo, useRef } from 'react';
 import create from 'zustand';
@@ -38,18 +38,21 @@ const usePlaygroundEditor = create<{
   selectedFile: string;
   setSelectedFile: (file: string) => void;
 
-  contextMenu?: string;
-  showContextMenu: (path: string) => void;
+  contextMenu?: {
+    path: string;
+    node: DirectoryNode | FileNode;
+  };
+  showContextMenu: (path: string, node: DirectoryNode | FileNode) => void;
   hideContextMenu: () => void;
 }>(set => ({
   url: '',
   setUrl: url => set({ url }),
 
   selectedFile: '',
-  setSelectedFile: (file: string) => set({ selectedFile: file }),
+  setSelectedFile: file => set({ selectedFile: file }),
 
   contextMenu: undefined,
-  showContextMenu: (path: string) => set({ contextMenu: path }),
+  showContextMenu: (path, node) => set({ contextMenu: { path, node } }),
   hideContextMenu: () => set({ contextMenu: undefined }),
 }));
 
@@ -129,7 +132,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
         {' '}
         <FileSystemTreeViewer
           tree={tree ?? {}}
-          onContextMenu={p => showContextMenu(p)}
+          onContextMenu={(path, node) => showContextMenu(path, node)}
           selectedPath={selectedFile}
           onSelect={path => {
             writeLoading ? undefined : setSelectedFile(path);
@@ -172,7 +175,11 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
       </div>
       <PlaygroundSettings />
       {contextMenuPath && (
-        <ContextMenu path={contextMenuPath} hide={hideContextMenu} />
+        <ContextMenu
+          path={contextMenuPath.path}
+          node={contextMenuPath.node}
+          hide={hideContextMenu}
+        />
       )}
     </>
   );

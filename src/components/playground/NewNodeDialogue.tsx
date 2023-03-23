@@ -15,7 +15,7 @@ import {
   FolderPlusIcon,
   PlusIcon,
 } from '@heroicons/react/24/solid';
-import { DirectoryNode } from '@webcontainer/api';
+import { FileSystemTree } from '@webcontainer/api';
 import { useCallback, useMemo, useState } from 'react';
 import { ToolbarButton } from '../ProjectEditor/Toolbar';
 import { Alert } from '../Toast';
@@ -29,8 +29,11 @@ export default function NewFileDialogueWrapper({
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
 
+  const { data: dirListing, refetch } = useDirListing();
+
   const onDone = (path: string, type: typeof NodeTypes[number]) => {
     onComplete?.(path, type);
+    refetch();
     onClose();
   };
 
@@ -49,9 +52,9 @@ export default function NewFileDialogueWrapper({
         <Dialog.Panel className={'modal-box'}>
           <Dialog.Title className="text-2xl font-bold mb-2 flex items-center gap-2">
             <PlusIcon className="w-5 h-5" />
-            Create New File/Folder
+            New File/Folder
           </Dialog.Title>
-          <NewFile onComplete={onDone} />
+          <NewNode onComplete={onDone} parent="/" tree={dirListing} />
         </Dialog.Panel>
       </Dialog>
     </>
@@ -81,18 +84,53 @@ function FolderView({
   );
 }
 
-function NewFile({
+function FoldersView({
+  tree,
+  selectDir,
+  selectedDir,
+}: {
+  tree: FileSystemTree;
+  selectDir: (path: string) => void;
+  selectedDir: string;
+}) {
+  const folders = useMemo(() => {
+    const folders: string[] = [];
+    visitFileTree(tree, (path, node) => {
+      if (!isFileNode(node)) {
+        folders.push(path);
+      }
+    });
+    return folders;
+  }, [tree]);
+
+  return (
+    <div className="flex flex-col gap-2 overflow-y-auto max-h-48">
+      {['/', ...folders].map((path, i) => (
+        <FolderView
+          key={i}
+          path={path}
+          onClick={selectDir}
+          selectedPath={selectedDir}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function NewNode({
   onComplete,
+  tree,
+  parent,
 }: {
   onComplete?: (path: string, type: typeof NodeTypes[number]) => void;
+  tree?: FileSystemTree;
+  parent?: string;
 }) {
-  const { data: dirListing } = useDirListing();
-
+  const { refetch } = useDirListing();
   const [selectedDirectory, setSelectedDirectory] = useState<string>('/');
   const [pathName, setPathname] = useState<string | null>(null);
   const [type, setType] = useState<typeof NodeTypes[number]>(NodeTypes[0]);
 
-  const { refetch } = useDirListing();
   const { mutate: createFile } = useCreateFile();
   const { mutate: createFolder } = useCreateFolder();
 
@@ -102,13 +140,13 @@ function NewFile({
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (!pathName || !dirListing) return;
+      if (!pathName || !tree) return;
 
-      const path = `${
+      const path = `${parent && parent !== '/' ? `${parent}/` : ''}${
         selectedDirectory === '/' ? '' : `${selectedDirectory}/`
       }${pathName}`;
 
-      if (nodeExists(dirListing, path)) {
+      if (nodeExists(tree, path)) {
         setErr(`${path} already exists`);
         return;
       }
@@ -136,7 +174,8 @@ function NewFile({
     },
     [
       pathName,
-      dirListing,
+      tree,
+      parent,
       selectedDirectory,
       type,
       createFolder,
@@ -145,18 +184,6 @@ function NewFile({
       createFile,
     ]
   );
-
-  const folders = useMemo(() => {
-    const folders: [string, DirectoryNode][] = [];
-    if (!dirListing) return folders;
-
-    visitFileTree(dirListing, (path, node) => {
-      if (!isFileNode(node)) {
-        folders.push([path, node]);
-      }
-    });
-    return folders;
-  }, [dirListing]);
 
   return (
     <form onSubmit={onSubmit}>
@@ -177,7 +204,9 @@ function NewFile({
                 ) : (
                   <FolderIcon className="w-5 h-5" />
                 )}
-                <span className="label-text">{label}</span>
+                <span className="label-text">{`${label[0]?.toUpperCase()}${label.slice(
+                  1
+                )}`}</span>
               </label>
             </div>
           ))}
@@ -191,24 +220,24 @@ function NewFile({
         />
 
         <hr className="my-2" />
-        <b>Select a Destination</b>
 
-        <FolderView
-          onClick={setSelectedDirectory}
-          path="/"
-          selectedPath={selectedDirectory}
-        />
+        {tree && (
+          <>
+            <b className="text-sm">
+              Select a Destination {parent && parent !== '/' && `in ${parent}`}
+            </b>
+            <FoldersView
+              tree={tree}
+              selectDir={setSelectedDirectory}
+              selectedDir={selectedDirectory}
+            />
+          </>
+        )}
 
-        {folders.map(folder => (
-          <FolderView
-            onClick={setSelectedDirectory}
-            path={folder[0]}
-            selectedPath={selectedDirectory}
-            key={folder[0]}
-          />
-        ))}
-
-        <button className="btn btn-primary mt-2 w-full" type="submit">
+        <button
+          className="btn btn-primary mt-2 w-full normal-case"
+          type="submit"
+        >
           Create
         </button>
         {err && (

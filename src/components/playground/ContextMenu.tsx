@@ -1,37 +1,91 @@
 import { useRemoveNode } from '@/lib/webcontainers/files/writer';
+import { isDirectoryNode, isFileNode } from '@/lib/webcontainers/util';
 import { Dialog } from '@headlessui/react';
+import { DirectoryNode, FileNode } from '@webcontainer/api';
 import { useState } from 'react';
+import { NewNode } from './NewNodeDialogue';
 
-export default function ContextMenuWrapper({
-  path,
-  hide,
-}: {
-  path?: string;
+type ContextMenuProps = {
   hide: () => void;
-}) {
+
+  node: DirectoryNode | FileNode;
+  path?: string;
+};
+
+export default function ContextMenuWrapper(props: ContextMenuProps) {
   return (
     <Dialog
-      open={!!path}
-      onClose={hide}
-      className={`modal ${path ? 'modal-open' : ''}`}
+      open={!!props.path}
+      onClose={props.hide}
+      className={`modal ${props.path ? 'modal-open' : ''}`}
     >
       <Dialog.Panel className="modal-box">
         <Dialog.Title className="text-2xl font-bold mb-2 font-mono">
-          {path}
+          {props.path}
         </Dialog.Title>
-        <ContextMenu path={path} hide={hide} />
+
+        <div className="flex flex-col gap-2">
+          {isDirectoryNode(props.node) && (
+            <>
+              <CreateNew {...props} node={props.node} />
+              <hr className="my-2" />
+            </>
+          )}
+          <DeleteButton {...props} />
+        </div>
       </Dialog.Panel>
     </Dialog>
   );
 }
 
+function CreateNew(
+  props: Pick<ContextMenuProps, 'hide' | 'path'> & { node: DirectoryNode }
+) {
+  const [show, setShow] = useState(false);
+
+  return (
+    <>
+      {show && (
+        <>
+          <h2 className="text-lg font-bold">
+            Create New File/Folder in {props.path}
+          </h2>
+          <NewNode
+            parent={props.path}
+            tree={props.node.directory}
+            onComplete={() => {
+              setShow(false);
+              props.hide();
+            }}
+          />
+        </>
+      )}
+      <button
+        onClick={() => setShow(s => !s)}
+        className="btn btn-accent w-full normal-case"
+      >
+        {show ? 'Cancel' : `Create New File/Folder in ${props.path}`}
+      </button>
+    </>
+  );
+}
+
 const NEVER_DELETE = ['package.json', 'index.html', 'asconfig.json'];
-function ContextMenu({ path, hide }: { path?: string; hide: () => void }) {
+function DeleteButton({
+  path,
+  node,
+  hide,
+}: {
+  path?: string;
+  node: DirectoryNode | FileNode;
+  hide: () => void;
+}) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { mutate } = useRemoveNode();
 
-  const canDelete = path && !NEVER_DELETE.includes(path);
+  const isFile = isFileNode(node);
 
+  const canDelete = path && !NEVER_DELETE.includes(path);
   return (
     <div className="flex flex-col gap-2">
       {canDelete ? (
@@ -40,20 +94,22 @@ function ContextMenu({ path, hide }: { path?: string; hide: () => void }) {
             setConfirmDelete(true);
           }}
           disabled={confirmDelete}
-          className="btn btn-error w-full"
+          className="btn btn-error w-full normal-case"
         >
           Delete
         </button>
       ) : (
         <div className="tooltip" data-tip="This file cannot be deleted">
-          <button className="btn btn-error w-full" disabled>
+          <button className="btn btn-error w-full normal-case" disabled>
             Delete
           </button>
         </div>
       )}
       {confirmDelete && (
-        <div className="flex flex-col">
-          <p>Are you sure you want to delete this {}?</p>
+        <div className="flex flex-col my-2 gap-2">
+          <p>
+            Are you sure you want to delete this {isFile ? 'file' : 'folder'}?
+          </p>
           <div className="flex gap-4">
             <button
               onClick={() => {

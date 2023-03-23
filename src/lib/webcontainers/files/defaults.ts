@@ -58,7 +58,6 @@ export const defaultAsConfig = {
     outFile: 'out/module.wasm',
   },
 };
-
 export const mainJs = `
 import { fib } from './out/module.js';
 
