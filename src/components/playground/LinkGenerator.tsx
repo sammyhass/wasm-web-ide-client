@@ -1,5 +1,4 @@
-import { filesystem } from '@/lib/webcontainers/files/defaults';
-import { useFileReader } from '@/lib/webcontainers/files/reader';
+import { getDirListing } from '@/lib/webcontainers/files/dir';
 import { useQuery } from '@tanstack/react-query';
 import { FileSystemTree } from '@webcontainer/api';
 import { useCallback, useMemo } from 'react';
@@ -7,61 +6,29 @@ import LoadingSpinner from '../icons/Spinner';
 import { useToast } from '../Toast';
 
 export default function LinkGenerator() {
-  const { data: html } = useFileReader('index.html');
-  const { data: css } = useFileReader('styles.css');
-  const { data: js } = useFileReader('main.js');
-  const { data: ts } = useFileReader('assemblyscript/index.ts');
-  const { data: asConfig } = useFileReader('asconfig.json');
-  const { data: packageJson } = useFileReader('package.json');
-
   const show = useToast(s => s.show);
 
-  const fileTree = useMemo(
-    (): FileSystemTree => ({
-      'asconfig.json': {
-        file: {
-          contents: asConfig || '',
-        },
-      },
-      'index.html': {
-        file: {
-          contents: html || '',
-        },
-      },
-      'main.js': {
-        file: {
-          contents: js || '',
-        },
-      },
-      'styles.css': {
-        file: {
-          contents: css || '',
-        },
-      },
-      'package.json': {
-        file: {
-          contents: packageJson || '',
-        },
-      },
-      assemblyscript: {
-        directory: {
-          'index.ts': {
-            file: {
-              contents: ts || '',
-            },
-          },
-        },
-      },
-    }),
-    [asConfig, html, js, css, packageJson, ts]
-  );
-
   const { data, isLoading } = useQuery(
-    ['playground-link', fileTree],
+    ['playground-link'],
     async () => {
+      if (!window.webcontainer) return;
+
+      const tree = await getDirListing(window.webcontainer, '/', {}, true);
+
       const res = await fetch('/api/link', {
         method: 'POST',
-        body: JSON.stringify(fileTree),
+        body: JSON.stringify({
+          ...tree,
+          out: {
+            directory: {
+              'module.js': {
+                file: {
+                  contents: '',
+                },
+              },
+            },
+          },
+        } as FileSystemTree),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -72,8 +39,14 @@ export default function LinkGenerator() {
       return json as { code: string };
     },
     {
+      cacheTime: 0,
+      staleTime: 0,
       onSuccess: () => {
-        console.log(Object.assign(filesystem, fileTree));
+        show({
+          id: 'playground-link-success',
+          message: 'Playground link generated!',
+          type: 'success',
+        });
       },
     }
   );

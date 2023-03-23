@@ -18,7 +18,9 @@ import ConsoleWindow, {
   useEditorConsole,
 } from '../ProjectEditor/ConsoleWindow';
 import SettingsButton from '../ProjectEditor/Toolbar/SettingsButton';
+import ContextMenu from './ContextMenu';
 import FileSystemTreeViewer from './FileSystemTreeViewer';
+import NewFileDialogueWrapper from './NewNodeDialogue';
 import CompileButton from './PlaygroundCompileButton';
 import { PlaygroundSettings } from './PlaygroundSettings';
 
@@ -35,12 +37,20 @@ const usePlaygroundEditor = create<{
 
   selectedFile: string;
   setSelectedFile: (file: string) => void;
+
+  contextMenu?: string;
+  showContextMenu: (path: string) => void;
+  hideContextMenu: () => void;
 }>(set => ({
   url: '',
   setUrl: url => set({ url }),
 
   selectedFile: '',
   setSelectedFile: (file: string) => set({ selectedFile: file }),
+
+  contextMenu: undefined,
+  showContextMenu: (path: string) => set({ contextMenu: path }),
+  hideContextMenu: () => set({ contextMenu: undefined }),
 }));
 
 export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
@@ -50,6 +60,10 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
   const setUrl = usePlaygroundEditor(s => s.setUrl);
   const selectedFile = usePlaygroundEditor(s => s.selectedFile);
   const setSelectedFile = usePlaygroundEditor(s => s.setSelectedFile);
+
+  const showContextMenu = usePlaygroundEditor(s => s.showContextMenu);
+  const contextMenuPath = usePlaygroundEditor(s => s.contextMenu);
+  const hideContextMenu = usePlaygroundEditor(s => s.hideContextMenu);
 
   const { write, isLoading: writeLoading } = useDebouncedWriter(
     selectedFile,
@@ -84,7 +98,6 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
 
   const currentFileLanguage = useMemo<FileT['language']>(() => {
     const ext = selectedFile.split('.').pop();
-    console.log(ext as FileT['language']);
     return ext as FileT['language'];
   }, [selectedFile]);
 
@@ -106,6 +119,9 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
   return (
     <>
       <ul className="menu max-w-fit menu-horizontal group">
+        <NewFileDialogueWrapper
+          onComplete={(path, type) => type === 'file' && setSelectedFile(path)}
+        />
         <CompileButton />
         <SettingsButton />
       </ul>
@@ -113,6 +129,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
         {' '}
         <FileSystemTreeViewer
           tree={tree ?? {}}
+          onContextMenu={p => showContextMenu(p)}
           selectedPath={selectedFile}
           onSelect={path => {
             writeLoading ? undefined : setSelectedFile(path);
@@ -126,12 +143,13 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
                   <LanguageIcon language={currentFileLanguage} />
                   <b>{selectedFile}</b>
                 </div>
-                {(writeLoading || containerLoading) && (
-                  <div className="flex items-center gap-2 p-2">
-                    Loading...
-                    <LoadingSpinner />
-                  </div>
-                )}
+                {writeLoading ||
+                  (containerLoading && (
+                    <div className="flex items-center gap-2 p-2">
+                      Loading...
+                      <LoadingSpinner />
+                    </div>
+                  ))}
               </div>
 
               <FileEditor
@@ -153,6 +171,9 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
         </div>
       </div>
       <PlaygroundSettings />
+      {contextMenuPath && (
+        <ContextMenu path={contextMenuPath} hide={hideContextMenu} />
+      )}
     </>
   );
 }

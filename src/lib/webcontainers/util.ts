@@ -52,3 +52,9 @@ export function visitFileTree(
     visitNode(node, cb, name);
   }
 }
+
+export function nodeExists(tree: FileSystemTree, path: string) {
+  return !!findNode(tree, p => {
+    return p.replace(/^\/+/g, '') === path.replace(/^\/+/g, '');
+  });
+}

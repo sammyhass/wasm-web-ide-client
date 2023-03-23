@@ -8,6 +8,7 @@ export default function FileSystemTreeWrapper({
   tree,
   selectedPath,
   onSelect,
+  onContextMenu,
 }: FileSystemTreeViewerProps) {
   const [show, setShow] = useState(true);
   return show ? (
@@ -20,6 +21,7 @@ export default function FileSystemTreeWrapper({
       </div>
       <FileSystemTreeViewer
         tree={tree}
+        onContextMenu={onContextMenu}
         onSelect={onSelect}
         selectedPath={selectedPath}
       />
@@ -41,6 +43,7 @@ type FileSystemTreeViewerProps = {
   selectedPath: string;
   tree: FileSystemTree;
   parentPath?: string;
+  onContextMenu?: (path: string) => void;
 };
 
 function FileSystemTreeViewer({
@@ -48,6 +51,7 @@ function FileSystemTreeViewer({
   selectedPath,
   onSelect,
   parentPath = '/',
+  onContextMenu,
 }: FileSystemTreeViewerProps) {
   const renderNode = (node: FileNode | DirectoryNode, path: string) => {
     if (isFileNode(node)) {
@@ -56,6 +60,7 @@ function FileSystemTreeViewer({
           path={path}
           onSelect={onSelect}
           key={path}
+          onContextMenu={onContextMenu}
           isSelected={
             selectedPath ===
             `${parentPath === '/' ? '' : `${parentPath}/`}${path}`
@@ -67,6 +72,7 @@ function FileSystemTreeViewer({
         <DirectoryNodeViewer
           selectedPath={selectedPath}
           path={path}
+          onContextMenu={onContextMenu}
           node={node}
           onSelect={onSelect}
           key={path}
@@ -88,9 +94,11 @@ function FileNodeViewer({
   path,
   onSelect,
   isSelected,
+  onContextMenu,
 }: {
   path: string;
   onSelect: (path: string) => void;
+  onContextMenu?: (path: string) => void;
   isSelected: boolean;
 }) {
   return (
@@ -99,6 +107,10 @@ function FileNodeViewer({
         isSelected ? 'bg-base-200' : ''
       }`}
       onClick={() => onSelect(path)}
+      onContextMenu={e => {
+        e.preventDefault();
+        onContextMenu?.(path);
+      }}
     >
       <DocumentIcon className="w-5 h-5" />
       <span>{path}</span>
@@ -106,24 +118,30 @@ function FileNodeViewer({
   );
 }
 
-function DirectoryNodeViewer({
+export function DirectoryNodeViewer({
   path,
   node,
   onSelect,
+  onContextMenu,
   selectedPath,
 }: {
   path: string;
   node: DirectoryNode;
   onSelect: (path: string) => void;
+  onContextMenu?: (path: string) => void;
   selectedPath: string;
 }) {
   const [show, setShow] = useState(false);
   return (
-    <li className="flex flex-col gap-2">
+    <li className="flex flex-col gap-2" key={path}>
       <>
         <button
           className="flex items-center gap-2 hover:bg-base-200 w-full py-2"
           onClick={() => setShow(!show)}
+          onContextMenu={e => {
+            e.preventDefault();
+            onContextMenu?.(path);
+          }}
         >
           <ArrowRightIcon
             className={`w-5 h-5 ${
@@ -137,6 +155,7 @@ function DirectoryNodeViewer({
             parentPath={path}
             onSelect={p => onSelect(`${path}/${p}`)}
             tree={node.directory}
+            onContextMenu={onContextMenu}
             selectedPath={selectedPath}
           />
         )}
