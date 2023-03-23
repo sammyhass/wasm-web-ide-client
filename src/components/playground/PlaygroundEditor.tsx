@@ -31,7 +31,7 @@ const FileEditor = dynamic(
   }
 );
 
-const usePlaygroundEditor = create<{
+export const usePlaygroundEditor = create<{
   url: string;
   setUrl: (url: string) => void;
 

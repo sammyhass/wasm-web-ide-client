@@ -4,6 +4,7 @@ import { Dialog } from '@headlessui/react';
 import { DirectoryNode, FileNode } from '@webcontainer/api';
 import { useState } from 'react';
 import { NewNode } from './NewNodeDialogue';
+import { usePlaygroundEditor } from './PlaygroundEditor';
 
 type ContextMenuProps = {
   hide: () => void;
@@ -43,6 +44,8 @@ function CreateNew(
 ) {
   const [show, setShow] = useState(false);
 
+  const selectFile = usePlaygroundEditor(s => s.setSelectedFile);
+
   return (
     <>
       {show && (
@@ -53,9 +56,13 @@ function CreateNew(
           <NewNode
             parent={props.path}
             tree={props.node.directory}
-            onComplete={() => {
+            onComplete={(path, type) => {
               setShow(false);
               props.hide();
+
+              if (type === 'file') {
+                selectFile(path);
+              }
             }}
           />
         </>
