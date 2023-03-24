@@ -17,6 +17,8 @@ const icons: Record<FileT['language'], FC> = {
   js: JavaScriptIcon,
   wasm: WasmIcon,
   ts: AssemblyScriptIcon,
+  jsx: JavaScriptIcon,
+  tsx: JavaScriptIcon,
 };
 
 export default function LanguageIcon({
