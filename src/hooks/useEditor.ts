@@ -10,6 +10,8 @@ const langSort: Record<FileT['language'], number> = {
   ts: 4,
   json: 6,
   wat: 7,
+  jsx: 8,
+  tsx: 9,
 };
 
 type ProjectEditorState = {
