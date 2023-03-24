@@ -1,0 +1,69 @@
+import { ArrowUpIcon } from '@heroicons/react/24/solid';
+
+const EXAMPLES: {
+  code: string;
+  title: string;
+  description: string;
+}[] = [
+  {
+    description:
+      'Using AssemblyScript to create and export a function to calculate the fibonacci sequence, and then calling it from JavaScript inside the browser.',
+    title: 'AssemblyScript Fibonacci',
+    code: '',
+  },
+  {
+    description:
+      'A simple example of a Vite and React interacting with a WebAssembly module built with AssemblyScript.',
+    title: 'React + AssemblyScript',
+    code: 'c32c99e3853c',
+  },
+  {
+    description:
+      'Using AssemblyScript standard library load/store operations to interact with memory using JavaScript and WebAssembly.',
+    title: 'AssemblyScript Memory',
+    code: '06de9c28e811',
+  },
+];
+
+function ExampleView(example: typeof EXAMPLES[number]) {
+  return (
+    <a
+      href={`/playground${!!example.code ? `?code=${example.code}` : ''}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="card card-bordered shadow-lg relative group"
+    >
+      <div className="card-body">
+        <h2 className="card-title">{example.title}</h2>
+        <p>{example.description}</p>
+      </div>
+      <div className="absolute right-0 -bottom-8 hover:bottom-0 transition-all duration-300 ease-in-out">
+        <ArrowUpIcon className="w-6 h-6" />
+      </div>
+    </a>
+  );
+}
+
+export default function Examples() {
+  return (
+    <div className="container max-w-5xl mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold">Playground Examples</h1>
+      <p className="text-lg text-base-400 mt-2">
+        Here are some examples of what you can do with the WebContainers
+        Playground.
+      </p>
+      <span className="text-base-400 text-sm bg-base-300 block p-2 rounded-md">
+        <span className="badge badge-info">Recommended</span> Open playgrounds
+        one at a time and try not to have more than one open at once. <br />{' '}
+        This prevents the IDE from running out of its allocated memory.
+      </span>
+      <hr className="my-2" />
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {EXAMPLES.map(example => (
+          <ExampleView key={example.code} {...example} />
+        ))}
+      </div>
+    </div>
+  );
+}

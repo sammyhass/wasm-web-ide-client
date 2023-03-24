@@ -6,9 +6,11 @@ import { useDirListing } from '@/lib/webcontainers/files/dir';
 import { useFileReader } from '@/lib/webcontainers/files/reader';
 import { useDebouncedWriter } from '@/lib/webcontainers/files/writer';
 import { findNode, isFileNode } from '@/lib/webcontainers/util';
+import { BookOpenIcon } from '@heroicons/react/24/solid';
 import { useMonaco } from '@monaco-editor/react';
 import { DirectoryNode, FileNode, FileSystemTree } from '@webcontainer/api';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { Fragment, useMemo, useRef } from 'react';
 import create from 'zustand';
 import LanguageIcon from '../icons/Icon';
@@ -17,6 +19,7 @@ import { ResizableWindow } from '../ProjectEditor';
 import ConsoleWindow, {
   useEditorConsole,
 } from '../ProjectEditor/ConsoleWindow';
+import { ToolbarButton } from '../ProjectEditor/Toolbar';
 import SettingsButton from '../ProjectEditor/Toolbar/SettingsButton';
 import ContextMenu from './ContextMenu';
 import FileSystemTreeViewer from './FileSystemTreeViewer';
@@ -127,6 +130,17 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
         />
         <CompileButton />
         <SettingsButton />
+        <Link
+          href="/playground/examples"
+          target={'_blank'}
+          rel="noopener noreferrer"
+        >
+          <ToolbarButton
+            onClick={() => void 0}
+            title="Examples"
+            icon={<BookOpenIcon className="w-5 h-5" />}
+          />
+        </Link>
       </ul>
       <div className="flex flex-col md:flex-row h-full">
         {' '}
