@@ -39,12 +39,12 @@ export const publicIndexHtml = `
   <title>Preview Window</title>
   <link rel="stylesheet" href="/styles.css">
   <script src="/lib/setup-preview.js"></script>
+  <script type="module" src="/main.js" defer></script>
 </head>
 <body>
   <div id="app">
     <h1>Hello World!</h1>
   </div>
-  <script type="module" src="/main.js" defer></script>
 </body>
 </html>
 `;

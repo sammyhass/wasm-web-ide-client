@@ -13,13 +13,13 @@ const EXAMPLES: {
     description:
       'A simple example of a Vite and React interacting with a WebAssembly module built with AssemblyScript.',
     title: 'React + AssemblyScript',
-    code: 'c32c99e3853c',
+    code: '25030ed0aae2',
   },
   {
     description:
       'Using AssemblyScript standard library load/store operations to interact with memory using JavaScript and WebAssembly.',
     title: 'AssemblyScript Memory',
-    code: '06de9c28e811',
+    code: '22c8de758e8c',
   },
 ];
 
