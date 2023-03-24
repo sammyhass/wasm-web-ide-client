@@ -6,12 +6,10 @@ import { useDirListing } from '@/lib/webcontainers/files/dir';
 import { useFileReader } from '@/lib/webcontainers/files/reader';
 import { useDebouncedWriter } from '@/lib/webcontainers/files/writer';
 import { findNode, isFileNode } from '@/lib/webcontainers/util';
-import { BookOpenIcon } from '@heroicons/react/24/solid';
 import { useMonaco } from '@monaco-editor/react';
 import { DirectoryNode, FileNode, FileSystemTree } from '@webcontainer/api';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { Fragment, useMemo, useRef } from 'react';
+import { Fragment, useMemo } from 'react';
 import create from 'zustand';
 import LanguageIcon from '../icons/Icon';
 import LoadingSpinner from '../icons/Spinner';
@@ -19,13 +17,11 @@ import { ResizableWindow } from '../ProjectEditor';
 import ConsoleWindow, {
   useEditorConsole,
 } from '../ProjectEditor/ConsoleWindow';
-import { ToolbarButton } from '../ProjectEditor/Toolbar';
-import SettingsButton from '../ProjectEditor/Toolbar/SettingsButton';
 import ContextMenu from './ContextMenu';
 import FileSystemTreeViewer from './FileSystemTreeViewer';
-import NewFileDialogueWrapper from './NewNodeDialogue';
-import CompileButton from './PlaygroundCompileButton';
+import { PlaygroundPreview } from './PlaygroundPreview';
 import { PlaygroundSettings } from './PlaygroundSettings';
+import { PlaygroundToolbar } from './PlaygroundToolbar';
 
 const FileEditor = dynamic(
   () => import('../ProjectEditor/EditorWindow').then(m => m.FileEditor),
@@ -48,7 +44,7 @@ export const usePlaygroundEditor = create<{
   showContextMenu: (path: string, node: DirectoryNode | FileNode) => void;
   hideContextMenu: () => void;
 }>(set => ({
-  url: '',
+  url: '/loading_preview.html',
   setUrl: url => set({ url }),
 
   selectedFile: '',
@@ -60,8 +56,6 @@ export const usePlaygroundEditor = create<{
 }));
 
 export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
-  const previewRef = useRef<HTMLIFrameElement>(null);
-
   const url = usePlaygroundEditor(s => s.url);
   const setUrl = usePlaygroundEditor(s => s.setUrl);
   const selectedFile = usePlaygroundEditor(s => s.selectedFile);
@@ -124,24 +118,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
 
   return (
     <>
-      <ul className="menu max-w-fit menu-horizontal group">
-        <NewFileDialogueWrapper
-          onComplete={(path, type) => type === 'file' && setSelectedFile(path)}
-        />
-        <CompileButton />
-        <SettingsButton />
-        <Link
-          href="/playground/examples"
-          target={'_blank'}
-          rel="noopener noreferrer"
-        >
-          <ToolbarButton
-            onClick={() => void 0}
-            title="Examples"
-            icon={<BookOpenIcon className="w-5 h-5" />}
-          />
-        </Link>
-      </ul>
+      <PlaygroundToolbar setSelectedFile={setSelectedFile} />
       <div className="flex flex-col md:flex-row h-full">
         {' '}
         <FileSystemTreeViewer
@@ -179,12 +156,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
               <ConsoleWindow />
             </div>
           </ParentComponent>
-          <iframe
-            title="Preview Window"
-            ref={previewRef}
-            className="w-full block h-full bg-white"
-            src={url}
-          />
+          <PlaygroundPreview url={url} />
         </div>
       </div>
       <PlaygroundSettings />
