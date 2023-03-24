@@ -1,12 +1,15 @@
 import { getDirListing } from '@/lib/webcontainers/files/dir';
 import { useQuery } from '@tanstack/react-query';
 import { FileSystemTree } from '@webcontainer/api';
+import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import LoadingSpinner from '../icons/Spinner';
 import { useToast } from '../Toast';
 
 export default function LinkGenerator() {
   const show = useToast(s => s.show);
+
+  const router = useRouter();
 
   const { data, isLoading } = useQuery(
     ['playground-link'],
@@ -41,11 +44,17 @@ export default function LinkGenerator() {
     {
       cacheTime: 0,
       staleTime: 0,
-      onSuccess: () => {
+      onSuccess: data => {
         show({
           id: 'playground-link-success',
           message: 'Playground link generated!',
           type: 'success',
+        });
+
+        if (!data?.code || data.code === router.query.code) return;
+
+        router.push(`/playground?code=${data.code}`, undefined, {
+          shallow: true,
         });
       },
     }

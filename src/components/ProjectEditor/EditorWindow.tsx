@@ -15,6 +15,8 @@ const monacoLanguages: Record<FileT['language'], string> = {
   wasm: 'txt',
   json: 'json',
   wat: 'txt',
+  jsx: 'javascript',
+  tsx: 'typescript',
 };
 
 export default function EditorWindow() {

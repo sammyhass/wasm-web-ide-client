@@ -47,7 +47,7 @@ const startServer = async (w?: WritableStream<string>) => {
   const container = getContainer();
   const processOut = await container?.spawn('npm', ['run', 'dev']);
   w && processOut?.output?.pipeTo(w);
-  return processOut?.exit;
+  return processOut.exit;
 };
 
 const setup = async (

@@ -11,6 +11,8 @@ const languageSchema = z.union([
   z.literal('ts'),
   z.literal('json'),
   z.literal('wat'),
+  z.literal('jsx'),
+  z.literal('tsx'),
 ]);
 export const projectLanguage = z.union([
   z.literal('Go'),
