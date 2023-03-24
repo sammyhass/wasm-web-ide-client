@@ -1,5 +1,3 @@
-import { ArrowUpIcon } from '@heroicons/react/24/solid';
-
 const EXAMPLES: {
   code: string;
   title: string;
@@ -36,9 +34,6 @@ function ExampleView(example: typeof EXAMPLES[number]) {
       <div className="card-body">
         <h2 className="card-title">{example.title}</h2>
         <p>{example.description}</p>
-      </div>
-      <div className="absolute right-0 -bottom-8 hover:bottom-0 transition-all duration-300 ease-in-out">
-        <ArrowUpIcon className="w-6 h-6" />
       </div>
     </a>
   );
