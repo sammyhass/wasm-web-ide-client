@@ -12,6 +12,7 @@ export function PlaygroundPreview(props: { url: string }) {
           <LockOpenIcon className="w-5 h-5 text-error" />
         )}
         <input
+          readOnly
           className="input input-sm w-full bg-base-200 rounded-md p-2"
           value={props.url.startsWith('http') ? props.url : ''}
           onClick={e => {
