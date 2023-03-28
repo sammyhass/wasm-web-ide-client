@@ -1,4 +1,5 @@
 import LanguageIcon from '@/components/icons/Icon';
+import SEO from '@/components/seo';
 import Container from '@/layouts/Container';
 import ProtectedPage from '@/layouts/ProtectedPage';
 import { ApiErrorResponse } from '@/lib/api/axios';
@@ -57,52 +58,58 @@ export default function NewProjectPage() {
   );
 
   return (
-    <ProtectedPage>
-      <Container title={'New Project'}>
-        <form
-          className="flex flex-col gap-4 max-w-xl mx-auto"
-          onSubmit={onSubmit}
-        >
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Name</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Project Name"
-              className="input input-bordered"
-              id="name"
-              onChange={e => setName(e.target.value)}
-              value={name}
-              required
-              name="name"
-              data-testid="project-name-input"
-            />
-          </div>
-
-          <LanguageSelect selected={selectedLang} onChange={setSelectedLang} />
-
-          <button
-            className={`btn btn-primary ${loading ? 'loading' : ''}`}
-            data-testid="create-project-button"
-            type="submit"
+    <>
+      <SEO title="New Project" />
+      <ProtectedPage>
+        <Container title={'New Project'}>
+          <form
+            className="flex flex-col gap-4 max-w-xl mx-auto"
+            onSubmit={onSubmit}
           >
-            Create Project
-          </button>
-
-          {error && (
-            <div className="alert alert-error">
-              <div className="alert-title">Error</div>
-              <p>
-                {error.info?.map((e, i) => (
-                  <span key={i}>{e}</span>
-                ))}
-              </p>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Project Name"
+                className="input input-bordered"
+                id="name"
+                onChange={e => setName(e.target.value)}
+                value={name}
+                required
+                name="name"
+                data-testid="project-name-input"
+              />
             </div>
-          )}
-        </form>
-      </Container>
-    </ProtectedPage>
+
+            <LanguageSelect
+              selected={selectedLang}
+              onChange={setSelectedLang}
+            />
+
+            <button
+              className={`btn btn-primary ${loading ? 'loading' : ''}`}
+              data-testid="create-project-button"
+              type="submit"
+            >
+              Create Project
+            </button>
+
+            {error && (
+              <div className="alert alert-error">
+                <div className="alert-title">Error</div>
+                <p>
+                  {error.info?.map((e, i) => (
+                    <span key={i}>{e}</span>
+                  ))}
+                </p>
+              </div>
+            )}
+          </form>
+        </Container>
+      </ProtectedPage>
+    </>
   );
 }
 

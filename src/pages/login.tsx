@@ -1,3 +1,4 @@
+import SEO from '@/components/seo';
 import { Alert } from '@/components/Toast';
 import { useLogin } from '@/hooks/api/useLogin';
 import { useRegister } from '@/hooks/api/useRegister';
@@ -65,69 +66,72 @@ export default function LoginPage() {
   );
 
   return (
-    <div className="max-w-lg mx-auto bg-base-200 shadow-md p-5 rounded-md my-10">
-      <h1 className="text-4xl font-bold">
-        {mode === 'login' ? 'Login' : 'Register'}
-      </h1>
-      <form className="flex flex-col gap-5 my-5" onSubmit={onSubmit}>
-        <FormControl
-          id="email"
-          data-testid="email-input"
-          label="Email"
-          name="email"
-          onChange={e => setEmail(e.target.value)}
-        />
-        <FormControl
-          id="password"
-          data-testid="password-input"
-          label="Password"
-          name="password"
-          type="password"
-          onChange={e => setPassword(e.target.value)}
-        />
-        {mode === 'register' && (
+    <>
+      <SEO title={mode === 'login' ? 'Login' : 'Register'} />
+      <div className="max-w-lg mx-auto bg-base-200 shadow-md p-5 rounded-md my-10">
+        <h1 className="text-4xl font-bold">
+          {mode === 'login' ? 'Login' : 'Register'}
+        </h1>
+        <form className="flex flex-col gap-5 my-5" onSubmit={onSubmit}>
           <FormControl
-            id="confirmPassword"
-            data-testid="confirm-password-input"
-            label="Confirm Password"
-            name="confirmPassword"
-            type="password"
-            onChange={e => setConfirmPassword(e.target.value)}
+            id="email"
+            data-testid="email-input"
+            label="Email"
+            name="email"
+            onChange={e => setEmail(e.target.value)}
           />
-        )}
-        <button
-          className={`btn btn-primary
+          <FormControl
+            id="password"
+            data-testid="password-input"
+            label="Password"
+            name="password"
+            type="password"
+            onChange={e => setPassword(e.target.value)}
+          />
+          {mode === 'register' && (
+            <FormControl
+              id="confirmPassword"
+              data-testid="confirm-password-input"
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              onChange={e => setConfirmPassword(e.target.value)}
+            />
+          )}
+          <button
+            className={`btn btn-primary
           ${loginLoading || registerLoading ? 'loading' : ''}
         `}
-          type="submit"
-          disabled={loginLoading || registerLoading}
+            type="submit"
+            disabled={loginLoading || registerLoading}
+          >
+            {mode === 'login' ? 'Login' : 'Register'}
+          </button>
+        </form>
+        <button
+          onClick={() => setMode(m => (m === 'login' ? 'register' : 'login'))}
+          className={`btn btn-accent w-full btn-sm normal-case`}
+          data-testid={'toggle-mode'}
         >
-          {mode === 'login' ? 'Login' : 'Register'}
+          {mode === 'login'
+            ? 'Need an account? Register here.'
+            : 'Already have an account? Login here.'}
         </button>
-      </form>
-      <button
-        onClick={() => setMode(m => (m === 'login' ? 'register' : 'login'))}
-        className={`btn btn-accent w-full btn-sm normal-case`}
-        data-testid={'toggle-mode'}
-      >
-        {mode === 'login'
-          ? 'Need an account? Register here.'
-          : 'Already have an account? Login here.'}
-      </button>
-      {!!error && (
-        <div className="my-5" data-testid="error">
-          <Alert
-            type="error"
-            message={
-              error instanceof ZodError
-                ? `${error.errors[0]?.path}: ${error.errors[0]?.message}`
-                : error
-            }
-            id="failed-login"
-            onHide={() => (error ? setError('') : null)}
-          />
-        </div>
-      )}
-    </div>
+        {!!error && (
+          <div className="my-5" data-testid="error">
+            <Alert
+              type="error"
+              message={
+                error instanceof ZodError
+                  ? `${error.errors[0]?.path}: ${error.errors[0]?.message}`
+                  : error
+              }
+              id="failed-login"
+              onHide={() => (error ? setError('') : null)}
+            />
+          </div>
+        )}
+      </div>
+    </>
   );
 }

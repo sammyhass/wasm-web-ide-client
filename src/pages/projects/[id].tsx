@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar';
+import SEO from '@/components/seo';
 import { useProject } from '@/hooks/api/useProject';
 import Container from '@/layouts/Container';
 import ProtectedPage from '@/layouts/ProtectedPage';
@@ -27,28 +28,31 @@ export default function ProjectOverviewPage(props: Props) {
   );
 
   return (
-    <ProtectedPage>
-      <Navbar title={<h1 className="text-xl font-bold">{title}</h1>} />
+    <>
+      <SEO title={title} />
+      <ProtectedPage>
+        <Navbar title={<h1 className="text-xl font-bold">{title}</h1>} />
 
-      {status === 'success' && data && props.id ? (
-        <>
-          <ProjectEditor {...data} />
-        </>
-      ) : (
-        <Container>
-          <div className="flex flex-col items-center justify-center bg-base-200 shadow-md min-h-16 gap-2 py-4">
-            <h1 className="text-2xl font-bold">
-              {status === 'error' ? 'Project Not Found' : 'Loading...'}
-            </h1>
-            <p className="text-base text-center">
-              {status === 'error'
-                ? 'The project you are looking for does not exist or you do not have access to it.'
-                : 'Just a moment...'}
-            </p>
-          </div>
-        </Container>
-      )}
-    </ProtectedPage>
+        {status === 'success' && data && props.id ? (
+          <>
+            <ProjectEditor {...data} />
+          </>
+        ) : (
+          <Container>
+            <div className="flex flex-col items-center justify-center bg-base-200 shadow-md min-h-16 gap-2 py-4">
+              <h1 className="text-2xl font-bold">
+                {status === 'error' ? 'Project Not Found' : 'Loading...'}
+              </h1>
+              <p className="text-base text-center">
+                {status === 'error'
+                  ? 'The project you are looking for does not exist or you do not have access to it.'
+                  : 'Just a moment...'}
+              </p>
+            </div>
+          </Container>
+        )}
+      </ProtectedPage>
+    </>
   );
 }
 

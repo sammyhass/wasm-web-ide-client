@@ -1,9 +1,5 @@
 import { queryClient } from '@/lib/api/queryClient';
-import {
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { FileSystemTree, WebContainer } from '@webcontainer/api';
 import { useContainer } from '..';
 
@@ -33,7 +29,6 @@ export const getDirListing = async (
         /^\/+/,
         ''
       );
-      console.log('readPath', readPath);
       res[dirent.name] = {
         file: {
           contents: includeContents
@@ -63,8 +58,6 @@ type QueryT = UseQueryOptions<DataT, unknown>;
 // dir listing represents the filesystem tree, it does not contain the file contents unless includeContents is true
 export const useDirListing = (opts: QueryT = {}) => {
   const { data: container } = useContainer();
-
-  const qc = useQueryClient();
   return useQuery<DataT>(
     ['dirListing'],
     async () => {

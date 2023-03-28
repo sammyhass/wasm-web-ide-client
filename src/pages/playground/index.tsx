@@ -2,6 +2,7 @@
 
 import Navbar from '@/components/Navbar';
 import PlaygroundEditor from '@/components/playground/PlaygroundEditor';
+import SEO from '@/components/seo';
 import { env } from '@/env/server.mjs';
 import { filesystem } from '@/lib/webcontainers/files/defaults';
 import { FileSystemTree } from '@webcontainer/api';
@@ -16,10 +17,13 @@ function PlaygroundPage({
   files,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <div className="flex flex-col h-screen">
-      <Navbar />
-      <PlaygroundEditor mount={files} />
-    </div>
+    <>
+      <SEO title="Playground" />
+      <div className="flex flex-col h-screen">
+        <Navbar />
+        <PlaygroundEditor mount={files} />
+      </div>
+    </>
   );
 }
 

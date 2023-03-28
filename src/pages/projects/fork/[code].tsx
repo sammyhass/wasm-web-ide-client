@@ -1,5 +1,6 @@
 import LanguageIcon from '@/components/icons/Icon';
 import LoadingSpinner from '@/components/icons/Spinner';
+import SEO from '@/components/seo';
 import { useForkProject } from '@/hooks/api/useForkProject';
 import { useSharedProject } from '@/hooks/api/useSharedProject';
 import { useMeQuery } from '@/hooks/useMe';
@@ -43,37 +44,40 @@ export default function ForkProjectPage({ code }: { code: string }) {
   }, [_mutate, me?.id, router]);
 
   return (
-    <Container className="bg-base-300 rounded-md shadow-sm flex flex-col items-center p-5">
-      {projectLoading ? (
-        <LoadingSpinner />
-      ) : error ? (
-        <p>Something went wrong</p>
-      ) : project ? (
-        <>
-          <SmallProjectOverview {...project} />
-          {me ? (
-            <button
-              className="btn btn-primary btn-xl btn-wide"
-              onClick={mutate}
-            >
-              {isForking ? 'Forking...' : 'Fork this Project'}
-            </button>
-          ) : (
-            <Link
-              href={`/login?next=	${encodeURIComponent(
-                `/projects/fork/${code}`
-              )}`}
-            >
-              <button className="btn btn-xl btn-wide btn-primary">
-                Login to Fork this Project
+    <>
+      <SEO title="Fork Project" />
+      <Container className="bg-base-300 rounded-md shadow-sm flex flex-col items-center p-5">
+        {projectLoading ? (
+          <LoadingSpinner />
+        ) : error ? (
+          <p>Something went wrong</p>
+        ) : project ? (
+          <>
+            <SmallProjectOverview {...project} />
+            {me ? (
+              <button
+                className="btn btn-primary btn-xl btn-wide"
+                onClick={mutate}
+              >
+                {isForking ? 'Forking...' : 'Fork this Project'}
               </button>
-            </Link>
-          )}
-        </>
-      ) : (
-        <p>Project not found</p>
-      )}
-    </Container>
+            ) : (
+              <Link
+                href={`/login?next=	${encodeURIComponent(
+                  `/projects/fork/${code}`
+                )}`}
+              >
+                <button className="btn btn-xl btn-wide btn-primary">
+                  Login to Fork this Project
+                </button>
+              </Link>
+            )}
+          </>
+        ) : (
+          <p>Project not found</p>
+        )}
+      </Container>
+    </>
   );
 }
 
