@@ -4,7 +4,6 @@ import { queryClient } from '@/lib/api/queryClient';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { NextPage } from 'next';
 import type { AppProps, AppType } from 'next/app';
-import Head from 'next/head';
 import { ReactElement, ReactNode } from 'react';
 
 import '@fontsource/fira-code/400.css';
@@ -14,6 +13,7 @@ import '@fontsource/open-sans/700.css';
 
 import { ToastProvider } from '@/components/Toast';
 
+import SEO from '@/components/seo';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Router } from 'next/router';
 import NProgress from 'nprogress';
@@ -46,9 +46,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
 
   return (
     <>
-      <Head>
-        <title>WASM IDE</title>
-      </Head>
+      <SEO />
       <QueryClientProvider client={queryClient}>
         {getLayout(<Component {...pageProps} />)}
         <ToastProvider />
