@@ -40,6 +40,7 @@ export default function ContextMenuWrapper({
 
   return (
     <Portal>
+      <div className="fixed inset-0 bg-black opacity-0" />
       <div
         ref={ref}
         className="absolute flex flex-col  menu menu-compact min-w-[200px] bg-base-300 rounded overflow-hidden shadow-lg"
@@ -58,7 +59,7 @@ export default function ContextMenuWrapper({
             node={props.node as DirectoryNode}
           />
         )}
-        <DeleteButton {...props} onDone={hide} />
+        {props.path !== '/' && <DeleteButton {...props} onDone={hide} />}
       </div>
     </Portal>
   );
