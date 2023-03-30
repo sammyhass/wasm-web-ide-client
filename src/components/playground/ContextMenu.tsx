@@ -105,7 +105,7 @@ function CreateNew(
           title={
             <span className="flex items-center gap-2">
               <PlusIcon className="w-5 h-5" />
-              New File/Folder in {props.path}
+              New File/Folder {props.path !== '/' && `in ${props.path}`}
             </span>
           }
           hide={props.hide}
@@ -158,7 +158,7 @@ function DeleteButton({
         Delete {isFile ? 'File' : 'Folder'}
       </ContextMenuButton>
       {confirmDelete && path && (
-        <DeleteDialgoue
+        <ConfirmDeleteDialgoue
           path={path}
           node={node}
           hide={() => {
@@ -171,7 +171,7 @@ function DeleteButton({
   );
 }
 
-function DeleteDialgoue({
+function ConfirmDeleteDialgoue({
   path,
   node,
   hide,
