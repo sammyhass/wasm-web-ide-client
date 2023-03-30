@@ -40,8 +40,13 @@ export const usePlaygroundEditor = create<{
   contextMenu?: {
     path: string;
     node: DirectoryNode | FileNode;
+    location: { top: number; left: number };
   };
-  showContextMenu: (path: string, node: DirectoryNode | FileNode) => void;
+  showContextMenu: (
+    path: string,
+    node: DirectoryNode | FileNode,
+    location: { top: number; left: number }
+  ) => void;
   hideContextMenu: () => void;
 }>(set => ({
   url: '/loading_preview.html',
@@ -51,7 +56,8 @@ export const usePlaygroundEditor = create<{
   setSelectedFile: file => set({ selectedFile: file }),
 
   contextMenu: undefined,
-  showContextMenu: (path, node) => set({ contextMenu: { path, node } }),
+  showContextMenu: (path, node, location) =>
+    set({ contextMenu: { path, node, location } }),
   hideContextMenu: () => set({ contextMenu: undefined }),
 }));
 
@@ -118,12 +124,17 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
 
   return (
     <>
-      <PlaygroundToolbar setSelectedFile={setSelectedFile} />
+      <PlaygroundToolbar />
       <div className="flex flex-col md:flex-row h-full">
         {' '}
         <FileSystemTreeViewer
           tree={tree ?? {}}
-          onContextMenu={(path, node) => showContextMenu(path, node)}
+          onContextMenu={(path, node, e) =>
+            showContextMenu(path, node, {
+              top: e.clientY,
+              left: e.clientX,
+            })
+          }
           selectedPath={selectedFile}
           onSelect={path => {
             writeLoading ? undefined : setSelectedFile(path);
@@ -162,6 +173,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
       <PlaygroundSettings />
       {contextMenuPath && (
         <ContextMenu
+          {...contextMenuPath.location}
           path={contextMenuPath.path}
           node={contextMenuPath.node}
           hide={hideContextMenu}

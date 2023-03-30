@@ -32,8 +32,8 @@ export default function NewFileDialogueWrapper({
   const { data: dirListing, refetch } = useDirListing();
 
   const onDone = (path: string, type: typeof NodeTypes[number]) => {
-    onComplete?.(path, type);
     refetch();
+    onComplete?.(path, type);
     onClose();
   };
 
@@ -126,7 +126,6 @@ export function NewNode({
   tree?: FileSystemTree;
   parent?: string;
 }) {
-  const { refetch } = useDirListing();
   const [selectedDirectory, setSelectedDirectory] = useState<string>('/');
   const [pathName, setPathname] = useState<string | null>(null);
   const [type, setType] = useState<typeof NodeTypes[number]>(NodeTypes[0]);
@@ -154,7 +153,6 @@ export function NewNode({
       if (type === 'folder') {
         createFolder(path, {
           onSuccess: () => {
-            refetch();
             setPathname(null);
             onComplete?.(path, 'folder');
           },
@@ -163,7 +161,6 @@ export function NewNode({
       } else {
         createFile(path, {
           onSuccess: () => {
-            refetch();
             setPathname(null);
             onComplete?.(path, 'file');
           },
@@ -179,7 +176,6 @@ export function NewNode({
       selectedDirectory,
       type,
       createFolder,
-      refetch,
       onComplete,
       createFile,
     ]

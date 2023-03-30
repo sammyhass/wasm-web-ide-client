@@ -2,7 +2,7 @@ import { isDirectoryNode, isFileNode } from '@/lib/webcontainers/util';
 import { DocumentIcon } from '@heroicons/react/24/outline';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 import { DirectoryNode, FileNode, FileSystemTree } from '@webcontainer/api';
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 
 export default function FileSystemTreeWrapper({
   tree,
@@ -43,7 +43,11 @@ type FileSystemTreeViewerProps = {
   selectedPath: string;
   tree: FileSystemTree;
   parentPath?: string;
-  onContextMenu?: (path: string, node: DirectoryNode | FileNode) => void;
+  onContextMenu?: (
+    path: string,
+    node: DirectoryNode | FileNode,
+    event: MouseEvent<HTMLButtonElement>
+  ) => void;
 };
 
 function FileSystemTreeViewer({
@@ -60,7 +64,7 @@ function FileSystemTreeViewer({
           path={path}
           onSelect={onSelect}
           key={path}
-          onContextMenu={() => onContextMenu?.(path, node)}
+          onContextMenu={(_, e) => onContextMenu?.(path, node, e)}
           isSelected={
             selectedPath ===
             `${parentPath === '/' ? '' : `${parentPath}/`}${path}`
@@ -98,7 +102,7 @@ function FileNodeViewer({
 }: {
   path: string;
   onSelect: (path: string) => void;
-  onContextMenu?: (path: string) => void;
+  onContextMenu?: (path: string, event: MouseEvent<HTMLButtonElement>) => void;
   isSelected: boolean;
 }) {
   return (
@@ -109,7 +113,7 @@ function FileNodeViewer({
       onClick={() => onSelect(path)}
       onContextMenu={e => {
         e.preventDefault();
-        onContextMenu?.(path);
+        onContextMenu?.(path, e);
       }}
     >
       <DocumentIcon className="w-5 h-5" />
@@ -128,7 +132,11 @@ export function DirectoryNodeViewer({
   path: string;
   node: DirectoryNode;
   onSelect: (path: string) => void;
-  onContextMenu?: (path: string, node: DirectoryNode | FileNode) => void;
+  onContextMenu?: (
+    path: string,
+    node: DirectoryNode | FileNode,
+    event: MouseEvent<HTMLButtonElement>
+  ) => void;
   selectedPath: string;
 }) {
   const [show, setShow] = useState(false);
@@ -140,7 +148,7 @@ export function DirectoryNodeViewer({
           onClick={() => setShow(!show)}
           onContextMenu={e => {
             e.preventDefault();
-            onContextMenu?.(path, node);
+            onContextMenu?.(path, node, e);
           }}
         >
           <ArrowRightIcon
@@ -155,7 +163,7 @@ export function DirectoryNodeViewer({
             parentPath={path}
             onSelect={p => onSelect(`${path}/${p}`)}
             tree={node.directory}
-            onContextMenu={(p, n) => onContextMenu?.(`${path}/${p}`, n)}
+            onContextMenu={(p, n, e) => onContextMenu?.(`${path}/${p}`, n, e)}
             selectedPath={selectedPath}
           />
         )}
