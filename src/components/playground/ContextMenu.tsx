@@ -42,12 +42,15 @@ export default function ContextMenuWrapper({
     <Portal>
       <div
         ref={ref}
-        className="absolute flex flex-col gap-2 menu min-w-[200px] bg-base-200 rounded-md shadow-lg"
+        className="absolute flex flex-col  menu menu-compact min-w-[200px] bg-base-300 rounded overflow-hidden shadow-lg"
         style={{
           top: props.top,
           left: props.left,
         }}
       >
+        <li className="menu-title text-sm text-base-content opacity-50 font-mono p-2">
+          {props.path}
+        </li>
         {isDirectory && (
           <CreateNew
             hide={hide}
