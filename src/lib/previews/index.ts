@@ -101,7 +101,3 @@ export const iframeContent = ({
     </body>
   </html>
 `;
-
-export const blobFromIframeContent = (content: string) => {
-  return new Blob([content], { type: 'text/html' });
-};
