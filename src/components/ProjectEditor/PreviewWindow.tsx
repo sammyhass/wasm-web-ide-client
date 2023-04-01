@@ -2,6 +2,7 @@ import { useProject } from '@/hooks/api/useProject';
 import { useEditor } from '@/hooks/useEditor';
 import { iframeContent } from '@/lib/previews';
 import { faker } from '@faker-js/faker';
+import { useMemo } from 'react';
 import create from 'zustand';
 
 export const usePreviewWindow = create<{
@@ -45,14 +46,20 @@ export default function PreviewWindow() {
     useGo: project?.language === 'Go',
   });
 
+  const blob = useMemo(() => {
+    const blob = new Blob([srcDoc], { type: 'text/html' });
+    return URL.createObjectURL(blob);
+  }, [srcDoc]);
+
   return (
     <>
       <div className="bg-white min-w-[40px] w-full block" id="previewWindow">
         <iframe
-          srcDoc={srcDoc}
+          src={blob}
           className="w-full h-full"
           title="Preview"
           data-testid="preview-window"
+          sandbox="allow-scripts"
         />
       </div>
     </>

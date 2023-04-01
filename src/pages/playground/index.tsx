@@ -5,9 +5,9 @@ import PlaygroundEditor from '@/components/playground/PlaygroundEditor';
 import SEO from '@/components/seo';
 import { env } from '@/env/server.mjs';
 import { filesystem } from '@/lib/webcontainers/files/defaults';
-import { FileSystemTree } from '@webcontainer/api';
+import type { FileSystemTree } from '@webcontainer/api';
 import Redis from 'ioredis';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 type PageProps = {
   files: FileSystemTree;
