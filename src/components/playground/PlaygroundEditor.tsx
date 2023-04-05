@@ -150,7 +150,10 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
                 </div>
                 {writeLoading ||
                   (containerLoading && (
-                    <div className="flex items-center gap-2 p-2">
+                    <div
+                      className="flex items-center gap-2 p-2"
+                      data-testid="loading-indicator"
+                    >
                       Loading...
                       <LoadingSpinner />
                     </div>

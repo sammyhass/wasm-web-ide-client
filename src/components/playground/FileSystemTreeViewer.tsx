@@ -88,6 +88,7 @@ function FileSystemTreeViewer({
   return (
     <ul
       className="font-mono list-none px-2 text-sm gap-2 flex flex-col h-full w-full md:w-[270px]"
+      data-testid="file-tree-list"
       onContextMenu={e => {
         e.preventDefault();
         onContextMenu?.('/', { directory: tree }, e);
