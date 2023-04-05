@@ -24,7 +24,7 @@ export default function FileSystemTreeWrapper({
 }: FileSystemTreeViewerProps) {
   const [show, setShow] = useState(true);
   return show ? (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col relative" data-testid="file-tree">
       <div className="flex items-center gap-2 pl-4 pr-2 h-12 ">
         <b className="flex-1">Files</b>
         <button onClick={() => setShow(false)} title="Close">

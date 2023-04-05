@@ -25,6 +25,7 @@ export function PlaygroundPreview(props: { url: string }) {
       <iframe
         title="Preview Window"
         ref={previewRef}
+        data-testid="preview-window"
         className="w-full block h-full bg-white"
         src={props.url}
       />

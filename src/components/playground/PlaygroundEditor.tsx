@@ -142,7 +142,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
         />
         <div className="flex flex-col-reverse md:flex-row w-full mr-1">
           <ParentComponent>
-            <div className="w-full relative h-full">
+            <div className="w-full relative h-full" data-testid="editor-window">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 p-2">
                   <LanguageIcon language={currentFileLanguage} />

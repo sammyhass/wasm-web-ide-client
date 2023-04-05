@@ -10,7 +10,7 @@ export function PlaygroundToolbar() {
   const setSelectedFile = usePlaygroundEditor(s => s.setSelectedFile);
 
   return (
-    <ul className="menu max-w-fit menu-horizontal group">
+    <ul className="menu max-w-fit menu-horizontal group" data-testid="toolbar">
       <NewNodeWrapper
         onComplete={(path, type) => type === 'file' && setSelectedFile(path)}
       />
