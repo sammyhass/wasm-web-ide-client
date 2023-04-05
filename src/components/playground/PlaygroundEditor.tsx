@@ -146,7 +146,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 p-2">
                   <LanguageIcon language={currentFileLanguage} />
-                  <b>{selectedFile}</b>
+                  <b data-testid="selected-file">{selectedFile}</b>
                 </div>
                 {writeLoading ||
                   (containerLoading && (
