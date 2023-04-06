@@ -7,15 +7,13 @@ import { env } from '@/env/server.mjs';
 import { filesystem } from '@/lib/webcontainers/files/defaults';
 import type { FileSystemTree } from '@webcontainer/api';
 import Redis from 'ioredis';
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import type { GetServerSideProps } from 'next';
 
 type PageProps = {
   files: FileSystemTree;
 };
 
-function PlaygroundPage({
-  files,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+function PlaygroundPage({ files }: PageProps) {
   return (
     <>
       <SEO title="Playground" />
@@ -29,15 +27,6 @@ function PlaygroundPage({
 
 PlaygroundPage.getLayout = (page: React.ReactNode) => {
   return <>{page}</>;
-};
-
-export const encode = (obj: FileSystemTree) => {
-  const str = JSON.stringify(obj);
-  return Buffer.from(str).toString('base64url');
-};
-
-export const decode = (str: string) => {
-  return JSON.parse(Buffer.from(str, 'base64url').toString());
 };
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async ({
