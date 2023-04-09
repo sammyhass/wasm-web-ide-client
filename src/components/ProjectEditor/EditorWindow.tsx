@@ -79,6 +79,7 @@ export function FileEditor({
 
   return (
     <MonacoEditor
+      wrapperProps={{ 'data-testid': 'file-editor' }}
       value={content}
       options={{
         minimap: { enabled: minimapEnabled },
