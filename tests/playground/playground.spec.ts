@@ -14,8 +14,13 @@ let pom: PlaygroundPage;
 let firstFile: { path: string; node: DirectoryNode | FileNode } | undefined;
 let firstFolder: { path: string; node: DirectoryNode | FileNode } | undefined;
 
-test.describe.configure({ mode: 'serial' });
+test.skip(
+  ({ browserName }) => browserName !== 'chromium',
+  'Playground is only supported in Chromium based browsers'
+);
 test.slow();
+test.describe.configure({ mode: 'serial' });
+
 test.beforeAll(async ({ browser }) => {
   page = await browser.newPage();
 
