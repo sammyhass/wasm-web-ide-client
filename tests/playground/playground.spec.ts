@@ -7,6 +7,7 @@ import {
 import { Page, expect, test } from '@playwright/test';
 import { DirectoryNode, FileNode } from '@webcontainer/api';
 import { PlaygroundPage } from '../util/pom/PlaygroundPage';
+import { LoadingSpinner } from '../util/pom/Spinner';
 
 let page: Page;
 let pom: PlaygroundPage;
@@ -25,9 +26,15 @@ test.beforeAll(async ({ browser }) => {
   page = await browser.newPage();
 
   await page.goto('/playground');
-  await page.waitForLoadState('networkidle');
 
   pom = new PlaygroundPage(page);
+  const spinner = new LoadingSpinner(page.getByTestId('editor-window'));
+
+  await spinner.waitFor();
+
+  await spinner.waitForToBeHidden();
+
+  await pom.fileTree.getByText('index.html').waitFor();
 });
 
 test('playground mounts the file tree', async ({}) => {
@@ -106,10 +113,9 @@ test('can see the preview for the playground', async ({}) => {
     throw new Error('No src found for preview frame');
   }
 
-  const frame = await pom.page.frame({ url: new RegExp(src) });
+  const frame = await pom.page.frame({ url: src });
 
-  expect(src).toContain('webcontainer.io');
-
+  await frame?.waitForURL(u => u.toString().includes('webcontainer.io'));
   const heading = await pom.previewFrame.getByRole('heading');
   expect(heading).toBeTruthy();
 
