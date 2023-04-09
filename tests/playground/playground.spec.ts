@@ -121,3 +121,31 @@ test('can see the preview for the playground', async ({}) => {
 
   expect(await heading.textContent()).toBe('Hello World!');
 });
+
+test('can compile to AssemblyScript to WebAssembly', async () => {
+  const outDir = await pom.fileTree.getByText('out');
+  await outDir.click();
+
+  const outFiles = ['module.wat', 'module.wasm'];
+
+  const compileButton = await pom.toolbar.getByTestId('compile-to-wasm-button');
+
+  const spinner = new LoadingSpinner(compileButton);
+  await compileButton.click();
+
+  await spinner.waitFor();
+
+  await spinner.waitForToBeHidden();
+
+  for (const file of outFiles) {
+    const fileEl = await outDir.getByText(file);
+
+    expect(fileEl).toBeTruthy();
+  }
+
+  const watFile = await pom.fileTree.getByText('module.wat');
+  await watFile.click();
+
+  expect(await pom.selectedFile.textContent()).toBe('out/module.wat');
+  expect(await pom.editor.inputValue()).toContain('(module');
+});
