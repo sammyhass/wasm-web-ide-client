@@ -21,7 +21,7 @@ try {
 
 // Sets up the WebAssembly memory to be used by the WebAssembly code
 // If the code is Go, we need to instantiate the Go object, otherwise we can
-// just instantiate the WebAssembly memory
+// just instantiate WebAssembly memory
 const instantiateMemory = (isGo = true) => `
   const memory = ${
     isGo ? `new Go()` : `new WebAssembly.Memory({ initial: 10, maximum: 256 })`

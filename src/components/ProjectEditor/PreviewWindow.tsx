@@ -1,7 +1,6 @@
 import { useProject } from '@/hooks/api/useProject';
 import { useEditor } from '@/hooks/useEditor';
 import { iframeContent } from '@/lib/previews';
-import { faker } from '@faker-js/faker';
 import create from 'zustand';
 
 export const usePreviewWindow = create<{
@@ -9,7 +8,7 @@ export const usePreviewWindow = create<{
   newNonce: () => void;
 }>(s => ({
   nonce: '',
-  newNonce: () => s({ nonce: faker.random.alphaNumeric(16) }),
+  newNonce: () => s({ nonce: Math.random().toString(36) }),
 }));
 
 export default function PreviewWindow() {
