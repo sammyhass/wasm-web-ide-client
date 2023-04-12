@@ -44,6 +44,9 @@ axiosClient.interceptors.response.use(
   },
   error => {
     if (error.response) {
+      if (error.response.status === 401) {
+        useMe.setState({ jwt: null });
+      }
       const { data } = error.response;
       const apiError = apiErrorSchema.parse(data);
       return Promise.reject(apiError);
