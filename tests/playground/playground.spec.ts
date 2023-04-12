@@ -149,3 +149,29 @@ test('can compile to AssemblyScript to WebAssembly', async () => {
   expect(await pom.selectedFile.textContent()).toBe('out/module.wat');
   expect(await pom.editor.inputValue()).toContain('(module');
 });
+
+test('can download the project as a ZIP file', async () => {
+  const settingsButton = await pom.toolbar.getByTestId(
+    'project-settings-button'
+  );
+
+  await settingsButton.click();
+
+  const modal = await pom.page.locator('.modal');
+
+  const sharingTab = await modal.getByText('Sharing');
+
+  await sharingTab.click();
+
+  const downloadButton = await modal.getByText('Download Project as ZIP');
+
+  await downloadButton.click();
+
+  const download = await pom.page.waitForEvent('download');
+
+  await download.path();
+
+  expect(download.suggestedFilename()).toBe('project.zip');
+
+  await download.delete();
+});
