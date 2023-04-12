@@ -52,7 +52,6 @@ export default function PreviewWindow() {
           className="w-full h-full"
           title="Preview"
           data-testid="preview-window"
-          sandbox="allow-scripts allow-same-origin"
         />
       </div>
     </>
