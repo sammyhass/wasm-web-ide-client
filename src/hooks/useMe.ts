@@ -26,7 +26,8 @@ export const useLogoutMutation = () => {
     ['logout'],
     () => {
       useMe.setState({ jwt: null });
-      qc.setQueryData(['me'], null);
+      qc.resetQueries(['me']);
+      qc.clear();
       return Promise.resolve();
     },
     {
@@ -38,19 +39,14 @@ export const useLogoutMutation = () => {
 };
 
 export const useMeQuery = (enabled = true) => {
+  const jwt = useMe(s => s.jwt);
+  const { mutate: _logout } = useLogoutMutation();
   const { data, error, isLoading, refetch } = useQuery(['me'], me, {
     cacheTime: 60,
-    enabled,
+    enabled: enabled && !!jwt,
     retryOnMount: false,
     retry: false,
-    onSuccess: user => {
-      if (!user) {
-        useMe.setState({ jwt: null });
-      }
-    },
-    onError: () => {
-      useMe.setState({ jwt: null });
-    },
+    onError: _logout,
   });
 
   return {
