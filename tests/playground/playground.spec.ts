@@ -141,7 +141,6 @@ test('can show context menu for a folder', async ({}) => {
 
   expect(contextMenu).toBeTruthy();
 
-  // expect 2 buttons, one for delete and one for new file
   const buttons = await contextMenu.locator('button').all();
 
   expect(buttons.length).toBe(2);
@@ -150,8 +149,6 @@ test('can show context menu for a folder', async ({}) => {
 });
 
 test('can see the preview for the playground', async ({}) => {
-  // get the preview body and check that it contains the expected text
-
   const src = await pom.previewFrameEl.getAttribute('src');
 
   if (!src) {
