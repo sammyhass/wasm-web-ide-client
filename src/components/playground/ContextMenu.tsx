@@ -78,7 +78,9 @@ function ContextMenuButton({
     return (
       <div className="tooltip" data-tip={disabledTip}>
         <li className="opacity-50">
-          <button {...props}>{children}</button>
+          <button {...props} data-testid="context-menu-button">
+            {children}
+          </button>
         </li>
       </div>
     );
