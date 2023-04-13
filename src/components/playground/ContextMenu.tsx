@@ -44,6 +44,7 @@ export default function ContextMenuWrapper({
       <div
         ref={ref}
         className="absolute flex flex-col  menu menu-compact min-w-[200px] bg-base-300 rounded overflow-hidden shadow-lg"
+        data-testid="context-menu"
         style={{
           top: props.top,
           left: props.left,
