@@ -13,6 +13,8 @@ export class ProjectEditorPage {
 
   readonly compileButton: Locator;
   readonly saveButton: Locator;
+  readonly watViewerButton: Locator;
+  readonly watViewer: Locator;
 
   readonly fileTree: Locator;
 
@@ -31,7 +33,7 @@ export class ProjectEditorPage {
 
     this.settingsButton = page.getByTestId('project-settings-button');
 
-    this.compileButton = page.getByTestId('compile-project-button');
+    this.compileButton = page.getByTestId('compile-to-wasm-button');
 
     this.saveButton = page.getByTestId('save-project-button');
 
@@ -42,6 +44,9 @@ export class ProjectEditorPage {
     this.editorWindow = page.getByTestId('editor-window');
 
     this.editor = this.editorWindow.locator('.inputarea');
+
+    this.watViewerButton = page.getByTestId('wat-viewer-button');
+    this.watViewer = page.getByTestId('wat-viewer');
 
     this.previewWindow = new PreviewWindow(page);
 
