@@ -49,7 +49,7 @@ test('can create a new AssemblyScript project', async () => {
   projectEditorPom = new ProjectEditorPage(page);
 });
 
-test('can compile the project to AssemblyScript', async () => {
+test('can compile AssemblyScript to WebAssembly', async () => {
   const spinner = new LoadingSpinner(projectEditorPom.compileButton);
 
   await projectEditorPom.compileButton.click();
@@ -59,7 +59,7 @@ test('can compile the project to AssemblyScript', async () => {
 
   const { editorConsole } = projectEditorPom;
 
-  expect(editorConsole.hasMessage('Compiled successfully')).toBeTruthy();
+  expect(editorConsole.hasMessage('compiled successfully')).toBeTruthy();
 });
 
 test('can view WAT representation of WASM module', async () => {
