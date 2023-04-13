@@ -1,4 +1,5 @@
 import { FrameLocator, Locator, Page } from '@playwright/test';
+import { EditorConsole } from './ProjectEditorPage/EditorConsole';
 
 export class PlaygroundPage {
   readonly page: Page;
@@ -15,6 +16,8 @@ export class PlaygroundPage {
   readonly editorWindow: Locator;
   readonly editor: Locator;
 
+  readonly consoleWindow: EditorConsole;
+
   constructor(page: Page) {
     this.page = page;
 
@@ -30,5 +33,7 @@ export class PlaygroundPage {
     this.fileTree = page.getByTestId('file-tree');
 
     this.selectedFile = page.getByTestId('selected-file');
+
+    this.consoleWindow = new EditorConsole(page);
   }
 }

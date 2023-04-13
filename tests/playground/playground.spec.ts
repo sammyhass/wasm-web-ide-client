@@ -1,4 +1,4 @@
-import { filesystem } from '@/lib/webcontainers/files/defaults';
+import { filesystem, packageJson } from '@/lib/webcontainers/files/defaults';
 import {
   findNode,
   isDirectoryNode,
@@ -37,17 +37,19 @@ test.beforeAll(async ({ browser }) => {
   await pom.fileTree.getByText('index.html').waitFor();
 });
 
-test('playground mounts the file tree', async ({}) => {
-  await pom.fileTree.waitFor();
+const expectedTopLevelNodes = Object.keys(filesystem).filter(
+  p => !p.includes('lib')
+);
+for (const path of expectedTopLevelNodes) {
+  test(`file tree contains ${path}`, async ({}) => {
+    const fileEl = await pom.fileTree.getByText(path);
+    expect(fileEl).toBeTruthy();
 
-  const textContent = await pom.fileTree.textContent();
+    const textContent = await pom.fileTree.textContent();
 
-  const tlFiles = Object.keys(filesystem).filter(p => !p.includes('lib'));
-
-  for (const path of tlFiles) {
     expect(textContent).toContain(path);
-  }
-});
+  });
+}
 
 test('can select a file', async ({}) => {
   firstFile = findNode(
@@ -90,7 +92,7 @@ test('can expand a folder to show its contents', async ({}) => {
   });
 });
 
-test('can see the contents of a file', async ({}) => {
+test('can see the contents of the selected file', async ({}) => {
   if (!firstFile || isDirectoryNode(firstFile.node)) {
     throw new Error('No file found');
   }
@@ -102,6 +104,49 @@ test('can see the contents of a file', async ({}) => {
   for (const line of editorLines) {
     expect(expectedLines).toContain(line);
   }
+});
+
+test('can show context menu for a file', async ({}) => {
+  if (!firstFile) {
+    throw new Error('No file found');
+  }
+
+  const fileEl = await pom.fileTree.getByText(firstFile?.path);
+
+  await fileEl.click({ button: 'right' });
+
+  const contextMenu = await pom.page.getByTestId('context-menu');
+
+  expect(contextMenu).toBeTruthy();
+
+  const deleteButton = await contextMenu
+    .getByTestId('context-menu-button')
+    .getByText('Delete File');
+
+  expect(deleteButton).toBeTruthy();
+
+  await page.click('body');
+});
+
+test('can show context menu for a folder', async ({}) => {
+  if (!firstFolder) {
+    throw new Error('No folder found');
+  }
+
+  const folderEl = await pom.fileTree.getByText(firstFolder?.path);
+
+  await folderEl.click({ button: 'right' });
+
+  const contextMenu = await pom.page.getByTestId('context-menu');
+
+  expect(contextMenu).toBeTruthy();
+
+  // expect 2 buttons, one for delete and one for new file
+  const buttons = await contextMenu.locator('button').all();
+
+  expect(buttons.length).toBe(2);
+
+  await page.click('body');
 });
 
 test('can see the preview for the playground', async ({}) => {
@@ -120,6 +165,13 @@ test('can see the preview for the playground', async ({}) => {
   expect(heading).toBeTruthy();
 
   expect(await heading.textContent()).toBe('Hello World!');
+});
+
+test('can see console output for the development server', async () => {
+  expect(
+    await pom.consoleWindow.hasMessage(packageJson.scripts.dev),
+    "I don't see the development server output in the console"
+  ).toBeTruthy();
 });
 
 test('can compile to AssemblyScript to WebAssembly', async () => {
@@ -142,12 +194,20 @@ test('can compile to AssemblyScript to WebAssembly', async () => {
 
     expect(fileEl).toBeTruthy();
   }
-
   const watFile = await pom.fileTree.getByText('module.wat');
   await watFile.click();
 
   expect(await pom.selectedFile.textContent()).toBe('out/module.wat');
   expect(await pom.editor.inputValue()).toContain('(module');
+});
+
+test('can see console output for the build command', async () => {
+  const cmd = packageJson.scripts['build-assemblyscript'];
+
+  expect(
+    await pom.consoleWindow.hasMessage(cmd),
+    "I don't see the assemblyscript-build command output in the console"
+  ).toBeTruthy();
 });
 
 test('can download the project as a ZIP file', async () => {

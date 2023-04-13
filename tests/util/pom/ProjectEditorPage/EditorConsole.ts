@@ -16,4 +16,10 @@ export class EditorConsole {
   async getConsoleMessageCount() {
     return await this.consoleMessages.count();
   }
+
+  async hasMessage(message: string) {
+    const joinedMessages = (await this.getConsoleMessages()).join('');
+
+    return joinedMessages.includes(message);
+  }
 }
