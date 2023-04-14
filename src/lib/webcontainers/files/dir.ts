@@ -1,4 +1,3 @@
-import { queryClient } from '@/lib/api/queryClient';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { FileSystemTree, WebContainer } from '@webcontainer/api';
 import { useContainer } from '..';
@@ -32,7 +31,7 @@ export const getDirListing = async (
       res[dirent.name] = {
         file: {
           contents: includeContents
-            ? queryClient.getQueryData(['readFile', readPath]) || ''
+            ? await container.fs.readFile(readPath, 'utf-8')
             : '',
         },
       };
