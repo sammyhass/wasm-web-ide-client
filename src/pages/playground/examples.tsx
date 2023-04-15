@@ -23,6 +23,11 @@ const EXAMPLES: {
     title: 'AssemblyScript Memory',
     code: '22c8de758e8c',
   },
+  {
+    description: 'Using AssemblyScript to perform addition and subtraction.',
+    title: 'AssemblyScript Math',
+    code: '4069239f9588',
+  },
 ];
 
 function ExampleView(example: typeof EXAMPLES[number]) {
