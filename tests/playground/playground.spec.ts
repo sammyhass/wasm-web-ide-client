@@ -166,8 +166,7 @@ test('can see the preview for the playground', async ({}) => {
 
 test('can see console output for the development server', async () => {
   expect(
-    await pom.consoleWindow.hasMessage(packageJson.scripts.dev),
-    "I don't see the development server output in the console"
+    await pom.consoleWindow.hasMessage(packageJson.scripts.dev)
   ).toBeTruthy();
 });
 
@@ -202,8 +201,7 @@ test('can see console output for the build command', async () => {
   const cmd = packageJson.scripts['build-assemblyscript'];
 
   expect(
-    await pom.consoleWindow.hasMessage(cmd),
-    "I don't see the assemblyscript-build command output in the console"
+    await pom.consoleWindow.hasMessage(cmd)
   ).toBeTruthy();
 });
 
