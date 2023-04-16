@@ -11,12 +11,12 @@ import { DirectoryNode, FileNode, FileSystemTree } from '@webcontainer/api';
 import dynamic from 'next/dynamic';
 import { Fragment, useMemo } from 'react';
 import create from 'zustand';
-import LanguageIcon from '../icons/Icon';
-import LoadingSpinner from '../icons/Spinner';
 import { ResizableWindow } from '../ProjectEditor';
 import ConsoleWindow, {
   useEditorConsole,
 } from '../ProjectEditor/ConsoleWindow';
+import LanguageIcon from '../icons/Icon';
+import LoadingSpinner from '../icons/Spinner';
 import ContextMenu from './ContextMenu';
 import FileSystemTreeViewer from './FileSystemTreeViewer';
 import { PlaygroundPreview } from './PlaygroundPreview';
@@ -126,7 +126,6 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
     <>
       <PlaygroundToolbar />
       <div className="flex flex-col md:flex-row h-full">
-        {' '}
         <FileSystemTreeViewer
           tree={tree ?? {}}
           onContextMenu={(path, node, e) =>
@@ -148,16 +147,15 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
                   <LanguageIcon language={currentFileLanguage} />
                   <b data-testid="selected-file">{selectedFile}</b>
                 </div>
-                {writeLoading ||
-                  (containerLoading && (
-                    <div
-                      className="flex items-center gap-2 p-2"
-                      data-testid="loading-indicator"
-                    >
-                      Loading...
-                      <LoadingSpinner />
-                    </div>
-                  ))}
+                {(writeLoading || containerLoading) && (
+                  <div
+                    className="flex items-center gap-2 p-2"
+                    data-testid="loading-indicator"
+                  >
+                    Loading...
+                    <LoadingSpinner />
+                  </div>
+                )}
               </div>
 
               <FileEditor
