@@ -82,6 +82,7 @@ function WatViewer({ projectId }: { projectId: string }) {
       {status === 'loading' && <div>Loading...</div>}
       {status === 'success' && !!wat && (
         <Editor
+          wrapperProps={{ 'data-testid': 'wat-viewer-editor' }}
           height={'calc(100vh - 300px)'}
           language="wat"
           value={wat}

@@ -76,6 +76,11 @@ for (const lang of projectLanguages) {
 
     await loading.waitFor({ state: 'hidden' });
 
+    const watViewerEditor =
+      projectEditorPom.watViewer.getByTestId('wat-viewer-editor');
+
+    await watViewerEditor.waitFor();
+
     const wat = await projectEditorPom.watViewer.innerText();
 
     expect(wat).toContain('(module');
