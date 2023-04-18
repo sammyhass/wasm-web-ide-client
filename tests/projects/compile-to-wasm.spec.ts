@@ -87,8 +87,11 @@ for (const lang of projectLanguages) {
 
     expect(wat).toContain('(module');
 
-    await projectEditorPom.watViewer.screenshot({
-      path: testInfo.outputPath('wat-viewer.png'),
+    const screenshot = await projectEditorPom.watViewer.screenshot();
+
+    await testInfo.attach('screenshot', {
+      body: screenshot,
+      contentType: 'image/png',
     });
 
     await projectEditorPom.page.press('body', 'Escape');
