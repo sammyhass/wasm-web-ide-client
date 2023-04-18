@@ -68,6 +68,8 @@ for (const lang of projectLanguages) {
   });
 
   test(`can view WAT representation of WASM module for ${lang} project`, async () => {
+    expect(await projectEditorPom.watViewerButton.isEnabled()).toBeTruthy();
+
     await projectEditorPom.watViewerButton.click();
 
     await projectEditorPom.watViewer.waitFor();
@@ -79,7 +81,7 @@ for (const lang of projectLanguages) {
     const watViewerEditor =
       projectEditorPom.watViewer.getByTestId('wat-viewer-editor');
 
-    await watViewerEditor.waitFor();
+    await watViewerEditor.getByText('(module').waitFor();
 
     const wat = await projectEditorPom.watViewer.innerText();
 
