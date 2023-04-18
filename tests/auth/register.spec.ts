@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { getURL } from '../util';
 import {
-  createRandomLoginInput,
   LoginRegisterPage,
+  createRandomLoginInput,
 } from '../util/pom/LoginRegisterPage';
 import { Navbar } from '../util/pom/Navbar';
 

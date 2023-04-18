@@ -27,4 +27,12 @@ export class Navbar {
   async isLoggedIn() {
     return await this.logoutButton.isVisible();
   }
+
+  async waitForLoggedIn() {
+    await this.logoutButton.waitFor();
+  }
+
+  async waitForLoggedOut() {
+    await this.loginButton.waitFor();
+  }
 }

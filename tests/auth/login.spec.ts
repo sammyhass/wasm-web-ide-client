@@ -18,7 +18,7 @@ test('can login', async ({ page }) => {
   expect(page.url()).toBe(getURL('/projects'));
 
   const nav = new Navbar(page);
-  await nav.logoutButton.waitFor();
+  await nav.waitForLoggedIn();
 
   const isLoggedIn = await nav.isLoggedIn();
   expect(isLoggedIn).toBe(true);

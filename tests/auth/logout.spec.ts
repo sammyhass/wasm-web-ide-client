@@ -10,11 +10,11 @@ test('can logout', async ({ browser }) => {
   await page.goto(getURL('/projects'));
 
   const nav = new Navbar(page);
+  await nav.waitForLoggedIn();
 
-  await nav.logoutButton.waitFor();
   await nav.clickLogoutButton();
+  await nav.waitForLoggedOut();
 
-  await nav.loginButton.waitFor();
   const isLoggedIn = await nav.isLoggedIn();
   expect(isLoggedIn).toBe(false);
 });
