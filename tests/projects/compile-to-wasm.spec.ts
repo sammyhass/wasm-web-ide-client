@@ -67,7 +67,7 @@ for (const lang of projectLanguages) {
     expect(editorConsole.hasMessage('compiled successfully')).toBeTruthy();
   });
 
-  test(`can view WAT representation of WASM module for ${lang} project`, async () => {
+  test(`can view WAT representation of WASM module for ${lang} project`, async ({}, testInfo) => {
     expect(await projectEditorPom.watViewerButton.isEnabled()).toBeTruthy();
 
     await projectEditorPom.watViewerButton.click();
@@ -86,6 +86,10 @@ for (const lang of projectLanguages) {
     const wat = await projectEditorPom.watViewer.innerText();
 
     expect(wat).toContain('(module');
+
+    await projectEditorPom.watViewer.screenshot({
+      path: testInfo.outputPath('wat-viewer.png'),
+    });
 
     await projectEditorPom.page.press('body', 'Escape');
 
