@@ -1,12 +1,12 @@
 import { BookOpenIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import { usePlaygroundEditor } from '.';
 import { ToolbarButton } from '../ProjectEditor/Toolbar';
 import SettingsButton from '../ProjectEditor/Toolbar/SettingsButton';
 import NewNodeWrapper from './NewNodeDialogue';
 import CompileButton from './PlaygroundCompileButton';
-import { usePlaygroundEditor } from './PlaygroundEditor';
 
-export function PlaygroundToolbar() {
+export default function PlaygroundToolbar() {
   const setSelectedFile = usePlaygroundEditor(s => s.setSelectedFile);
 
   return (

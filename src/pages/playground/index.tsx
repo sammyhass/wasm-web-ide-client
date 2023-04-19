@@ -1,7 +1,7 @@
 // Playground Page using WebContainers to provide a sandboxed environment
 
 import Navbar from '@/components/Navbar';
-import PlaygroundEditor from '@/components/playground/PlaygroundEditor';
+import PlaygroundEditor from '@/components/playground';
 import SEO from '@/components/seo';
 import { env } from '@/env/server.mjs';
 import { filesystem } from '@/lib/webcontainers/files/defaults';

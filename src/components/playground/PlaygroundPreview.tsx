@@ -1,7 +1,7 @@
 import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/solid';
 import { useRef } from 'react';
 
-export function PlaygroundPreview(props: { url: string }) {
+export default function PlaygroundPreview(props: { url: string }) {
   const previewRef = useRef<HTMLIFrameElement>(null);
   return (
     <div className="fit-content w-full h-full relative rounded-t-md overflow-hidden">

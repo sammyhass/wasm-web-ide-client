@@ -15,13 +15,19 @@ import { ResizableWindow } from '../ProjectEditor';
 import ConsoleWindow, {
   useEditorConsole,
 } from '../ProjectEditor/ConsoleWindow';
-import LanguageIcon from '../icons/Icon';
-import LoadingSpinner from '../icons/Spinner';
 import ContextMenu from './ContextMenu';
 import FileSystemTreeViewer from './FileSystemTreeViewer';
-import { PlaygroundPreview } from './PlaygroundPreview';
-import { PlaygroundSettings } from './PlaygroundSettings';
-import { PlaygroundToolbar } from './PlaygroundToolbar';
+import PlaygroundPreview from './PlaygroundPreview';
+import PlaygroundSettings from './PlaygroundSettings';
+import PlaygroundToolbar from './PlaygroundToolbar';
+
+const LanguageIcon = dynamic(() => import('../icons/Icon'), {
+  ssr: false,
+});
+
+const LoadingSpinner = dynamic(() => import('../icons/Spinner'), {
+  ssr: false,
+});
 
 const FileEditor = dynamic(
   () => import('../ProjectEditor/EditorWindow').then(m => m.FileEditor),

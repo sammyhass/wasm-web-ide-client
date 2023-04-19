@@ -11,7 +11,7 @@ import DownloadButton from './DownloadButton';
 import LinkGenerator from './LinkGenerator';
 
 const PLAYGROUND_SETTINGS_TABS = ['Editor', 'Sharing', 'Dependencies'];
-export function PlaygroundSettings() {
+export default function PlaygroundSettings() {
   const showSettings = useEditor(s => s.showSettings);
   const setShowSettings = useEditor(s => s.setShowSettings);
 

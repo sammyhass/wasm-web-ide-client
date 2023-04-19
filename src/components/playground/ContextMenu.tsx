@@ -6,8 +6,8 @@ import { TrashIcon } from '@heroicons/react/20/solid';
 import { FolderPlusIcon, PlusIcon } from '@heroicons/react/24/solid';
 import { DirectoryNode, FileNode } from '@webcontainer/api';
 import { ButtonHTMLAttributes, useEffect, useRef, useState } from 'react';
+import { usePlaygroundEditor } from '.';
 import { NewNode } from './NewNodeDialogue';
-import { usePlaygroundEditor } from './PlaygroundEditor';
 
 type ContextMenuProps = {
   hide: () => void;
