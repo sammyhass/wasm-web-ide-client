@@ -22,8 +22,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Run Playwright tests
-        run: HOME=/root pnpm exec playwright test
+        run: pnpm exec playwright test
         env:
+          HOME: /root
           TEST_URL: https://wasm-web-ide-client.vercel.app
           TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}

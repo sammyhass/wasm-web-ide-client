@@ -17,7 +17,7 @@ let firstFolder: { path: string; node: DirectoryNode | FileNode } | undefined;
 
 test.skip(
   ({ browserName }) => browserName !== 'chromium',
-  'Playground is only supported in Chromium based browsers'
+  'Playground is only currently supported in Chromium based browsers'
 );
 test.slow();
 test.describe.configure({ mode: 'serial' });
@@ -200,9 +200,7 @@ test('can compile to AssemblyScript to WebAssembly', async () => {
 test('can see console output for the build command', async () => {
   const cmd = packageJson.scripts['build-assemblyscript'];
 
-  expect(
-    await pom.consoleWindow.hasMessage(cmd)
-  ).toBeTruthy();
+  expect(await pom.consoleWindow.hasMessage(cmd)).toBeTruthy();
 });
 
 test('can download the project as a ZIP file', async () => {
