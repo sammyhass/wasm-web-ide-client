@@ -102,7 +102,7 @@ export default function PlaygroundEditor({ mount }: { mount: FileSystemTree }) {
 
       mutate(mount);
 
-      c?.on('server-ready', (port, url) => {
+      c?.on('server-ready', (_port, url) => {
         setUrl(url);
       });
     },

@@ -80,6 +80,7 @@ export const Alert = ({
 }: Alert & {
   onHide?: AlertStore['hide'];
   onClick?: () => void;
+  className?: string;
 }) => {
   return (
     <div
@@ -93,20 +94,20 @@ export const Alert = ({
           : alert.type === 'info'
           ? 'alert-info'
           : ''
-      }
-    `}
+      } ${alert.className || ''}`}
     >
       <div className="flex-1 flex mr-6">
         <AlertIcon type={alert.type} />
         <p>{alert.message}</p>
       </div>
-
-      <button
-        className="absolute top-1 right-1 btn btn-square btn-ghost btn-sm"
-        onClick={() => onHide?.(alert.id)}
-      >
-        <XCircleIcon />
-      </button>
+      {onHide && (
+        <button
+          className="absolute top-1 right-1 btn btn-square btn-ghost btn-sm"
+          onClick={() => onHide?.(alert.id)}
+        >
+          <XCircleIcon />
+        </button>
+      )}
     </div>
   );
 };

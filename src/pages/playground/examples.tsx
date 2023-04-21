@@ -1,4 +1,6 @@
+import { Alert } from '@/components/Toast';
 import SEO from '@/components/seo';
+import Container from '@/layouts/Container';
 
 const EXAMPLES: {
   code: string;
@@ -50,17 +52,19 @@ export default function Examples() {
   return (
     <>
       <SEO title="Playground Examples" />
-      <div className="container max-w-5xl mx-auto px-4 py-8">
+      {/* <div className="container max-w-5xl mx-auto px-4 py-8"> */}
+      <Container>
         <h1 className="text-4xl font-bold">Playground Examples</h1>
         <p className="text-lg text-base-400 mt-2">
           Here are some examples of what you can do with the WebContainers
           Playground.
         </p>
-        <span className="text-base-400 text-sm bg-base-300 block p-2 rounded-md">
-          <span className="badge badge-info">Recommended</span> Open playgrounds
-          one at a time and try not to have more than one open at once. <br />{' '}
-          This prevents the IDE from running out of its allocated memory.
-        </span>
+        <Alert
+          className="w-full max-w-none"
+          message="Recommended: Open playgrounds one at a time and try not to have more than one open at once across different tabs. This prevents the IDE from running out of its allocated memory."
+          id="playground-examples-recommendation"
+          type="info"
+        />
         <hr className="my-2" />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -68,7 +72,7 @@ export default function Examples() {
             <ExampleView key={example.code} {...example} />
           ))}
         </div>
-      </div>
+      </Container>
     </>
   );
 }
