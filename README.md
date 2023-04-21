@@ -41,8 +41,8 @@ The application will then be available at [http://localhost:3000](http://localho
 In order to run the tests you must specify the following environment variables:
 
 * `TEST_URL` - URL of the deployed app. This should be [https://wasm-web-ide-client.vercel.app](https://wasm-web-ide-client.vercel.app) when running the tests against the production app.
-* `TEST_USER_EMAIL` - Email of an *existing* test user
-* `TEST_USER_PASSWORD` - Password of an *existing* user
+* `TEST_USER_EMAIL` - Email address of an *existing* user of the 'Projects IDE'
+* `TEST_USER_PASSWORD` - Password of an *existing* user of the 'Projects IDE'
 
 To run the tests, run:
 
