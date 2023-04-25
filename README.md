@@ -23,7 +23,7 @@ pnpm install
 
 ### Running the app
 
-In order to run the server, you must specify the required environment variables in a `.env` file in the root of the project. The following variables are required:
+In order to run the server to serve the web app, you must specify the required environment variables which can be provided in a `.env` file in the root of the project. The following variables are required:
 
 * `NEXT_PUBLIC_API_URL` - URL of the deployed API server (used by the 'Projects IDE')
 * `REDIS_URL` - URL of a running Redis instance (used by the 'WebContainer Playground')
