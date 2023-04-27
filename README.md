@@ -1,6 +1,6 @@
 # WebAssembly IDE Frontend
 
-This repository contains the source code for the [Next.js](https://nextjs.org) app used for my dissertation project. The app is a web-based IDE designed to make building projects that utilise WebAssembly easier. This app uses two different IDEs that use very different approaches to how they run and compile WebAssembly projects:
+This repository contains the source code for the [Next.js](https://nextjs.org) app used for my dissertation project. The app is a web-based IDE designed to make building projects that utilise WebAssembly easier. We present two different IDEs that use very different approaches to how they run and compile WebAssembly projects:
 
 * **The Projects IDE** - a client-server IDE that allows users to create, edit and run WebAssembly projects using an API for managing compilation and storage.
 * **The WebContainer Playground** - a client-side IDE that allows users to create web applications that utilise WebAssembly (using AssemblyScript as the source language for compilation) within a Node.js environment running entirely in the browser via a [WebContainer](https://webcontainers.io).
@@ -23,7 +23,7 @@ pnpm install
 
 ### Running the app
 
-In order to run the server, you must specify the required environment variables in a `.env` file in the root of the project. The following variables are required:
+In order to run the server to serve the web app, you must specify the required environment variables which can be provided in a `.env` file in the root of the project. The following variables are required:
 
 * `NEXT_PUBLIC_API_URL` - URL of the deployed API server (used by the 'Projects IDE')
 * `REDIS_URL` - URL of a running Redis instance (used by the 'WebContainer Playground')
