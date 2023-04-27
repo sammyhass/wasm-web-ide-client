@@ -8,7 +8,6 @@ function ProtectedPage(props: React.PropsWithChildren<unknown>) {
   const { data, isLoading } = useMeQuery();
   const jwt = useMe(s => s.jwt);
   const { mutate: logout } = useLogoutMutation();
-
   const router = useRouter();
 
   useEffect(() => {

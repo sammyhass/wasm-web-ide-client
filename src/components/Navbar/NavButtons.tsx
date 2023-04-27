@@ -1,10 +1,21 @@
 import { useLogoutMutation, useMeQuery } from '@/hooks/useMe';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useCallback } from 'react';
 
 export default function NavButtons() {
   const { data: user } = useMeQuery();
+  const { mutate: _logout } = useLogoutMutation();
 
-  const logout = useLogoutMutation();
+  const router = useRouter();
+
+  const logout = useCallback(() => {
+    _logout(void 0, {
+      onSuccess: () => {
+        router.push('/login');
+      },
+    });
+  }, [_logout, router]);
 
   return (
     <div className="flex gap-2">
@@ -19,7 +30,7 @@ export default function NavButtons() {
           <button
             className="btn btn-error btn-outline btn-md"
             data-testid="logout-button"
-            onClick={() => logout.mutate()}
+            onClick={logout}
           >
             Logout
           </button>
