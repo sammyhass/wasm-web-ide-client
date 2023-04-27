@@ -1,9 +1,22 @@
-import { useMeQuery } from '@/hooks/useMe';
+import { useLogoutMutation, useMe, useMeQuery } from '@/hooks/useMe';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 function ProtectedPage(props: React.PropsWithChildren<unknown>) {
   const { data, isLoading } = useMeQuery();
+  const jwt = useMe(s => s.jwt);
+  const { mutate: logout } = useLogoutMutation();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if ((!isLoading && !data?.id) || !jwt) {
+      logout();
+      router.push('/login');
+    }
+  }, [data, isLoading, jwt, logout, router]);
 
   return data?.id ? (
     <>{props.children}</>

@@ -1,7 +1,6 @@
 import { me } from '@/lib/api/services/auth';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -23,20 +22,12 @@ export const useMe = create<{
 export const useLogoutMutation = () => {
   const router = useRouter();
   const qc = useQueryClient();
-  return useMutation(
-    ['logout'],
-    () => {
-      useMe.setState({ jwt: null });
-      qc.resetQueries(['me']);
-      qc.clear();
-      return Promise.resolve();
-    },
-    {
-      onSuccess: () => {
-        router.push('/login');
-      },
-    }
-  );
+  return useMutation(['logout'], () => {
+    useMe.setState({ jwt: null });
+    qc.resetQueries(['me']);
+    qc.clear();
+    return Promise.resolve();
+  });
 };
 
 export const useMeQuery = (enabled = true) => {
@@ -49,12 +40,6 @@ export const useMeQuery = (enabled = true) => {
     retry: false,
     onError: _logout,
   });
-
-  useEffect(() => {
-    if (!jwt) {
-      _logout();
-    }
-  }, [jwt, _logout]);
 
   return {
     refetch,
