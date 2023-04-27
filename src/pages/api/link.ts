@@ -5,7 +5,7 @@ import { NextApiHandler } from 'next';
 
 const redis = new Redis(env.REDIS_URL);
 
-const createCode = () => randomBytes(6).toString('hex');
+const createCode = () => randomBytes(8).toString('hex');
 
 const POST: NextApiHandler = async (req, res) => {
   const tree = req.body;
