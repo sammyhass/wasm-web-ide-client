@@ -158,7 +158,7 @@ test('can see the preview for the playground', async ({}) => {
   const frame = await pom.page.frame({ url: src });
 
   await frame?.waitForURL(u => u.toString().includes('webcontainer.io'));
-  const heading = await pom.previewFrame.getByRole('heading');
+  const heading = await pom.previewFrame.getByText('Hello World!');
   expect(heading).toBeTruthy();
 
   expect(await heading.textContent()).toBe('Hello World!');
