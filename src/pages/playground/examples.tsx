@@ -23,7 +23,7 @@ const EXAMPLES: {
 		description:
 			'Using the AssemblyScript standard library load/store operations to interact with memory using JavaScript and WebAssembly.',
 		title: 'AssemblyScript Memory',
-		code: '22c8de758e8c',
+		code: '25dac1db582a7032',
 	},
 	{
 		description: 'Using AssemblyScript to perform addition and subtraction.',
