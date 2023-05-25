@@ -18,6 +18,7 @@ export const projectLanguage = z.union([
   z.literal('Go'),
   z.literal('AssemblyScript'),
 ]);
+
 export type ProjectLangT = z.output<typeof projectLanguage>;
 
 const fileSchema = z.object({
