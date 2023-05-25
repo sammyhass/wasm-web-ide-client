@@ -1,8 +1,6 @@
 name: Playwright Tests
 on:
   deployment_status:
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   test:
