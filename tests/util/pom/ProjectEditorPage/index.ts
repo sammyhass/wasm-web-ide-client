@@ -1,9 +1,9 @@
-import { Locator, Page } from '@playwright/test';
-import { Navbar } from '../Navbar';
-import { LoadingSpinner } from '../Spinner';
-import { EditorConsole } from './EditorConsole';
-import { PreviewWindow } from './PreviewWindow';
-import { SettingsModal } from './SettingsModal';
+import { Locator, Page } from "@playwright/test";
+import { Navbar } from "../Navbar";
+import { LoadingSpinner } from "../Spinner";
+import { EditorConsole } from "./EditorConsole";
+import { PreviewWindow } from "./PreviewWindow";
+import { SettingsModal } from "./SettingsModal";
 
 export class ProjectEditorPage {
   readonly page: Page;
@@ -31,22 +31,22 @@ export class ProjectEditorPage {
 
     this.settingsModal = new SettingsModal(page);
 
-    this.settingsButton = page.getByTestId('project-settings-button');
+    this.settingsButton = page.getByTestId("project-settings-button");
 
-    this.compileButton = page.getByTestId('compile-to-wasm-button');
+    this.compileButton = page.getByTestId("compile-to-wasm-button");
 
-    this.saveButton = page.getByTestId('save-project-button');
+    this.saveButton = page.getByTestId("save-project-button");
 
-    this.fileTree = page.getByTestId('file-tree');
+    this.fileTree = page.getByTestId("file-tree");
 
-    this.selectedFile = page.getByTestId('selected-file');
+    this.selectedFile = page.getByTestId("selected-file");
 
-    this.editorWindow = page.getByTestId('editor-window');
+    this.editorWindow = page.getByTestId("editor-window");
 
-    this.editor = this.editorWindow.locator('.inputarea');
+    this.editor = this.editorWindow.locator(".inputarea");
 
-    this.watViewerButton = page.getByTestId('wat-viewer-button');
-    this.watViewer = page.getByTestId('wat-viewer');
+    this.watViewerButton = page.getByTestId("wat-viewer-button");
+    this.watViewer = page.getByTestId("wat-viewer");
 
     this.previewWindow = new PreviewWindow(page);
 
@@ -58,7 +58,7 @@ export class ProjectEditorPage {
   }
 
   async selectFile(fileName: string) {
-    const ext = fileName.split('.').pop();
+    const ext = fileName.split(".").pop();
     await this.fileTree
       .locator(`[data-testid="file-tree-item-${ext}"]`)
       .click();
@@ -66,13 +66,13 @@ export class ProjectEditorPage {
 
   async clearEditor(browserName: string) {
     await this.editor.focus();
-    if (browserName === 'webkit') {
-      await this.editor.press('Meta+A');
+    if (browserName === "webkit") {
+      await this.editor.press("Meta+A");
     } else {
-      await this.editor.press('Control+A');
+      await this.editor.press("Control+A");
     }
 
-    await this.editor.press('Backspace');
+    await this.editor.press("Backspace");
   }
 
   async getEditorValue() {
@@ -85,7 +85,7 @@ export class ProjectEditorPage {
     await this.saveButton.click();
     await spinner.waitFor();
 
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
 
     await spinner.waitForToBeHidden();
 
@@ -98,8 +98,8 @@ export async function waitForProjectPage(page: Page, title: string) {
   const regex =
     /\/projects\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 
-  await page.waitForURL(url => regex.test(url.href));
-  await page.waitForLoadState('networkidle');
+  await page.waitForURL((url) => regex.test(url.href));
+  await page.waitForLoadState("networkidle");
 
   await navbar.title.locator(`text=${title}`).waitFor();
 }

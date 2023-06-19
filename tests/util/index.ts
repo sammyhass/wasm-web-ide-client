@@ -1,4 +1,4 @@
-import { loginSchema } from '@/lib/api/services/auth';
+import { loginSchema } from "@/lib/api/services/auth";
 
 export const getTestURL = () => {
   return process.env.TEST_URL;

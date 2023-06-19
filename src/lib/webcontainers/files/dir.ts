@@ -1,8 +1,8 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { FileSystemTree, WebContainer } from '@webcontainer/api';
-import { useContainer } from '..';
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { FileSystemTree, WebContainer } from "@webcontainer/api";
+import { useContainer } from "..";
 
-const EXCLUDE = ['node_modules', 'lib', 'package-lock.json'];
+const EXCLUDE = ["node_modules", "lib", "package-lock.json"];
 export const getDirListing = async (
   container: WebContainer,
   path: string,
@@ -11,7 +11,7 @@ export const getDirListing = async (
 ) => {
   const contents = await container.fs.readdir(path, {
     withFileTypes: true,
-    encoding: 'utf-8',
+    encoding: "utf-8",
   });
 
   contents.sort((a, b) => {
@@ -24,15 +24,15 @@ export const getDirListing = async (
     if (EXCLUDE.includes(dirent.name)) continue;
 
     if (dirent.isFile()) {
-      const readPath = `${path === '/' ? '' : path}/${dirent.name}`.replace(
+      const readPath = `${path === "/" ? "" : path}/${dirent.name}`.replace(
         /^\/+/,
-        ''
+        ""
       );
       res[dirent.name] = {
         file: {
           contents: includeContents
-            ? await container.fs.readFile(readPath, 'utf-8')
-            : '',
+            ? await container.fs.readFile(readPath, "utf-8")
+            : "",
         },
       };
     } else if (dirent.isDirectory()) {
@@ -58,10 +58,10 @@ type QueryT = UseQueryOptions<DataT, unknown>;
 export const useDirListing = (opts: QueryT = {}) => {
   const { data: container } = useContainer();
   return useQuery<DataT>(
-    ['dirListing'],
+    ["dirListing"],
     async () => {
       if (!container) return {};
-      return getDirListing(container, '/', {});
+      return getDirListing(container, "/", {});
     },
     {
       enabled: !!container,

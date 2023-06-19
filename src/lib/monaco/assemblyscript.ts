@@ -1,10 +1,10 @@
-import { Monaco } from '@monaco-editor/react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { useRef } from 'react';
-import { ProjectLangT } from '../api/services/projects';
+import { Monaco } from "@monaco-editor/react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useRef } from "react";
+import { ProjectLangT } from "../api/services/projects";
 
-const typesUrl = '/assemblyscript_v0.27.0.d.tstmpl';
+const typesUrl = "/assemblyscript_v0.27.0.d.tstmpl";
 
 const getAssemblyScriptTypes = async () => {
   const { data, status } = await axios.get<string>(typesUrl);
@@ -14,26 +14,26 @@ const getAssemblyScriptTypes = async () => {
   }
 
   Promise.reject(
-    'Unable to fetch AssemblyScript types. Please check your internet connection.'
+    "Unable to fetch AssemblyScript types. Please check your internet connection."
   );
 };
 
 export const useMonacoAssemblyScriptSetup = (
   monaco?: Monaco,
-  projectLanguage: ProjectLangT = 'AssemblyScript'
+  projectLanguage: ProjectLangT = "AssemblyScript"
 ) => {
-  useQuery(['assemblyscript-types'], getAssemblyScriptTypes, {
-    enabled: projectLanguage === 'AssemblyScript' && !!monaco,
-    onSuccess: data => {
+  useQuery(["assemblyscript-types"], getAssemblyScriptTypes, {
+    enabled: projectLanguage === "AssemblyScript" && !!monaco,
+    onSuccess: (data) => {
       if (data) {
         monaco?.languages.typescript.typescriptDefaults.addExtraLib(
           data,
-          'assemblyscript.d.ts'
+          "assemblyscript.d.ts"
         );
       }
     },
-    onError: error => {
-      console.warn('Unable to fetch AssemblyScript types', error);
+    onError: (error) => {
+      console.warn("Unable to fetch AssemblyScript types", error);
     },
   });
 };

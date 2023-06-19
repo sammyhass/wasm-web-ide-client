@@ -1,13 +1,13 @@
-import { expect, test } from '@playwright/test';
-import { getURL } from '../util';
-import { Navbar } from '../util/pom/Navbar';
+import { expect, test } from "@playwright/test";
+import { getURL } from "../util";
+import { Navbar } from "../util/pom/Navbar";
 
-test('can logout', async ({ browser }) => {
+test("can logout", async ({ browser }) => {
   const page = await browser.newPage({
-    storageState: 'authedStorageState.json',
+    storageState: "authedStorageState.json",
   });
 
-  await page.goto(getURL('/projects'));
+  await page.goto(getURL("/projects"));
 
   const nav = new Navbar(page);
   await nav.waitForLoggedIn();

@@ -3,18 +3,18 @@ import {
   ExclamationCircleIcon,
   InformationCircleIcon,
   XCircleIcon,
-} from '@heroicons/react/24/solid';
-import { useEffect, useRef } from 'react';
-import create from 'zustand';
-import shallow from 'zustand/shallow';
+} from "@heroicons/react/24/solid";
+import { useEffect, useRef } from "react";
+import create from "zustand";
+import shallow from "zustand/shallow";
 
 const AlertTypes = [
-  'compile-error',
-  'compile-success',
-  'run-error',
-  'run-success',
-  'project-save-success',
-  'project-save-error',
+  "compile-error",
+  "compile-success",
+  "run-error",
+  "run-success",
+  "project-save-success",
+  "project-save-error",
 ] as const;
 
 type AlertIdentifier = typeof AlertTypes[number] | string;
@@ -22,10 +22,10 @@ type AlertIdentifier = typeof AlertTypes[number] | string;
 type Alert = {
   id: string;
   message: string;
-  type: 'success' | 'error' | 'info';
+  type: "success" | "error" | "info";
 };
 
-type ShowAlertInput = Pick<Alert, 'message' | 'type'> & {
+type ShowAlertInput = Pick<Alert, "message" | "type"> & {
   id: AlertIdentifier;
 };
 
@@ -40,36 +40,36 @@ type AlertStore = {
   clearAlerts: () => void;
 };
 
-export const useToast = create<AlertStore>(set => ({
+export const useToast = create<AlertStore>((set) => ({
   alerts: [],
   show: (alert: ShowAlertInput) => {
     const id = generateAlertId(alert.id);
-    set(state => ({
+    set((state) => ({
       alerts: [...state.alerts, { ...alert, id }],
     }));
     return id;
   },
   hide: (id: string) => {
-    set(state => ({
-      alerts: state.alerts.filter(alert => alert.id !== id),
+    set((state) => ({
+      alerts: state.alerts.filter((alert) => alert.id !== id),
     }));
   },
   pop: () => {
-    set(state => ({
+    set((state) => ({
       alerts: state.alerts.slice(1),
     }));
   },
   clearAlerts: () => set({ alerts: [] }),
 }));
 
-export const AlertIcon = ({ type }: { type: Alert['type'] }) => {
+export const AlertIcon = ({ type }: { type: Alert["type"] }) => {
   switch (type) {
-    case 'success':
-      return <CheckIcon className="w-5 h-5" />;
-    case 'error':
-      return <ExclamationCircleIcon className="w-5 h-5 text-error" />;
-    case 'info':
-      return <InformationCircleIcon className="w-5 h-5 text-info" />;
+    case "success":
+      return <CheckIcon className="h-5 w-5" />;
+    case "error":
+      return <ExclamationCircleIcon className="h-5 w-5 text-error" />;
+    case "info":
+      return <InformationCircleIcon className="h-5 w-5 text-info" />;
   }
 };
 
@@ -78,7 +78,7 @@ export const Alert = ({
   onClick,
   ...alert
 }: Alert & {
-  onHide?: AlertStore['hide'];
+  onHide?: AlertStore["hide"];
   onClick?: () => void;
   className?: string;
 }) => {
@@ -87,22 +87,22 @@ export const Alert = ({
       onClick={() => onClick && onClick()}
       className={`alert relative min-w-[300px] max-w-xl font-medium
       ${
-        alert.type === 'success'
-          ? 'alert-success'
-          : alert.type === 'error'
-          ? 'alert-danger'
-          : alert.type === 'info'
-          ? 'alert-info'
-          : ''
-      } ${alert.className || ''}`}
+        alert.type === "success"
+          ? "alert-success"
+          : alert.type === "error"
+          ? "alert-danger"
+          : alert.type === "info"
+          ? "alert-info"
+          : ""
+      } ${alert.className || ""}`}
     >
-      <div className="flex-1 flex mr-6">
+      <div className="mr-6 flex flex-1">
         <AlertIcon type={alert.type} />
         <p>{alert.message}</p>
       </div>
       {onHide && (
         <button
-          className="absolute top-1 right-1 btn btn-square btn-ghost btn-sm"
+          className="btn btn-ghost btn-square btn-sm absolute top-1 right-1"
           onClick={() => onHide?.(alert.id)}
         >
           <XCircleIcon />
@@ -114,7 +114,7 @@ export const Alert = ({
 
 export const ToastProvider = () => {
   const { alerts, hide, pop } = useToast(
-    s => ({ alerts: s.alerts, hide: s.hide, pop: s.pop }),
+    (s) => ({ alerts: s.alerts, hide: s.hide, pop: s.pop }),
     shallow
   );
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -133,8 +133,8 @@ export const ToastProvider = () => {
   }, [alerts.length, pop]);
 
   return (
-    <div className="toast toast-bottom toast-end" data-testid="toast">
-      {alerts.map(alert => (
+    <div className="toast toast-end toast-bottom" data-testid="toast">
+      {alerts.map((alert) => (
         <Alert key={alert.id} {...alert} onHide={hide} />
       ))}
     </div>

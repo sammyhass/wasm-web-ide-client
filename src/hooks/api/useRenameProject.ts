@@ -1,10 +1,10 @@
-import { useToast } from '@/components/Toast';
-import { ProjectT, renameProject } from '@/lib/api/services/projects';
-import { Project } from '@playwright/test';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useToast } from "@/components/Toast";
+import { ProjectT, renameProject } from "@/lib/api/services/projects";
+import { Project } from "@playwright/test";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useRenameProjectMutation = (id: string) => {
-  const show = useToast(s => s.show);
+  const show = useToast((s) => s.show);
   const qc = useQueryClient();
   const m = useMutation<Project, unknown, { name: string }>({
     mutationFn: ({ name }) =>
@@ -12,8 +12,8 @@ export const useRenameProjectMutation = (id: string) => {
         id,
         name,
       }),
-    onSuccess: project => {
-      qc.setQueryData<ProjectT>(['project', id], p =>
+    onSuccess: (project) => {
+      qc.setQueryData<ProjectT>(["project", id], (p) =>
         p
           ? {
               ...p,
@@ -22,9 +22,9 @@ export const useRenameProjectMutation = (id: string) => {
           : p
       );
 
-      qc.setQueryData<ProjectT[]>(['projects'], projects =>
+      qc.setQueryData<ProjectT[]>(["projects"], (projects) =>
         projects
-          ? projects.map(p => {
+          ? projects.map((p) => {
               if (p.id === id) {
                 return {
                   ...p,
@@ -40,7 +40,7 @@ export const useRenameProjectMutation = (id: string) => {
       show({
         id: `project-renamed-${id}`,
         message: `Project renamed to "${project.name}"`,
-        type: 'success',
+        type: "success",
       });
     },
   });

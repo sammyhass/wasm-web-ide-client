@@ -6,8 +6,8 @@ export default function Container(
 ) {
   return (
     <div
-      className={`max-w-[80%] mx-auto mt-10 ${
-        props.className ? props.className : ''
+      className={`mx-auto mt-10 max-w-[80%] ${
+        props.className ? props.className : ""
       }`}
     >
       {props.title && (

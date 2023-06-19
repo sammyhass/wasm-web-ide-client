@@ -1,39 +1,39 @@
-import { useEditor } from '@/hooks/useEditor';
-import { Dialog, Tab } from '@headlessui/react';
-import { LinkIcon } from '@heroicons/react/24/solid';
-import { Fragment } from 'react';
+import { useEditor } from "@/hooks/useEditor";
+import { Dialog, Tab } from "@headlessui/react";
+import { LinkIcon } from "@heroicons/react/24/solid";
+import { Fragment } from "react";
 import {
   EditorSettings,
   SettingsSection,
-} from '../ProjectEditor/ProjectSettings';
-import DependencyManager from './DependencyManager';
-import DownloadButton from './DownloadButton';
-import LinkGenerator from './LinkGenerator';
+} from "../ProjectEditor/ProjectSettings";
+import DependencyManager from "./DependencyManager";
+import DownloadButton from "./DownloadButton";
+import LinkGenerator from "./LinkGenerator";
 
-const PLAYGROUND_SETTINGS_TABS = ['Editor', 'Sharing', 'Dependencies'];
+const PLAYGROUND_SETTINGS_TABS = ["Editor", "Sharing", "Dependencies"];
 export default function PlaygroundSettings() {
-  const showSettings = useEditor(s => s.showSettings);
-  const setShowSettings = useEditor(s => s.setShowSettings);
+  const showSettings = useEditor((s) => s.showSettings);
+  const setShowSettings = useEditor((s) => s.setShowSettings);
 
   return (
     <Dialog
-      className={`modal ${showSettings ? 'modal-open' : ''}`}
+      className={`modal ${showSettings ? "modal-open" : ""}`}
       open={showSettings}
       onClose={() => setShowSettings(false)}
     >
       <Dialog.Overlay />
-      <Dialog.Panel className={'modal-box'}>
+      <Dialog.Panel className={"modal-box"}>
         <Tab.Group>
           <div className="flex flex-col gap-6">
-            <Tab.List className={'tabs tabs-boxed px-0'}>
-              {PLAYGROUND_SETTINGS_TABS.map(tab => (
+            <Tab.List className={"tabs tabs-boxed px-0"}>
+              {PLAYGROUND_SETTINGS_TABS.map((tab) => (
                 <Tab as={Fragment} key={tab}>
                   {({ selected }) => (
                     <button
-                      className={`tab tab-lg tab-rounded flex-1  ${
-                        selected ? 'tab-active' : ''
+                      className={`tab-rounded tab tab-lg flex-1  ${
+                        selected ? "tab-active" : ""
                       }`}
-                      data-testid={`settings-tab ${selected ? 'selected' : ''}`}
+                      data-testid={`settings-tab ${selected ? "selected" : ""}`}
                     >
                       {tab}
                     </button>
@@ -71,9 +71,9 @@ function PlaygroundSharingSettings() {
       description="Download your project to work on it locally, or copy a link to continue working in the playground."
     >
       <div>
-        <h2 className="text-lg flex gap-2 items-center">
+        <h2 className="flex items-center gap-2 text-lg">
           Playground Link
-          <LinkIcon className="w-5 h-5" />
+          <LinkIcon className="h-5 w-5" />
         </h2>
         <LinkGenerator />
       </div>

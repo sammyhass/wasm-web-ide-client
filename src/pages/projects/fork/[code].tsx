@@ -1,24 +1,24 @@
-import LanguageIcon from '@/components/icons/Icon';
-import LoadingSpinner from '@/components/icons/Spinner';
-import SEO from '@/components/seo';
-import { useForkProject } from '@/hooks/api/useForkProject';
-import { useSharedProject } from '@/hooks/api/useSharedProject';
-import { useMeQuery } from '@/hooks/useMe';
-import Container from '@/layouts/Container';
-import { ProjectT } from '@/lib/api/services/projects';
-import { GetServerSideProps } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useCallback } from 'react';
+import LanguageIcon from "@/components/icons/Icon";
+import LoadingSpinner from "@/components/icons/Spinner";
+import SEO from "@/components/seo";
+import { useForkProject } from "@/hooks/api/useForkProject";
+import { useSharedProject } from "@/hooks/api/useSharedProject";
+import { useMeQuery } from "@/hooks/useMe";
+import Container from "@/layouts/Container";
+import { ProjectT } from "@/lib/api/services/projects";
+import { GetServerSideProps } from "next";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useCallback } from "react";
 
 function SmallProjectOverview(project: ProjectT) {
   return (
-    <div className={'flex flex-col items-center p-5'}>
+    <div className={"flex flex-col items-center p-5"}>
       <LanguageIcon
-        language={project.language === 'AssemblyScript' ? 'ts' : 'go'}
-        className={'w-10 h-10'}
+        language={project.language === "AssemblyScript" ? "ts" : "go"}
+        className={"h-10 w-10"}
       />
-      <h1 className={'text-4xl font-bold'}>{project.name}</h1>
+      <h1 className={"text-4xl font-bold"}>{project.name}</h1>
     </div>
   );
 }
@@ -37,7 +37,7 @@ export default function ForkProjectPage({ code }: { code: string }) {
   const mutate = useCallback(() => {
     if (!me?.id) return;
     _mutate(void 0, {
-      onSuccess: d => {
+      onSuccess: (d) => {
         router.push(`/projects/${d.id}`);
       },
     });
@@ -46,7 +46,7 @@ export default function ForkProjectPage({ code }: { code: string }) {
   return (
     <>
       <SEO title="Fork Project" />
-      <Container className="bg-base-300 rounded-md shadow-sm flex flex-col items-center p-5">
+      <Container className="flex flex-col items-center rounded-md bg-base-300 p-5 shadow-sm">
         {projectLoading ? (
           <LoadingSpinner />
         ) : error ? (
@@ -59,7 +59,7 @@ export default function ForkProjectPage({ code }: { code: string }) {
                 className="btn btn-primary btn-xl btn-wide"
                 onClick={mutate}
               >
-                {isForking ? 'Forking...' : 'Fork this Project'}
+                {isForking ? "Forking..." : "Fork this Project"}
               </button>
             ) : (
               <Link
@@ -67,7 +67,7 @@ export default function ForkProjectPage({ code }: { code: string }) {
                   `/projects/fork/${code}`
                 )}`}
               >
-                <button className="btn btn-xl btn-wide btn-primary">
+                <button className="btn btn-primary btn-xl btn-wide">
                   Login to Fork this Project
                 </button>
               </Link>

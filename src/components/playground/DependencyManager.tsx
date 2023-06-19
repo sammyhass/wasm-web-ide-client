@@ -1,11 +1,11 @@
-import { useFileReader } from '@/lib/webcontainers/files/reader';
+import { useFileReader } from "@/lib/webcontainers/files/reader";
 import {
   ArrowDownOnSquareStackIcon,
   Square3Stack3DIcon,
-} from '@heroicons/react/24/solid';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
-import { useEditorConsole } from '../ProjectEditor/ConsoleWindow';
+} from "@heroicons/react/24/solid";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
+import { useEditorConsole } from "../ProjectEditor/ConsoleWindow";
 
 const installDependency = async (
   {
@@ -18,16 +18,16 @@ const installDependency = async (
   logger: (msg: string) => void
 ) => {
   if (!window.webcontainer) {
-    throw new Error('WebContainer not found');
+    throw new Error("WebContainer not found");
   }
   if (!!!dependency) {
-    throw new Error('No dependency provided');
+    throw new Error("No dependency provided");
   }
 
-  const process = await window.webcontainer.spawn('npm', [
-    'install',
-    dev ? '--save-dev' : '--save',
-    ...dependency.split(','),
+  const process = await window.webcontainer.spawn("npm", [
+    "install",
+    dev ? "--save-dev" : "--save",
+    ...dependency.split(","),
   ]);
 
   process.output.pipeTo(
@@ -41,7 +41,7 @@ const installDependency = async (
   const code = await process.exit;
 
   if (code !== 0) {
-    throw new Error('Failed to install dependency');
+    throw new Error("Failed to install dependency");
   }
 
   return code;
@@ -52,11 +52,11 @@ const removeDependency = async (
   logger: (msg: string) => void
 ) => {
   if (!window.webcontainer) {
-    throw new Error('WebContainer not found');
+    throw new Error("WebContainer not found");
   }
 
-  const process = await window.webcontainer.spawn('npm', [
-    'uninstall',
+  const process = await window.webcontainer.spawn("npm", [
+    "uninstall",
     ...dependencies,
   ]);
 
@@ -70,25 +70,25 @@ const removeDependency = async (
   const code = await process.exit;
 
   if (code !== 0) {
-    throw new Error('Failed to remove dependency');
+    throw new Error("Failed to remove dependency");
   }
   return code;
 };
 
 const useRemoveDependencies = () => {
-  const push = useEditorConsole(s => s.push);
+  const push = useEditorConsole((s) => s.push);
 
   const qc = useQueryClient();
 
   const { mutate, isLoading } = useMutation(
-    (d: string[]) => removeDependency(d, m => push('log', m)),
+    (d: string[]) => removeDependency(d, (m) => push("log", m)),
     {
-      onSuccess: exitCode => {
+      onSuccess: (exitCode) => {
         if (exitCode !== 0) {
-          console.log('Failed');
+          console.log("Failed");
         }
 
-        qc.refetchQueries(['readFile', 'package.json']);
+        qc.refetchQueries(["readFile", "package.json"]);
       },
     }
   );
@@ -116,29 +116,29 @@ const listDependencies = (packageJson: string) => {
 };
 
 const useInstalledDependencies = () => {
-  const { data } = useFileReader('package.json');
+  const { data } = useFileReader("package.json");
 
-  return listDependencies(data ?? '{}');
+  return listDependencies(data ?? "{}");
 };
 
 function InstallDependencyForm() {
-  const push = useEditorConsole(s => s.push);
-  const [dependency, setDependency] = useState('');
+  const push = useEditorConsole((s) => s.push);
+  const [dependency, setDependency] = useState("");
   const [dev, setDev] = useState(false);
 
   const qc = useQueryClient();
   const { mutate, isLoading } = useMutation(
     (vars: { dependency: string; dev: boolean }) =>
-      installDependency(vars, m => push('log', m)),
+      installDependency(vars, (m) => push("log", m)),
     {
-      onSuccess: exitCode => {
+      onSuccess: (exitCode) => {
         if (exitCode !== 0) {
-          console.log('Failed');
+          console.log("Failed");
         }
 
-        setDependency('');
+        setDependency("");
 
-        qc.refetchQueries(['readFile', 'package.json']);
+        qc.refetchQueries(["readFile", "package.json"]);
       },
     }
   );
@@ -149,40 +149,40 @@ function InstallDependencyForm() {
 
   return (
     <>
-      <h2 className="text-lg my-2 flex items-center gap-2">
+      <h2 className="my-2 flex items-center gap-2 text-lg">
         <ArrowDownOnSquareStackIcon className="h-6 w-6 " />
         <span>Install Dependencies</span>
       </h2>
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
           install();
         }}
         className="flex flex-col gap-2"
       >
         <div className="form-control">
-          <label className="label gap-2 cursor-pointer rounded-md hover:bg-base-200 justify-start items-center">
+          <label className="label cursor-pointer items-center justify-start gap-2 rounded-md hover:bg-base-200">
             <input
               type="checkbox"
               checked={dev}
-              onChange={e => setDev(e.target.checked)}
+              onChange={(e) => setDev(e.target.checked)}
               className="checkbox"
             />
             <span className="label-text">Install as Dev Dependency?</span>
           </label>
         </div>
-        <div className="flex flex-row items-center gap-2 form-control">
-          <label className="input-group font-mono input-group-sm ">
+        <div className="form-control flex flex-row items-center gap-2">
+          <label className="input-group input-group-sm font-mono ">
             <input
               type="text"
               value={dependency}
-              onChange={e => setDependency(e.target.value)}
+              onChange={(e) => setDependency(e.target.value)}
               placeholder="e.g. lodash"
               className="input input-bordered flex-1 outline-1 focus:outline-primary"
             />
             <button
               type="submit"
-              className={`btn btn-accent ${isLoading ? 'loading' : ''}`}
+              className={`btn btn-accent ${isLoading ? "loading" : ""}`}
               disabled={isLoading || !!!dependency}
             >
               Install
@@ -209,43 +209,43 @@ export default function DependencyManager() {
       {deps && (
         <>
           <hr className="my-4" />
-          <h2 className="text-lg my-2 flex items-center gap-2">
+          <h2 className="my-2 flex items-center gap-2 text-lg">
             <Square3Stack3DIcon className="h-6 w-6 " />
             <span>Installed Dependencies</span>
           </h2>
-          <div className="flex flex-col h-full">
-            <ul className="flex flex-col gap-2 mb-2">
+          <div className="flex h-full flex-col">
+            <ul className="mb-2 flex flex-col gap-2">
               {Object.entries(deps ?? {}).map(([type, deps]) => (
                 <>
-                  <h3 className="text-sm font-mono font-semibold">{type}</h3>
+                  <h3 className="font-mono text-sm font-semibold">{type}</h3>
                   <div
                     key={type}
-                    className=" max-h-32 overflow-y-auto flex flex-col gap-2"
+                    className=" flex max-h-32 flex-col gap-2 overflow-y-auto"
                   >
                     {Object.entries(deps).length > 0 ? (
                       Object.entries(deps).map(([name, version]) => (
                         <label
-                          className="label cursor-pointer rounded-md hover:bg-base-300 gap-2"
+                          className="label cursor-pointer gap-2 rounded-md hover:bg-base-300"
                           key={name}
                         >
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
                             checked={selectedDependencies.includes(name)}
-                            onChange={e => {
+                            onChange={(e) => {
                               if (e.target.checked) {
-                                setSelectedDependencies(prev => [
-                                  ...prev.filter(d => d !== name),
+                                setSelectedDependencies((prev) => [
+                                  ...prev.filter((d) => d !== name),
                                   name,
                                 ]);
                               } else {
-                                setSelectedDependencies(prev =>
-                                  prev.filter(d => d !== name)
+                                setSelectedDependencies((prev) =>
+                                  prev.filter((d) => d !== name)
                                 );
                               }
                             }}
                           />
-                          <span className="font-mono flex-1">
+                          <span className="flex-1 font-mono">
                             <>
                               {name}@{version}
                             </>
@@ -253,7 +253,7 @@ export default function DependencyManager() {
                         </label>
                       ))
                     ) : (
-                      <span className="text-sm text-base-400 w-full text-center bg-base-200 rounded-md p-2">
+                      <span className="text-base-400 w-full rounded-md bg-base-200 p-2 text-center text-sm">
                         No {type} installed
                       </span>
                     )}
@@ -264,7 +264,7 @@ export default function DependencyManager() {
             <div className="btn-group ">
               <button
                 className={`btn btn-outline btn-error btn-sm normal-case ${
-                  isLoading ? 'loading' : ''
+                  isLoading ? "loading" : ""
                 }`}
                 disabled={isLoading || selectedDependencies.length === 0}
                 onClick={() => {
@@ -275,7 +275,7 @@ export default function DependencyManager() {
                 Remove Selected Dependencies
               </button>
               <button
-                className="btn btn-sm btn-outline normal-case"
+                className="btn btn-outline btn-sm normal-case"
                 onClick={() => setSelectedDependencies([])}
               >
                 Reset Selection

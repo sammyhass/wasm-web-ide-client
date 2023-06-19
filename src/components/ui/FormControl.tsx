@@ -1,10 +1,10 @@
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes } from "react";
 
 export function FormControl({
   id,
   label,
   name,
-  type = 'text',
+  type = "text",
   placeholder,
   onChange,
   ...rest

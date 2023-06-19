@@ -1,19 +1,19 @@
-import { useLogoutMutation, useMe, useMeQuery } from '@/hooks/useMe';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useLogoutMutation, useMe, useMeQuery } from "@/hooks/useMe";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 function ProtectedPage(props: React.PropsWithChildren<unknown>) {
   const { data, isLoading } = useMeQuery();
-  const jwt = useMe(s => s.jwt);
+  const jwt = useMe((s) => s.jwt);
   const { mutate: logout } = useLogoutMutation();
   const router = useRouter();
 
   useEffect(() => {
     if ((!isLoading && !data?.id) || !jwt) {
       logout();
-      router.push('/login');
+      router.push("/login");
     }
   }, [data, isLoading, jwt, logout, router]);
 
@@ -21,8 +21,8 @@ function ProtectedPage(props: React.PropsWithChildren<unknown>) {
     <>{props.children}</>
   ) : (
     <>
-      <div className="flex flex-col items-center justify-center mt-20">
-        <div className="bg-base-200 p-10 rounded-lg shadow-lg max-w-xl mx-auto gap-10 flex-col flex items-center">
+      <div className="mt-20 flex flex-col items-center justify-center">
+        <div className="mx-auto flex max-w-xl flex-col items-center gap-10 rounded-lg bg-base-200 p-10 shadow-lg">
           <h1 className="text-4xl font-bold">
             You must be logged in to view this page
           </h1>
@@ -30,7 +30,7 @@ function ProtectedPage(props: React.PropsWithChildren<unknown>) {
             <div>Loading...</div>
           ) : (
             <Link href="/login">
-              <button className="btn btn-primary min-w-[200px] btn-lg">
+              <button className="btn btn-primary btn-lg min-w-[200px]">
                 Login
               </button>
             </Link>

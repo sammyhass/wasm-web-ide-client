@@ -1,7 +1,7 @@
-import { FileT } from '@/lib/api/services/projects';
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
-import { useState } from 'react';
-import LanguageIcon from '../icons/Icon';
+import { FileT } from "@/lib/api/services/projects";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
+import LanguageIcon from "../icons/Icon";
 
 export default function FileTreeWrapper({
   files,
@@ -23,12 +23,12 @@ export default function FileTreeWrapper({
     />
   ) : (
     <button
-      className="top-0 left-0 p-2 flex items-center gap-2 md:inline"
+      className="top-0 left-0 flex items-center gap-2 p-2 md:inline"
       onClick={() => setShow(true)}
       title="Open File Tree"
     >
       <b className="md:hidden">Show File Tree</b>
-      <ArrowRightIcon className="w-5 h-5" />
+      <ArrowRightIcon className="h-5 w-5" />
     </button>
   );
 }
@@ -46,23 +46,23 @@ function FileTree({
 }) {
   return (
     <div
-      className="flex flex-col text-sm relative min-w-fit"
+      className="relative flex min-w-fit flex-col text-sm"
       data-testid="file-tree"
     >
-      <div className="flex items-center gap-2 pl-4 pr-2 h-12">
+      <div className="flex h-12 items-center gap-2 pl-4 pr-2">
         <b className="flex-1">Project Files</b>
         <button onClick={onClose} title="Close">
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeftIcon className="h-5 w-5" />
         </button>
       </div>
       <div className="flex flex-col gap-2">
-        {fileNames?.map(f => (
+        {fileNames?.map((f) => (
           <FileTreeItem
             onClick={() => selectFile(f)}
             selected={f === selectedFile}
             name={f}
             key={f}
-            language={f.split('.').pop() as FileT['language']}
+            language={f.split(".").pop() as FileT["language"]}
           />
         ))}
       </div>
@@ -74,14 +74,14 @@ const FileTreeItem = ({
   onClick,
   selected,
   ...file
-}: Pick<FileT, 'name' | 'language'> & {
+}: Pick<FileT, "name" | "language"> & {
   onClick?: () => void;
   selected?: boolean;
 }) => (
   <button
     data-testid={`file-tree-item-${file.language}`}
-    className={`flex font-mono items-center gap-2 text-xs pl-4 pr-12 py-2 ${
-      selected ? 'bg-neutral-focus' : ''
+    className={`flex items-center gap-2 py-2 pl-4 pr-12 font-mono text-xs ${
+      selected ? "bg-neutral-focus" : ""
     }`}
     onClick={onClick}
   >

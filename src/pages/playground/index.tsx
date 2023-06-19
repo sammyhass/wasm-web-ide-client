@@ -1,13 +1,13 @@
 // Playground Page using WebContainers to provide a sandboxed environment
 
-import Navbar from '@/components/Navbar';
-import PlaygroundEditor from '@/components/playground';
-import SEO from '@/components/seo';
-import { env } from '@/env/server.mjs';
-import { filesystem } from '@/lib/webcontainers/files/defaults';
-import type { FileSystemTree } from '@webcontainer/api';
-import Redis from 'ioredis';
-import type { GetServerSideProps } from 'next';
+import Navbar from "@/components/Navbar";
+import PlaygroundEditor from "@/components/playground";
+import SEO from "@/components/seo";
+import { env } from "@/env/server.mjs";
+import { filesystem } from "@/lib/webcontainers/files/defaults";
+import type { FileSystemTree } from "@webcontainer/api";
+import Redis from "ioredis";
+import type { GetServerSideProps } from "next";
 
 type PageProps = {
   files: FileSystemTree;
@@ -17,7 +17,7 @@ function PlaygroundPage({ files }: PageProps) {
   return (
     <>
       <SEO title="Playground" />
-      <div className="flex flex-col h-screen">
+      <div className="flex h-screen flex-col">
         <Navbar />
         <PlaygroundEditor mount={files} />
       </div>
@@ -51,7 +51,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async ({
     };
   }
 
-  const tree = JSON.parse(Buffer.from(base64, 'base64').toString());
+  const tree = JSON.parse(Buffer.from(base64, "base64").toString());
 
   return {
     props: {

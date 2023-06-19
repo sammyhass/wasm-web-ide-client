@@ -1,9 +1,9 @@
-import { deleteProject, ProjectT } from '@/lib/api/services/projects';
+import { deleteProject, ProjectT } from "@/lib/api/services/projects";
 import {
   useMutation,
   UseMutationOptions,
   useQueryClient,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
 export const useDeleteProjectMutation = (
   id: string,
@@ -15,11 +15,11 @@ export const useDeleteProjectMutation = (
     ...opts,
     onSuccess: (...args) => {
       queryClient.removeQueries({
-        queryKey: ['project', id],
+        queryKey: ["project", id],
       });
 
-      queryClient.setQueryData<ProjectT[]>(['projects'], projects =>
-        projects ? projects.filter(p => p.id !== id) : projects ?? []
+      queryClient.setQueryData<ProjectT[]>(["projects"], (projects) =>
+        projects ? projects.filter((p) => p.id !== id) : projects ?? []
       );
 
       opts.onSuccess?.(...args);

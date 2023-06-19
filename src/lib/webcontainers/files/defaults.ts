@@ -1,19 +1,19 @@
-import { consoleReassign } from '../../previews';
+import { consoleReassign } from "../../previews";
 
 export const packageJson = {
-  name: 'wasm-ide-assemblyscript-playground',
+  name: "wasm-ide-assemblyscript-playground",
   private: true,
-  version: '0.0.0',
-  type: 'module',
+  version: "0.0.0",
+  type: "module",
   scripts: {
-    dev: 'vite',
-    build: 'vite build',
-    preview: 'vite preview',
-    'build-assemblyscript': 'asc --config asconfig.json',
+    dev: "vite",
+    build: "vite build",
+    preview: "vite preview",
+    "build-assemblyscript": "asc --config asconfig.json",
   },
   devDependencies: {
-    vite: '^4.1.0',
-    assemblyscript: 'latest',
+    vite: "^4.1.0",
+    assemblyscript: "latest",
   },
 };
 
@@ -50,12 +50,12 @@ export const publicIndexHtml = `
 `;
 
 export const defaultAsConfig = {
-  entries: ['assemblyscript/index.ts'],
+  entries: ["assemblyscript/index.ts"],
   options: {
-    runtime: 'stub',
-    bindings: 'esm',
-    textFile: 'out/module.wat',
-    outFile: 'out/module.wasm',
+    runtime: "stub",
+    bindings: "esm",
+    textFile: "out/module.wat",
+    outFile: "out/module.wasm",
   },
 };
 export const mainJs = `
@@ -77,27 +77,27 @@ console.log('Hello from main.js');
 `;
 
 export const filesystem = {
-  'index.html': {
+  "index.html": {
     file: {
       contents: publicIndexHtml,
     },
   },
-  'main.js': {
+  "main.js": {
     file: {
       contents: mainJs,
     },
   },
-  'package.json': {
+  "package.json": {
     file: {
       contents: JSON.stringify(packageJson, null, 2),
     },
   },
-  'styles.css': {
+  "styles.css": {
     file: {
-      contents: 'html { font-family: sans-serif; }',
+      contents: "html { font-family: sans-serif; }",
     },
   },
-  'asconfig.json': {
+  "asconfig.json": {
     file: {
       contents: JSON.stringify(defaultAsConfig, null, 2),
     },
@@ -105,7 +105,7 @@ export const filesystem = {
 
   assemblyscript: {
     directory: {
-      'index.ts': {
+      "index.ts": {
         file: {
           contents: indexAssemblyScript,
         },
@@ -114,7 +114,7 @@ export const filesystem = {
   },
   lib: {
     directory: {
-      'setup-preview.js': {
+      "setup-preview.js": {
         file: {
           contents: `/* This script sets up the preview window to it can interact with the editor. Feel free to remove this if you dont need it anymore. */\n${consoleReassign}\n${errorHandler}`,
         },
@@ -123,9 +123,9 @@ export const filesystem = {
   },
   out: {
     directory: {
-      'module.js': {
+      "module.js": {
         file: {
-          contents: '',
+          contents: "",
         },
       },
     },

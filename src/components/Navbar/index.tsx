@@ -1,7 +1,7 @@
-import dynamic from 'next/dynamic';
-import HeaderImage from '../ui/HeaderImage';
+import dynamic from "next/dynamic";
+import HeaderImage from "../ui/HeaderImage";
 
-const NavButtons = dynamic(() => import('./NavButtons'), {
+const NavButtons = dynamic(() => import("./NavButtons"), {
   ssr: false,
 });
 
@@ -14,13 +14,13 @@ export default function Navbar({
 }) {
   return (
     <div
-      className={`p-2 bg-base-200 flex items-center justify-evenly ${
-        className ? className : ''
+      className={`flex items-center justify-evenly bg-base-200 p-2 ${
+        className ? className : ""
       }`}
     >
       <div className="flex flex-1 items-end gap-2">
         <HeaderImage />
-        <span className="text-xl font-sans pb-1" data-testid="navbar-title">
+        <span className="pb-1 font-sans text-xl" data-testid="navbar-title">
           {title}
         </span>
       </div>

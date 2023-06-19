@@ -1,9 +1,9 @@
-import { Locator } from '@playwright/test';
+import { Locator } from "@playwright/test";
 
 export class LoadingSpinner {
   private spinner: Locator;
   constructor(parent: Locator) {
-    this.spinner = parent.getByTestId('loading-spinner');
+    this.spinner = parent.getByTestId("loading-spinner");
   }
 
   async waitFor() {
@@ -11,6 +11,6 @@ export class LoadingSpinner {
   }
 
   async waitForToBeHidden() {
-    await this.spinner.waitFor({ state: 'hidden' });
+    await this.spinner.waitFor({ state: "hidden" });
   }
 }

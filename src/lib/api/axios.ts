@@ -1,6 +1,6 @@
-import { useMe } from '@/hooks/useMe';
-import axios from 'axios';
-import { z } from 'zod';
+import { useMe } from "@/hooks/useMe";
+import axios from "axios";
+import { z } from "zod";
 
 export type ApiErrorResponse = {
   error: string;
@@ -8,7 +8,7 @@ export type ApiErrorResponse = {
 };
 
 export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 const apiErrorSchema = z.object({
   error: z.string(),
@@ -18,31 +18,31 @@ const apiErrorSchema = z.object({
 export const axiosClient = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
 
 axiosClient.interceptors.request.use(
-  config => {
+  (config) => {
     if (!config.headers) config.headers = {};
     const jwt = useMe.getState().jwt;
     if (jwt) {
-      config.headers['Authorization'] = jwt ? `Bearer ${jwt}` : '';
+      config.headers["Authorization"] = jwt ? `Bearer ${jwt}` : "";
     }
 
     return config;
   },
-  error => {
+  (error) => {
     Promise.reject(error);
   }
 );
 
 axiosClient.interceptors.response.use(
-  response => {
+  (response) => {
     return response;
   },
-  error => {
+  (error) => {
     if (error.response) {
       if (error.response.status === 401) {
         useMe.setState({ jwt: null });

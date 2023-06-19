@@ -1,32 +1,32 @@
 // src/pages/_app.tsx
-import DefaultLayout from '@/layouts/DefaultLayout';
-import { queryClient } from '@/lib/api/queryClient';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { NextPage } from 'next';
-import type { AppProps, AppType } from 'next/app';
-import { ReactElement, ReactNode } from 'react';
+import DefaultLayout from "@/layouts/DefaultLayout";
+import { queryClient } from "@/lib/api/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { NextPage } from "next";
+import type { AppProps, AppType } from "next/app";
+import { ReactElement, ReactNode } from "react";
 
-import '@fontsource/fira-code/400.css';
-import '@fontsource/fira-code/700.css';
-import '@fontsource/open-sans/400.css';
-import '@fontsource/open-sans/700.css';
+import "@fontsource/fira-code/400.css";
+import "@fontsource/fira-code/700.css";
+import "@fontsource/open-sans/400.css";
+import "@fontsource/open-sans/700.css";
 
-import { ToastProvider } from '@/components/Toast';
+import { ToastProvider } from "@/components/Toast";
 
-import SEO from '@/components/seo';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Router } from 'next/router';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-import '../styles/globals.css';
+import SEO from "@/components/seo";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Router } from "next/router";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+import "../styles/globals.css";
 
-Router.events.on('routeChangeStart', () => {
+Router.events.on("routeChangeStart", () => {
   NProgress.start();
 });
-Router.events.on('routeChangeError', () => {
+Router.events.on("routeChangeError", () => {
   NProgress.done();
 });
-Router.events.on('routeChangeComplete', () => {
+Router.events.on("routeChangeComplete", () => {
   NProgress.done();
 });
 

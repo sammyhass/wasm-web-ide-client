@@ -1,4 +1,4 @@
-import { FrameLocator, Locator, Page } from '@playwright/test';
+import { FrameLocator, Locator, Page } from "@playwright/test";
 
 export class PreviewWindow {
   readonly previewWindow: FrameLocator;
@@ -7,11 +7,11 @@ export class PreviewWindow {
   readonly previewJs: Locator;
 
   constructor(page: Page) {
-    this.previewWindow = page.frameLocator('#previewWindow iframe');
+    this.previewWindow = page.frameLocator("#previewWindow iframe");
 
-    this.previewBody = this.previewWindow.getByTestId('preview-body');
-    this.previewCss = this.previewWindow.getByTestId('preview-css');
-    this.previewJs = this.previewWindow.getByTestId('preview-script');
+    this.previewBody = this.previewWindow.getByTestId("preview-body");
+    this.previewCss = this.previewWindow.getByTestId("preview-css");
+    this.previewJs = this.previewWindow.getByTestId("preview-script");
   }
 
   async getBody() {

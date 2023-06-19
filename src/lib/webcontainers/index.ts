@@ -3,10 +3,10 @@ import {
   UseMutationOptions,
   useQuery,
   UseQueryOptions,
-} from '@tanstack/react-query';
-import { FileSystemTree, WebContainer } from '@webcontainer/api';
-import { queryClient } from '../api/queryClient';
-import { isFileNode, visitFileTree } from './util';
+} from "@tanstack/react-query";
+import { FileSystemTree, WebContainer } from "@webcontainer/api";
+import { queryClient } from "../api/queryClient";
+import { isFileNode, visitFileTree } from "./util";
 
 declare global {
   interface Window {
@@ -24,7 +24,7 @@ const boot = async () => {
 
 const getContainer = () => {
   if (!window.webcontainer) {
-    throw new Error('WebContainer not booted');
+    throw new Error("WebContainer not booted");
   }
   return window.webcontainer;
 };
@@ -37,7 +37,7 @@ const bootFiles = async (files: FileSystemTree) => {
 
 const installDependencies = async (w?: WritableStream<string>) => {
   const container = getContainer();
-  const processOut = await container?.spawn('npm', ['install']);
+  const processOut = await container?.spawn("npm", ["install"]);
   w && processOut?.output?.pipeTo(w);
 
   return processOut.exit;
@@ -45,7 +45,7 @@ const installDependencies = async (w?: WritableStream<string>) => {
 
 const startServer = async (w?: WritableStream<string>) => {
   const container = getContainer();
-  const processOut = await container?.spawn('npm', ['run', 'dev']);
+  const processOut = await container?.spawn("npm", ["run", "dev"]);
   w && processOut?.output?.pipeTo(w);
   return processOut.exit;
 };
@@ -57,7 +57,7 @@ const setup = async (
   await bootFiles(files);
   visitFileTree(files, (path, node) => {
     if (isFileNode(node)) {
-      queryClient.setQueryData(['readFile', path], node.file.contents);
+      queryClient.setQueryData(["readFile", path], node.file.contents);
     }
   });
 
@@ -67,7 +67,7 @@ const setup = async (
     },
   });
   const installProcess = await installDependencies(installerLogger);
-  if (installProcess !== 0) throw new Error('Failed to install dependencies');
+  if (installProcess !== 0) throw new Error("Failed to install dependencies");
 
   const startLogger = new WritableStream<string>({
     write(chunk) {
@@ -75,7 +75,7 @@ const setup = async (
     },
   });
   const startProcess = await startServer(startLogger);
-  if (startProcess !== 0) throw new Error('Failed to start server');
+  if (startProcess !== 0) throw new Error("Failed to start server");
 };
 
 export const destroyContainer = () => {
@@ -92,19 +92,19 @@ export const useContainer = (
   options?: UseQueryOptions<WebContainer | undefined>
 ) =>
   useQuery<WebContainer | undefined>(
-    ['useContainer'],
+    ["useContainer"],
     async () => {
       await boot();
       if (!window.webcontainer) {
-        throw new Error('WebContainer not booted');
+        throw new Error("WebContainer not booted");
       }
       return window.webcontainer;
     },
     {
-      enabled: typeof window !== 'undefined',
+      enabled: typeof window !== "undefined",
       retryOnMount: true,
       initialData:
-        typeof window !== 'undefined' ? window.webcontainer : undefined,
+        typeof window !== "undefined" ? window.webcontainer : undefined,
       ...options,
     }
   );

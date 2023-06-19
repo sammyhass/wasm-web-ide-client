@@ -1,9 +1,9 @@
-import { getProjects } from '@/lib/api/services/projects';
-import { useQuery } from '@tanstack/react-query';
+import { getProjects } from "@/lib/api/services/projects";
+import { useQuery } from "@tanstack/react-query";
 
 export const useProjects = (enabled = true) => {
   const { data, error, isLoading, refetch } = useQuery(
-    ['projects'],
+    ["projects"],
     getProjects,
     {
       retry: false,

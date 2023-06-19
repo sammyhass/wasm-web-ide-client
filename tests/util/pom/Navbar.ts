@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page } from "@playwright/test";
 
 /**
  * POM for the navbar.
@@ -10,10 +10,10 @@ export class Navbar {
   readonly title: Locator;
 
   constructor(page: Page) {
-    this.loginButton = page.getByTestId('login-button');
-    this.logoutButton = page.getByTestId('logout-button');
-    this.projectsButton = page.getByTestId('projects-button');
-    this.title = page.getByTestId('navbar-title');
+    this.loginButton = page.getByTestId("login-button");
+    this.logoutButton = page.getByTestId("logout-button");
+    this.projectsButton = page.getByTestId("projects-button");
+    this.title = page.getByTestId("navbar-title");
   }
 
   async clickLoginButton() {

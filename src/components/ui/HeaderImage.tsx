@@ -1,14 +1,14 @@
-import Link from 'next/link';
-import WasmIcon from '../icons/WasmIcon';
+import Link from "next/link";
+import WasmIcon from "../icons/WasmIcon";
 
 export default function HeaderImage({ className }: { className?: string }) {
   return (
     <Link href="/">
       <button
-        className={`${className} bg-base-200 btn btn-outline font-mono min-h-12 btn-md text-xl font-normal animate-none flex items-center `}
+        className={`${className} btn btn-outline min-h-12 btn-md flex animate-none items-center bg-base-200 font-mono text-xl font-normal `}
       >
-        <div className="flex gap-1 items-end">
-          <WasmIcon className="w-8 h-10" />
+        <div className="flex items-end gap-1">
+          <WasmIcon className="h-10 w-8" />
           IDE
         </div>
       </button>

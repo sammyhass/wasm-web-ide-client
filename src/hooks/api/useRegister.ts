@@ -1,12 +1,12 @@
-import { ApiErrorResponse } from '@/lib/api/axios';
+import { ApiErrorResponse } from "@/lib/api/axios";
 import {
   LoginResponseT,
   register,
   registerSchema,
-} from '@/lib/api/services/auth';
-import { useMutation } from '@tanstack/react-query';
-import { useCallback } from 'react';
-import { z, ZodError } from 'zod';
+} from "@/lib/api/services/auth";
+import { useMutation } from "@tanstack/react-query";
+import { useCallback } from "react";
+import { ZodError, z } from "zod";
 
 export type UseLoginRegisterParams = {
   onSuccess?: (data: LoginResponseT) => void | Promise<void>;
@@ -18,13 +18,13 @@ export const useRegister = ({
   onError,
 }: UseLoginRegisterParams = {}) => {
   const { mutate: _mutate, isLoading } = useMutation(
-    ['auth/register'],
+    ["auth/register"],
     register,
     {
-      onSuccess: d => {
+      onSuccess: (d) => {
         onSuccess?.(d);
       },
-      onError: e => {
+      onError: (e) => {
         onError?.(e as ApiErrorResponse);
       },
     }

@@ -1,30 +1,30 @@
-import { useProject } from '@/hooks/api/useProject';
-import { useProjects } from '@/hooks/api/useProjects';
-import { useProjectSharing } from '@/hooks/api/useToggleShareProject';
-import { useEditor } from '@/hooks/useEditor';
-import { useEditorSettings } from '@/hooks/useEditorSettings';
-import { ProjectT } from '@/lib/api/services/projects';
-import { Dialog, Tab, Transition } from '@headlessui/react';
-import { XCircleIcon } from '@heroicons/react/24/solid';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useProject } from "@/hooks/api/useProject";
+import { useProjects } from "@/hooks/api/useProjects";
+import { useProjectSharing } from "@/hooks/api/useToggleShareProject";
+import { useEditor } from "@/hooks/useEditor";
+import { useEditorSettings } from "@/hooks/useEditorSettings";
+import { ProjectT } from "@/lib/api/services/projects";
+import { Dialog, Tab, Transition } from "@headlessui/react";
+import { XCircleIcon } from "@heroicons/react/24/solid";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   Fragment,
   PropsWithChildren,
   useCallback,
   useMemo,
   useState,
-} from 'react';
-import shallow from 'zustand/shallow';
-import { useDeleteProjectMutation } from '../../hooks/api/useDeleteProject';
-import { useRenameProjectMutation } from '../../hooks/api/useRenameProject';
-import LoadingSpinner from '../icons/Spinner';
-import { Alert } from '../Toast';
+} from "react";
+import shallow from "zustand/shallow";
+import { useDeleteProjectMutation } from "../../hooks/api/useDeleteProject";
+import { useRenameProjectMutation } from "../../hooks/api/useRenameProject";
+import { Alert } from "../Toast";
+import LoadingSpinner from "../icons/Spinner";
 
 function ProjectSettings() {
   const { showSettings, setShowSettings, projectId } = useEditor(
-    state => ({
+    (state) => ({
       showSettings: state.showSettings,
       setShowSettings: state.setShowSettings,
       projectId: state.projectId,
@@ -40,21 +40,21 @@ function ProjectSettings() {
         className={`modal modal-open `}
         onClose={() => setShowSettings(false)}
       >
-        <Dialog.Panel className={'modal-box'}>
-          <div className={'flex justify-between items-center'}>
-            <Dialog.Title as="h1" className={'text-2xl font-bold'}>
+        <Dialog.Panel className={"modal-box"}>
+          <div className={"flex items-center justify-between"}>
+            <Dialog.Title as="h1" className={"text-2xl font-bold"}>
               Project Settings
             </Dialog.Title>
 
             <button
-              className={'btn btn-ghost btn-circle'}
+              className={"btn btn-ghost btn-circle"}
               data-testid="close-settings"
               onClick={() => setShowSettings(false)}
             >
-              <XCircleIcon className={'w-6 h-6'} />
+              <XCircleIcon className={"h-6 w-6"} />
             </button>
           </div>
-          <hr className={'my-4'} />
+          <hr className={"my-4"} />
           <SettingsBody id={projectId} />
         </Dialog.Panel>
       </Dialog>
@@ -63,29 +63,29 @@ function ProjectSettings() {
 }
 
 export const SETTINGS_TABS = [
-  'General',
-  'Sharing',
-  'Editor',
-  'Danger Zone',
+  "General",
+  "Sharing",
+  "Editor",
+  "Danger Zone",
 ] as const;
-function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
+function SettingsBody({ id }: Pick<ProjectT, "id">) {
   const { push } = useRouter();
 
   return (
-    <div className={'flex flex-col gap-6'}>
+    <div className={"flex flex-col gap-6"}>
       <Tab.Group>
         <Tab.List
           data-testid="settings-tabs"
-          className={'tabs tabs-boxed justify-between px-0'}
+          className={"tabs tabs-boxed justify-between px-0"}
         >
-          {SETTINGS_TABS.map(tab => (
+          {SETTINGS_TABS.map((tab) => (
             <Tab as={Fragment} key={tab}>
               {({ selected }) => (
                 <button
-                  className={`tab tab-lg tab-rounded  ${
-                    selected ? 'tab-active' : ''
+                  className={`tab-rounded tab tab-lg  ${
+                    selected ? "tab-active" : ""
                   }`}
-                  data-testid={`settings-tab ${selected ? 'selected' : ''}`}
+                  data-testid={`settings-tab ${selected ? "selected" : ""}`}
                 >
                   {tab}
                 </button>
@@ -110,7 +110,7 @@ function SettingsBody({ id }: Pick<ProjectT, 'id'>) {
             <SettingsSection title="Danger Zone">
               <DeleteProjectButton
                 id={id}
-                onSuccess={() => push('/projects')}
+                onSuccess={() => push("/projects")}
               />
             </SettingsSection>
           </Tab.Panel>
@@ -130,9 +130,9 @@ export function SettingsSection(
     <div className="flex flex-col gap-2">
       <h3 className="text-xl font-bold">{props.title}</h3>
       {props.description && (
-        <p className={'text-sm text-gray-500'}>{props.description}</p>
+        <p className={"text-sm text-gray-500"}>{props.description}</p>
       )}
-      <hr className={'my-4'} />
+      <hr className={"my-4"} />
       {props.children}
     </div>
   );
@@ -159,7 +159,7 @@ function DeleteProjectButton({
     <>
       <button
         data-testid="delete-project-button"
-        className={'btn btn-error btn-md w-full'}
+        className={"btn btn-error btn-md w-full"}
         onClick={() => {
           setShowConfirm(true);
         }}
@@ -167,7 +167,7 @@ function DeleteProjectButton({
         Delete Project
       </button>
       {showConfirm && (
-        <div className="alert rounded-md shadow-md items-end">
+        <div className="alert items-end rounded-md shadow-md">
           <div className="flex flex-col gap-2">
             <h3 className="font-bold">
               Are you sure you want to delete this project?
@@ -180,14 +180,14 @@ function DeleteProjectButton({
           <div className="flex gap-2">
             <button
               onClick={() => mutate()}
-              className={'btn btn-error btn-md'}
+              className={"btn btn-error btn-md"}
               data-testid="confirm-delete-project-button"
             >
               Yes
             </button>
             <button
               onClick={() => setShowConfirm(false)}
-              className={'btn btn-info btn-md'}
+              className={"btn btn-info btn-md"}
             >
               No
             </button>
@@ -232,13 +232,13 @@ function RenameProjectForm({ id }: { id: string }) {
           placeholder="Project Name"
           defaultValue={project?.name}
           value={name}
-          onChange={e => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
           data-testid="rename-project-input"
         />
       </div>
 
       <button
-        className={`btn btn-primary btn-md ${isLoading ? 'loading' : ''}`}
+        className={`btn btn-primary btn-md ${isLoading ? "loading" : ""}`}
         type="submit"
         data-testid="rename-project-button"
       >
@@ -263,10 +263,10 @@ function ShareProjectToggleSection({ id }: { id: string }) {
 
   return (
     <SettingsSection
-      title={'Project Sharing'}
+      title={"Project Sharing"}
       description="Sharing your project allows anyone to fork it and build on it."
     >
-      <div className="flex flex-col gap-2 relative">
+      <div className="relative flex flex-col gap-2">
         <>
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -274,15 +274,15 @@ function ShareProjectToggleSection({ id }: { id: string }) {
             </div>
           )}
           <button
-            className={`alert text-left items-stretch
-            hover:bg-base-300 active:bg-base-300 transitions-colors relative
-           ${isLoading ? 'disabled opacity-50' : ''}`}
+            className={`transitions-colors alert relative
+            items-stretch text-left hover:bg-base-300 active:bg-base-300
+           ${isLoading ? "disabled opacity-50" : ""}`}
             disabled={isLoading}
             onClick={() => mutate(!shareCode)}
             data-testid="share-project-button"
           >
             <span className="label-text flex flex-col">
-              Sharing : {shareCode ? 'Enabled' : 'Disabled'}
+              Sharing : {shareCode ? "Enabled" : "Disabled"}
             </span>
             <input
               type="checkbox"
@@ -296,12 +296,12 @@ function ShareProjectToggleSection({ id }: { id: string }) {
             <Alert
               type="error"
               onHide={reset}
-              message={'Something went wrong. Please try again later.'}
+              message={"Something went wrong. Please try again later."}
               id="share-project-error"
             />
           )}
           {shareCode && (
-            <p className="text-sm text-gray-500 p-1 text-center">
+            <p className="p-1 text-center text-sm text-gray-500">
               Anyone with the link can create a fork of your project.
               <br />
               <Link href={forkUri} className="link">
@@ -327,7 +327,7 @@ export function EditorSettings() {
     reset,
     setWordWrap,
   } = useEditorSettings(
-    s => ({
+    (s) => ({
       theme: s.theme,
       fontSize: s.fontSize,
       minimapEnabled: s.minimapEnabled,
@@ -354,7 +354,7 @@ export function EditorSettings() {
           <select
             className="select select-bordered w-full"
             value={theme}
-            onChange={e => setTheme(e.target.value)}
+            onChange={(e) => setTheme(e.target.value)}
             data-testid="editor-theme-select"
           >
             <option value="vs-light">Light</option>
@@ -366,27 +366,27 @@ export function EditorSettings() {
           <label className="label">
             <span className="label-text">Font Size</span>
           </label>
-          <div className="flex gap-2 justify-between items-center">
+          <div className="flex items-center justify-between gap-2">
             <input
               type="range"
               min="10"
               max="30"
               value={fontSize}
               className="range range-primary"
-              onChange={e => setFontSize(e.target.valueAsNumber)}
+              onChange={(e) => setFontSize(e.target.valueAsNumber)}
             />
             <b>{fontSize}px</b>
           </div>
         </div>
         <button
-          className="form-control flex-row justify-between items-center"
+          className="form-control flex-row items-center justify-between"
           onClick={() => {
             setMinimapEnabled(!minimapEnabled);
           }}
         >
           <label className="label">
             <span className="label-text">
-              Minimap: {minimapEnabled ? 'Enabled' : 'Disabled'}
+              Minimap: {minimapEnabled ? "Enabled" : "Disabled"}
             </span>
           </label>
           <input
@@ -397,21 +397,21 @@ export function EditorSettings() {
           />
         </button>
         <button
-          className="form-control flex-row justify-between items-center cursor-pointer"
+          className="form-control cursor-pointer flex-row items-center justify-between"
           onClick={() => {
-            setWordWrap(wordWrap === 'on' ? 'off' : 'on');
+            setWordWrap(wordWrap === "on" ? "off" : "on");
           }}
         >
           <label className="label">
             <span className="label-text">
-              Word Wrap: {wordWrap == 'on' ? 'Enabled' : 'Disabled'}
+              Word Wrap: {wordWrap == "on" ? "Enabled" : "Disabled"}
             </span>
           </label>
           <input
             type="checkbox"
             className="toggle toggle-primary"
-            checked={wordWrap === 'on'}
-            onChange={e => setWordWrap(e.target.checked ? 'on' : 'off')}
+            checked={wordWrap === "on"}
+            onChange={(e) => setWordWrap(e.target.checked ? "on" : "off")}
           />
         </button>
         <div className="form-control">

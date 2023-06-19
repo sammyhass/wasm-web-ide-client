@@ -1,15 +1,15 @@
-import { expect, test } from '@playwright/test';
-import { getURL } from '../util';
+import { expect, test } from "@playwright/test";
+import { getURL } from "../util";
 import {
   LoginRegisterPage,
   createRandomLoginInput,
-} from '../util/pom/LoginRegisterPage';
-import { Navbar } from '../util/pom/Navbar';
+} from "../util/pom/LoginRegisterPage";
+import { Navbar } from "../util/pom/Navbar";
 
-test('can register', async ({ page }) => {
+test("can register", async ({ page }) => {
   const credentials = createRandomLoginInput();
 
-  await page.goto('/login');
+  await page.goto("/login");
   const pom = new LoginRegisterPage(page);
   await pom.toggleMode.click();
 
@@ -19,7 +19,7 @@ test('can register', async ({ page }) => {
     credentials.password
   );
 
-  await page.waitForURL(getURL('/projects'));
+  await page.waitForURL(getURL("/projects"));
 
   const nav = new Navbar(page);
   const isLoggedIn = await nav.isLoggedIn();

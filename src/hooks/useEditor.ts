@@ -1,7 +1,7 @@
-import { FileT, ProjectLangT, ProjectT } from '@/lib/api/services/projects';
-import create from 'zustand';
+import { FileT, ProjectLangT, ProjectT } from "@/lib/api/services/projects";
+import create from "zustand";
 
-const langSort: Record<FileT['language'], number> = {
+const langSort: Record<FileT["language"], number> = {
   html: 0,
   js: 1,
   css: 2,
@@ -38,20 +38,20 @@ type ProjectEditorState = {
 
 export const useEditor = create<ProjectEditorState>((set, get) => ({
   dirty: false,
-  setDirty: dirty => set({ dirty }),
+  setDirty: (dirty) => set({ dirty }),
   files: [],
-  projectId: '',
-  setFiles: files => set({ files }),
+  projectId: "",
+  setFiles: (files) => set({ files }),
   selectedFile: undefined,
-  setShowSettings: showSettings => set({ showSettings }),
+  setShowSettings: (showSettings) => set({ showSettings }),
   showSettings: false,
   projectLanguage: undefined,
-  setSelectedFile: name => set({ selectedFile: name }),
-  initProject: project => {
+  setSelectedFile: (name) => set({ selectedFile: name }),
+  initProject: (project) => {
     const { files, id } = project;
     const sortedFiles = files
       ?.sort((a, b) => langSort[a.language] - langSort[b.language])
-      .map(f => ({ ...f, content: f.content ?? '' }));
+      .map((f) => ({ ...f, content: f.content ?? "" }));
     set({
       projectId: id,
       projectLanguage: project.language,
@@ -68,10 +68,10 @@ export const useEditor = create<ProjectEditorState>((set, get) => ({
       projectLanguage: undefined,
       projectId: undefined,
     }),
-  onCurrentFileChange: value => {
-    set(state => {
+  onCurrentFileChange: (value) => {
+    set((state) => {
       let didChangeFile = false;
-      const files = state.files.map(f => {
+      const files = state.files.map((f) => {
         if (f.name === state.selectedFile) {
           didChangeFile = f.content !== value;
           return { ...f, content: value };

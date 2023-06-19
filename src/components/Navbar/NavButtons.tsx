@@ -1,7 +1,7 @@
-import { useLogoutMutation, useMeQuery } from '@/hooks/useMe';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useCallback } from 'react';
+import { useLogoutMutation, useMeQuery } from "@/hooks/useMe";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useCallback } from "react";
 
 export default function NavButtons() {
   const { data: user } = useMeQuery();
@@ -12,7 +12,7 @@ export default function NavButtons() {
   const logout = useCallback(() => {
     _logout(void 0, {
       onSuccess: () => {
-        router.push('/login');
+        router.push("/login");
       },
     });
   }, [_logout, router]);
@@ -28,7 +28,7 @@ export default function NavButtons() {
             <button className="btn btn-outline btn-md">Your Projects</button>
           </Link>
           <button
-            className="btn btn-error btn-outline btn-md"
+            className="btn btn-outline btn-error btn-md"
             data-testid="logout-button"
             onClick={logout}
           >

@@ -1,21 +1,21 @@
-import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/solid';
-import { useRef } from 'react';
+import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/solid";
+import { useRef } from "react";
 
 export default function PlaygroundPreview(props: { url: string }) {
   const previewRef = useRef<HTMLIFrameElement>(null);
   return (
-    <div className="fit-content w-full h-full relative rounded-t-md overflow-hidden">
-      <div className="flex items-center gap-2 p-2 w-full bg-base-300">
-        {props.url.startsWith('https://') ? (
-          <LockClosedIcon className="w-5 h-5 text-success" />
+    <div className="fit-content relative h-full w-full overflow-hidden rounded-t-md">
+      <div className="flex w-full items-center gap-2 bg-base-300 p-2">
+        {props.url.startsWith("https://") ? (
+          <LockClosedIcon className="h-5 w-5 text-success" />
         ) : (
-          <LockOpenIcon className="w-5 h-5 text-error" />
+          <LockOpenIcon className="h-5 w-5 text-error" />
         )}
         <input
           readOnly
-          className="input input-sm w-full bg-base-200 rounded-md p-2"
-          value={props.url.startsWith('http') ? props.url : ''}
-          onClick={e => {
+          className="input input-sm w-full rounded-md bg-base-200 p-2"
+          value={props.url.startsWith("http") ? props.url : ""}
+          onClick={(e) => {
             e.preventDefault();
             e.currentTarget.select();
           }}
@@ -26,7 +26,7 @@ export default function PlaygroundPreview(props: { url: string }) {
         title="Preview Window"
         ref={previewRef}
         data-testid="preview-window"
-        className="w-full block h-full bg-white"
+        className="block h-full w-full bg-white"
         src={props.url}
       />
     </div>

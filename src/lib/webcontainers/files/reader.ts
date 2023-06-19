@@ -1,9 +1,9 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { WebContainer } from '@webcontainer/api';
-import { useContainer } from '..';
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { WebContainer } from "@webcontainer/api";
+import { useContainer } from "..";
 
 const createFileReader = (container: WebContainer, path: string) => {
-  return async () => container.fs.readFile(path, 'utf-8');
+  return () => container.fs.readFile(path, "utf-8");
 };
 
 export const useFileReader = (
@@ -13,9 +13,9 @@ export const useFileReader = (
   const { data: container } = useContainer();
 
   return useQuery<string>(
-    ['readFile', path],
+    ["readFile", path],
     async () => {
-      if (!container) return '';
+      if (!container) return "";
       return createFileReader(container, path)();
     },
     {

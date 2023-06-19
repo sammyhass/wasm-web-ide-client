@@ -1,26 +1,26 @@
-import { useDirListing } from '@/lib/webcontainers/files/dir';
+import { useDirListing } from "@/lib/webcontainers/files/dir";
 import {
   useCreateFile,
   useCreateFolder,
-} from '@/lib/webcontainers/files/writer';
+} from "@/lib/webcontainers/files/writer";
 import {
   isFileNode,
   nodeExists,
   visitFileTree,
-} from '@/lib/webcontainers/util';
-import { Dialog } from '@headlessui/react';
+} from "@/lib/webcontainers/util";
+import { Dialog } from "@headlessui/react";
 import {
   DocumentIcon,
   FolderIcon,
   FolderPlusIcon,
   PlusIcon,
-} from '@heroicons/react/24/solid';
-import { FileSystemTree } from '@webcontainer/api';
-import { useCallback, useMemo, useState } from 'react';
-import { ToolbarButton } from '../ProjectEditor/Toolbar';
-import { Alert } from '../Toast';
+} from "@heroicons/react/24/solid";
+import { FileSystemTree } from "@webcontainer/api";
+import { useCallback, useMemo, useState } from "react";
+import { ToolbarButton } from "../ProjectEditor/Toolbar";
+import { Alert } from "../Toast";
 
-const NodeTypes = ['file', 'folder'] as const;
+const NodeTypes = ["file", "folder"] as const;
 export default function NewFileDialogueWrapper({
   onComplete,
 }: {
@@ -40,18 +40,18 @@ export default function NewFileDialogueWrapper({
   return (
     <>
       <ToolbarButton
-        icon={<FolderPlusIcon className="w-5 h-5 text-info" />}
+        icon={<FolderPlusIcon className="h-5 w-5 text-info" />}
         title="New"
         onClick={() => setIsOpen(true)}
       />
       <Dialog
-        className={`modal ${isOpen ? 'modal-open' : ''}`}
+        className={`modal ${isOpen ? "modal-open" : ""}`}
         open={isOpen}
         onClose={onClose}
       >
-        <Dialog.Panel className={'modal-box'}>
-          <Dialog.Title className="text-2xl font-bold mb-2 flex items-center gap-2">
-            <PlusIcon className="w-5 h-5" />
+        <Dialog.Panel className={"modal-box"}>
+          <Dialog.Title className="mb-2 flex items-center gap-2 text-2xl font-bold">
+            <PlusIcon className="h-5 w-5" />
             New File/Folder
           </Dialog.Title>
           <NewNode onComplete={onDone} parent="/" tree={dirListing} />
@@ -72,13 +72,13 @@ function FolderView({
 }) {
   return (
     <button
-      className={`flex items-center gap-2 px-2 py-1 w-full rounded-md ${
-        selectedPath === path ? 'bg-base-300' : 'hover:bg-base-300'
+      className={`flex w-full items-center gap-2 rounded-md px-2 py-1 ${
+        selectedPath === path ? "bg-base-300" : "hover:bg-base-300"
       }`}
       type="button"
       onClick={() => onClick(path)}
     >
-      <FolderIcon className="w-5 h-5" />
+      <FolderIcon className="h-5 w-5" />
       {path}
     </button>
   );
@@ -104,8 +104,8 @@ function FoldersView({
   }, [tree]);
 
   return (
-    <div className="flex flex-col gap-2 overflow-y-auto max-h-48">
-      {['/', ...folders].map((path, i) => (
+    <div className="flex max-h-48 flex-col gap-2 overflow-y-auto">
+      {["/", ...folders].map((path, i) => (
         <FolderView
           key={i}
           path={path}
@@ -126,7 +126,7 @@ export function NewNode({
   tree?: FileSystemTree;
   parent?: string;
 }) {
-  const [selectedDirectory, setSelectedDirectory] = useState<string>('/');
+  const [selectedDirectory, setSelectedDirectory] = useState<string>("/");
   const [pathName, setPathname] = useState<string | null>(null);
   const [type, setType] = useState<typeof NodeTypes[number]>(NodeTypes[0]);
 
@@ -141,8 +141,8 @@ export function NewNode({
 
       if (!pathName || !tree) return;
 
-      const path = `${parent && parent !== '/' ? `${parent}/` : ''}${
-        selectedDirectory === '/' ? '' : `${selectedDirectory}/`
+      const path = `${parent && parent !== "/" ? `${parent}/` : ""}${
+        selectedDirectory === "/" ? "" : `${selectedDirectory}/`
       }${pathName}`;
 
       if (nodeExists(tree, path)) {
@@ -150,22 +150,22 @@ export function NewNode({
         return;
       }
 
-      if (type === 'folder') {
+      if (type === "folder") {
         createFolder(path, {
           onSuccess: () => {
             setPathname(null);
-            onComplete?.(path, 'folder');
+            onComplete?.(path, "folder");
           },
-          onError: e => setErr((e as Error).message),
+          onError: (e) => setErr((e as Error).message),
         });
       } else {
         createFile(path, {
           onSuccess: () => {
             setPathname(null);
-            onComplete?.(path, 'file');
+            onComplete?.(path, "file");
           },
 
-          onError: e => setErr((e as Error).message),
+          onError: (e) => setErr((e as Error).message),
         });
       }
     },
@@ -187,18 +187,18 @@ export function NewNode({
         <div className="flex flex-col">
           {NodeTypes.map((label, i) => (
             <div className="form-control" key={i}>
-              <label className="flex justify-start items-center gap-2 label cursor-pointer">
+              <label className="label flex cursor-pointer items-center justify-start gap-2">
                 <input
                   type="radio"
                   name="node-type"
-                  className="radio radio-lg checked:bg-info checked:border-info"
+                  className="radio radio-lg checked:border-info checked:bg-info"
                   checked={type === label.toLowerCase()}
                   onChange={() => setType(label)}
                 />
-                {label === 'file' ? (
-                  <DocumentIcon className="w-5 h-5" />
+                {label === "file" ? (
+                  <DocumentIcon className="h-5 w-5" />
                 ) : (
-                  <FolderIcon className="w-5 h-5" />
+                  <FolderIcon className="h-5 w-5" />
                 )}
                 <span className="label-text">{`${label[0]?.toUpperCase()}${label.slice(
                   1
@@ -210,9 +210,9 @@ export function NewNode({
         <input
           className="input input-bordered font-mono"
           type="text"
-          placeholder={`e.g. ${type === 'file' ? 'index.html' : 'styles'}`}
-          value={pathName ?? ''}
-          onChange={e => setPathname(e.target.value)}
+          placeholder={`e.g. ${type === "file" ? "index.html" : "styles"}`}
+          value={pathName ?? ""}
+          onChange={(e) => setPathname(e.target.value)}
         />
 
         <hr className="my-2" />
@@ -220,7 +220,7 @@ export function NewNode({
         {tree && (
           <>
             <b className="text-sm">
-              Select a Destination {parent && parent !== '/' && `in ${parent}`}
+              Select a Destination {parent && parent !== "/" && `in ${parent}`}
             </b>
             <FoldersView
               tree={tree}

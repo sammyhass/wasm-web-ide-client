@@ -1,22 +1,22 @@
-import { AxiosResponse } from 'axios';
-import { z } from 'zod';
-import { axiosClient } from '../axios';
+import { AxiosResponse } from "axios";
+import { z } from "zod";
+import { axiosClient } from "../axios";
 
 const languageSchema = z.union([
-  z.literal('html'),
-  z.literal('css'),
-  z.literal('go'),
-  z.literal('js'),
-  z.literal('wasm'),
-  z.literal('ts'),
-  z.literal('json'),
-  z.literal('wat'),
-  z.literal('jsx'),
-  z.literal('tsx'),
+  z.literal("html"),
+  z.literal("css"),
+  z.literal("go"),
+  z.literal("js"),
+  z.literal("wasm"),
+  z.literal("ts"),
+  z.literal("json"),
+  z.literal("wat"),
+  z.literal("jsx"),
+  z.literal("tsx"),
 ]);
 export const projectLanguage = z.union([
-  z.literal('Go'),
-  z.literal('AssemblyScript'),
+  z.literal("Go"),
+  z.literal("AssemblyScript"),
 ]);
 
 export type ProjectLangT = z.output<typeof projectLanguage>;
@@ -55,7 +55,7 @@ export const createProject = async ({
   name,
   language,
 }: createProjectDto): Promise<ProjectT> => {
-  const { data, status } = await axiosClient.post('/projects', {
+  const { data, status } = await axiosClient.post("/projects", {
     name,
     language,
   });
@@ -71,7 +71,7 @@ export const getProjects = async (): Promise<ProjectT[]> => {
   const { data, status } = await axiosClient.get<
     unknown,
     AxiosResponse<ProjectT[]>
-  >('/projects');
+  >("/projects");
 
   if (status !== 200) {
     return Promise.reject(data);

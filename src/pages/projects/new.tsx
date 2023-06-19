@@ -1,39 +1,39 @@
-import LanguageIcon from '@/components/icons/Icon';
-import SEO from '@/components/seo';
-import Container from '@/layouts/Container';
-import ProtectedPage from '@/layouts/ProtectedPage';
-import { ApiErrorResponse } from '@/lib/api/axios';
+import LanguageIcon from "@/components/icons/Icon";
+import SEO from "@/components/seo";
+import Container from "@/layouts/Container";
+import ProtectedPage from "@/layouts/ProtectedPage";
+import { ApiErrorResponse } from "@/lib/api/axios";
 import {
   createProject,
   ProjectLangT,
   ProjectT,
-} from '@/lib/api/services/projects';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
+} from "@/lib/api/services/projects";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
 
 export default function NewProjectPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiErrorResponse>();
 
   const [selectedLang, setSelectedLang] =
-    useState<ProjectLangT>('AssemblyScript');
-  const [name, setName] = useState('');
+    useState<ProjectLangT>("AssemblyScript");
+  const [name, setName] = useState("");
 
   const router = useRouter();
 
   const client = useQueryClient();
 
-  const { mutate } = useMutation(['createProject'], createProject, {
-    onSuccess: d => {
-      client.refetchQueries(['projects']);
+  const { mutate } = useMutation(["createProject"], createProject, {
+    onSuccess: (d) => {
+      client.refetchQueries(["projects"]);
 
-      client.setQueryData<ProjectT>(['project', d.id], d);
+      client.setQueryData<ProjectT>(["project", d.id], d);
       setLoading(false);
 
       router.push(`/projects/${d.id}`);
     },
-    onError: err => {
+    onError: (err) => {
       setError(err as ApiErrorResponse);
       setLoading(false);
     },
@@ -61,9 +61,9 @@ export default function NewProjectPage() {
     <>
       <SEO title="New Project" />
       <ProtectedPage>
-        <Container title={'New Project'}>
+        <Container title={"New Project"}>
           <form
-            className="flex flex-col gap-4 max-w-xl mx-auto"
+            className="mx-auto flex max-w-xl flex-col gap-4"
             onSubmit={onSubmit}
           >
             <div className="form-control">
@@ -75,7 +75,7 @@ export default function NewProjectPage() {
                 placeholder="Project Name"
                 className="input input-bordered"
                 id="name"
-                onChange={e => setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 value={name}
                 required
                 name="name"
@@ -89,7 +89,7 @@ export default function NewProjectPage() {
             />
 
             <button
-              className={`btn btn-primary ${loading ? 'loading' : ''}`}
+              className={`btn btn-primary ${loading ? "loading" : ""}`}
               data-testid="create-project-button"
               type="submit"
             >
@@ -128,13 +128,13 @@ function LanguageSelect({
       <div className="flex flex-col gap-2">
         <LangItem
           lang="AssemblyScript"
-          selected={selected === 'AssemblyScript'}
-          onClick={() => onChange('AssemblyScript')}
+          selected={selected === "AssemblyScript"}
+          onClick={() => onChange("AssemblyScript")}
         />
         <LangItem
           lang="Go"
-          selected={selected === 'Go'}
-          onClick={() => onChange('Go')}
+          selected={selected === "Go"}
+          onClick={() => onChange("Go")}
         />
       </div>
     </div>
@@ -153,14 +153,14 @@ function LangItem({
   return (
     <button
       data-testid={`lang-item-${lang}`}
-      className={`btn btn-lg btn-ghost ${
-        selected ? 'btn-active' : ''
-      } justify-start items-center gap-4`}
+      className={`btn btn-ghost btn-lg ${
+        selected ? "btn-active" : ""
+      } items-center justify-start gap-4`}
       onClick={onClick}
       type="button"
     >
-      <LanguageIcon language={lang === 'AssemblyScript' ? 'ts' : 'go'} />
-      <div className="flex flex-col gap-1 text-left items-start">
+      <LanguageIcon language={lang === "AssemblyScript" ? "ts" : "go"} />
+      <div className="flex flex-col items-start gap-1 text-left">
         <span className="font-bold normal-case">{lang}</span>
       </div>
     </button>

@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { axiosClient } from '../axios';
+import { z } from "zod";
+import { axiosClient } from "../axios";
 
 export const registerSchema = z
   .object({
@@ -7,9 +7,9 @@ export const registerSchema = z
     password: z.string().min(6).max(20),
     confirmPassword: z.string(),
   })
-  .refine(data => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match.",
-    path: ['confirmPassword'],
+    path: ["confirmPassword"],
   })
   .transform(({ confirmPassword, ...data }) => data);
 
@@ -37,7 +37,7 @@ export const register = async ({
   email,
   password,
 }: RegisterInputT): Promise<LoginResponseT> => {
-  const { data, status } = await axiosClient.post('/auth/register', {
+  const { data, status } = await axiosClient.post("/auth/register", {
     email,
     password,
   });
@@ -54,7 +54,7 @@ export const login = async ({
   email,
   password,
 }: LoginInputT): Promise<LoginResponseT> => {
-  const { data, status } = await axiosClient.post('/auth/login', {
+  const { data, status } = await axiosClient.post("/auth/login", {
     email,
     password,
   });
@@ -67,7 +67,7 @@ export const login = async ({
 };
 
 export const me = async (): Promise<UserT> => {
-  const { data, status } = await axiosClient.get('/auth/me', {
+  const { data, status } = await axiosClient.get("/auth/me", {
     withCredentials: true,
   });
 

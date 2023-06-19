@@ -1,19 +1,19 @@
-import { useEditorSettings } from '@/hooks/useEditorSettings';
+import { useEditorSettings } from "@/hooks/useEditorSettings";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
   XMarkIcon,
-} from '@heroicons/react/24/solid';
-import Ansi from 'ansi-to-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import create from 'zustand';
+} from "@heroicons/react/24/solid";
+import Ansi from "ansi-to-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import create from "zustand";
 
-type LogLevel = 'log' | 'error' | 'warn' | 'info' | 'debug';
+type LogLevel = "log" | "error" | "warn" | "info" | "debug";
 
 type ConsoleT = {
   handleMessage: (e: MessageEvent) => void;
   _messages: {
-    type: 'console';
+    type: "console";
     level: LogLevel;
     createdAt: number;
     args: unknown[];
@@ -27,14 +27,14 @@ type ConsoleT = {
 
 function joinRecursive(arr: unknown[]): string {
   return arr
-    .map(arg => {
+    .map((arg) => {
       if (Array.isArray(arg)) {
         return joinRecursive(arg);
       }
 
       return arg;
     })
-    .join(' ');
+    .join(" ");
 }
 
 export const useEditorConsole = create<ConsoleT>((set, get) => ({
@@ -42,11 +42,11 @@ export const useEditorConsole = create<ConsoleT>((set, get) => ({
   mustScroll: true,
   _setMustScroll: (mustScroll: boolean) => set({ mustScroll }),
   push: (logLevel: LogLevel, message: string) => {
-    set(state => ({
+    set((state) => ({
       _messages: [
         ...state._messages,
         {
-          type: 'console',
+          type: "console",
           level: logLevel,
           args: [message],
           createdAt: Date.now(),
@@ -58,11 +58,11 @@ export const useEditorConsole = create<ConsoleT>((set, get) => ({
   },
   clear: () => set({ _messages: [] }),
   handleMessage: (e: MessageEvent) => {
-    if (e.data.type !== 'console') return;
+    if (e.data.type !== "console") return;
 
     const [method, ...args] = e.data.data;
 
-    if (typeof console[method as LogLevel] === 'function') {
+    if (typeof console[method as LogLevel] === "function") {
       console[method as LogLevel](...args);
     } else {
       console.log(...e.data);
@@ -74,19 +74,19 @@ export const useEditorConsole = create<ConsoleT>((set, get) => ({
 
 export default function ConsoleWindow() {
   const [show, setShow] = useState(true);
-  const theme = useEditorSettings(s => s.theme);
-  const messages = useEditorConsole(state => state._messages);
-  const handleMessage = useEditorConsole(state => state.handleMessage);
-  const clear = useEditorConsole(state => state.clear);
-  const mustScroll = useEditorConsole(state => state.mustScroll);
-  const setMustScroll = useEditorConsole(state => state._setMustScroll);
+  const theme = useEditorSettings((s) => s.theme);
+  const messages = useEditorConsole((state) => state._messages);
+  const handleMessage = useEditorConsole((state) => state.handleMessage);
+  const clear = useEditorConsole((state) => state.clear);
+  const mustScroll = useEditorConsole((state) => state.mustScroll);
+  const setMustScroll = useEditorConsole((state) => state._setMustScroll);
   const messagesRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
     if (messagesRef.current) {
       messagesRef.current.scrollTo({
         top: messagesRef.current.scrollHeight,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
 
@@ -101,7 +101,7 @@ export default function ConsoleWindow() {
 
   useEffect(() => {
     const listener = (e: MessageEvent) => {
-      if (e.data.type === 'console') {
+      if (e.data.type === "console") {
         console.log(e.data);
         handleMessage(e);
       }
@@ -111,46 +111,46 @@ export default function ConsoleWindow() {
       scrollToBottom();
     }
 
-    window.addEventListener('message', listener);
+    window.addEventListener("message", listener);
 
     return () => {
-      window.removeEventListener('message', listener);
+      window.removeEventListener("message", listener);
     };
   }, [handleMessage, mustScroll, scrollToBottom]);
 
-  const isDark = theme.includes('dark');
+  const isDark = theme.includes("dark");
 
   return (
     <div
-      className={`flex flex-col gap-2 text-sm absolute bottom-0 pb-2 w-full  ${
+      className={`absolute bottom-0 flex w-full flex-col gap-2 pb-2 text-sm  ${
         isDark
-          ? 'bg-opacity-60 bg-base-200 backdrop-blur-md'
-          : 'bg-white border-t border-base-300 shadow-inner text-black'
+          ? "bg-base-200 bg-opacity-60 backdrop-blur-md"
+          : "border-t border-base-300 bg-white text-black shadow-inner"
       }`}
     >
       {show ? (
         <div>
-          <div className="flex gap-2 items-center my-2 px-2">
+          <div className="my-2 flex items-center gap-2 px-2">
             <b>Console ({messages.length})</b>
-            <div className="flex-1 flex">
+            <div className="flex flex-1">
               <button
                 onClick={() => setShow(!show)}
                 title="Hide Console"
-                className="btn btn-xs btn-ghost flex gap-2"
+                className="btn btn-ghost btn-xs flex gap-2"
               >
-                <ArrowDownIcon className="w-5 h-5" /> Hide
+                <ArrowDownIcon className="h-5 w-5" /> Hide
               </button>
               <button
                 onClick={() => clear()}
                 title="Clear Console"
-                className="flex gap-2 btn btn-xs btn-ghost"
+                className="btn btn-ghost btn-xs flex gap-2"
               >
-                <XMarkIcon className="w-5 h-5" /> Clear
+                <XMarkIcon className="h-5 w-5" /> Clear
               </button>
             </div>
           </div>
           <div
-            className="h-48 max-h-52 min-h-12 overflow-y-auto py-2 px-2 pb-6"
+            className="min-h-12 h-48 max-h-52 overflow-y-auto py-2 px-2 pb-6"
             ref={messagesRef}
             data-testid="console-messages"
           >
@@ -160,9 +160,9 @@ export default function ConsoleWindow() {
                 data-testid="console-message"
                 className={`font-mono ${consoleMessageClass(
                   m.level,
-                  isDark ? 'dark' : 'light'
-                )} break-all py-1 max-w-full ${
-                  isDark ? 'hover:bg-base-200' : 'hover:bg-slate-100'
+                  isDark ? "dark" : "light"
+                )} max-w-full break-all py-1 ${
+                  isDark ? "hover:bg-base-200" : "hover:bg-slate-100"
                 }`}
               >
                 {m.args.map((a, i) => (
@@ -176,14 +176,14 @@ export default function ConsoleWindow() {
         </div>
       ) : (
         <button
-          className=" p-2 flex items-center gap-2 text-sm w-full"
+          className=" flex w-full items-center gap-2 p-2 text-sm"
           onClick={() => {
             setShow(true);
             scrollToBottom();
           }}
           title="Show Console"
         >
-          <ArrowUpIcon className="w-5 h-5" />
+          <ArrowUpIcon className="h-5 w-5" />
           <b>Show Console ({messages.length})</b>
         </button>
       )}
@@ -191,17 +191,17 @@ export default function ConsoleWindow() {
   );
 }
 
-const consoleMessageClass = (level: LogLevel, theme: 'dark' | 'light') => {
+const consoleMessageClass = (level: LogLevel, theme: "dark" | "light") => {
   switch (level) {
-    case 'log':
-      return theme === 'dark' ? 'text-neutral-content' : 'text-black';
-    case 'error':
-      return 'text-error';
-    case 'warn':
-      return 'text-warning';
-    case 'info':
-      return 'text-accent';
-    case 'debug':
-      return 'text-neutral-content';
+    case "log":
+      return theme === "dark" ? "text-neutral-content" : "text-black";
+    case "error":
+      return "text-error";
+    case "warn":
+      return "text-warning";
+    case "info":
+      return "text-accent";
+    case "debug":
+      return "text-neutral-content";
   }
 };

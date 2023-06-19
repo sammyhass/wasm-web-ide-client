@@ -1,19 +1,19 @@
-import { useEditor } from '@/hooks/useEditor';
-import { useWindowDimensions } from '@/hooks/util/useDimensions';
-import { ProjectT } from '@/lib/api/services/projects';
-import { Resizable } from 're-resizable';
-import { Fragment, PropsWithChildren, useMemo, useRef } from 'react';
-import ConsoleWindow, { useEditorConsole } from './ConsoleWindow';
-import EditorWindow from './EditorWindow';
-import FileTree from './FileTree';
-import PreviewWindow from './PreviewWindow';
-import ProjectSettings from './ProjectSettings';
-import Toolbar from './Toolbar';
+import { useEditor } from "@/hooks/useEditor";
+import { useWindowDimensions } from "@/hooks/util/useDimensions";
+import { ProjectT } from "@/lib/api/services/projects";
+import { Resizable } from "re-resizable";
+import { Fragment, PropsWithChildren, useMemo, useRef } from "react";
+import ConsoleWindow, { useEditorConsole } from "./ConsoleWindow";
+import EditorWindow from "./EditorWindow";
+import FileTree from "./FileTree";
+import PreviewWindow from "./PreviewWindow";
+import ProjectSettings from "./ProjectSettings";
+import Toolbar from "./Toolbar";
 
 export default function ProjectEditorWrapper(project: ProjectT) {
   const hasInitialisedProject = useRef(false);
-  const initProject = useEditor(s => s.initProject);
-  const clearConsole = useEditorConsole(s => s.clear);
+  const initProject = useEditor((s) => s.initProject);
+  const clearConsole = useEditorConsole((s) => s.clear);
 
   if (!hasInitialisedProject.current) {
     clearConsole();
@@ -31,14 +31,14 @@ export default function ProjectEditorWrapper(project: ProjectT) {
 export function ResizableWindow({ children }: PropsWithChildren) {
   return (
     <Resizable
-      bounds={'parent'}
+      bounds={"parent"}
       defaultSize={{
-        width: '500px',
-        height: '100%',
+        width: "500px",
+        height: "100%",
       }}
-      minWidth={'300px'}
-      minHeight={'100%'}
-      maxWidth={'100%'}
+      minWidth={"300px"}
+      minHeight={"100%"}
+      maxWidth={"100%"}
       enable={{
         left: false,
         right: true,
@@ -51,7 +51,7 @@ export function ResizableWindow({ children }: PropsWithChildren) {
 
 function ProjectEditor() {
   const { files, selectedFile, setSelectedFile } = useEditor();
-  const filenames = files?.map(f => f.name);
+  const filenames = files?.map((f) => f.name);
 
   const { width } = useWindowDimensions();
 
@@ -63,7 +63,7 @@ function ProjectEditor() {
   }, [isMobile]);
 
   return (
-    <div className="w-full max-w-screen">
+    <div className="max-w-screen w-full">
       <Toolbar />
       <div className="flex flex-col md:flex-row ">
         <FileTree
@@ -71,10 +71,10 @@ function ProjectEditor() {
           selectFile={setSelectedFile}
           selectedFile={selectedFile}
         />
-        <div className="flex flex-col-reverse md:flex-row w-full mr-1">
+        <div className="mr-1 flex w-full flex-col-reverse md:flex-row">
           <ParentComponent>
             <hr className="md:hidden" />
-            <div className="w-full relative">
+            <div className="relative w-full">
               <EditorWindow />
               <ConsoleWindow />
             </div>

@@ -1,19 +1,19 @@
-import { DirectoryNode, FileNode, FileSystemTree } from '@webcontainer/api';
+import { DirectoryNode, FileNode, FileSystemTree } from "@webcontainer/api";
 
 export function isFileNode(node: FileNode | DirectoryNode): node is FileNode {
-  return 'file' in node;
+  return "file" in node;
 }
 
 export function isDirectoryNode(
   node: FileNode | DirectoryNode
 ): node is DirectoryNode {
-  return 'directory' in node;
+  return "directory" in node;
 }
 
 function visitNode(
   node: FileNode | DirectoryNode,
   cb: (path: string, node: FileNode | DirectoryNode) => void,
-  path = ''
+  path = ""
 ) {
   if (isFileNode(node)) {
     cb(path, node);
@@ -28,12 +28,12 @@ function visitNode(
 export function findNode(
   tree: FileSystemTree,
   pred: (path: string, node: FileNode | DirectoryNode) => boolean,
-  path = ''
+  path = ""
 ): { path: string; node: FileNode | DirectoryNode } | undefined {
   for (const [name, node] of Object.entries(tree)) {
     if (pred(`${path}/${name}`, node))
       return {
-        path: `${path}/${name}`.replace(/^\//, ''),
+        path: `${path}/${name}`.replace(/^\//, ""),
         node,
       };
     if (isDirectoryNode(node)) {
@@ -46,7 +46,7 @@ export function findNode(
 
 export function visitFileTree(
   tree: FileSystemTree,
-  cb: (path: string, node: FileNode | DirectoryNode) => void | false // false to stop
+  cb: (path: string, node: FileNode | DirectoryNode) => void
 ) {
   for (const [name, node] of Object.entries(tree)) {
     visitNode(node, cb, name);
@@ -54,7 +54,7 @@ export function visitFileTree(
 }
 
 export function nodeExists(tree: FileSystemTree, path: string) {
-  return !!findNode(tree, p => {
-    return p.replace(/^\/+/g, '') === path.replace(/^\/+/g, '');
+  return !!findNode(tree, (p) => {
+    return p.replace(/^\/+/g, "") === path.replace(/^\/+/g, "");
   });
 }

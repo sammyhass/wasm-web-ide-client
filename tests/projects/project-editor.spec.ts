@@ -1,23 +1,23 @@
-import { expect, Page, test } from '@playwright/test';
-import { getURL } from '../util';
-import { Navbar } from '../util/pom/Navbar';
+import { expect, Page, test } from "@playwright/test";
+import { getURL } from "../util";
+import { Navbar } from "../util/pom/Navbar";
 import {
   createRandomProjectName,
   NewProjectPage,
-} from '../util/pom/NewProjectPage';
+} from "../util/pom/NewProjectPage";
 import {
   ProjectEditorPage,
   waitForProjectPage,
-} from '../util/pom/ProjectEditorPage';
-import { ProjectsPage } from '../util/pom/ProjectsPage';
+} from "../util/pom/ProjectEditorPage";
+import { ProjectsPage } from "../util/pom/ProjectsPage";
 
-const H1_CONTENT = 'Hello WASM!';
+const H1_CONTENT = "Hello WASM!";
 const NEW_HTML = `<h1>${H1_CONTENT}</h1>`;
 
-const NEW_CSS = 'h1 { color: red; }';
+const NEW_CSS = "h1 { color: red; }";
 
-const CONSOLE_MESSAGE = 'Hello WASM!';
-const ERROR_MESSAGE = 'Uncaught SyntaxError: Unexpected identifier';
+const CONSOLE_MESSAGE = "Hello WASM!";
+const ERROR_MESSAGE = "Uncaught SyntaxError: Unexpected identifier";
 const JS_ERROR = `throw new Error('${ERROR_MESSAGE}');`;
 const NEW_JS = `console.log('${CONSOLE_MESSAGE}');`;
 
@@ -29,13 +29,13 @@ let projectEditorPom: ProjectEditorPage;
 
 let newProjectName: string;
 
-test.describe.configure({ mode: 'serial' });
+test.describe.configure({ mode: "serial" });
 test.beforeAll(async ({ browser, browserName: _browserName }) => {
   page = await browser.newPage({
-    storageState: 'authedStorageState.json',
+    storageState: "authedStorageState.json",
   });
 
-  await page.goto('/projects');
+  await page.goto("/projects");
 
   newProjectName = createRandomProjectName();
   projectsPagePom = new ProjectsPage(page);
@@ -43,12 +43,12 @@ test.beforeAll(async ({ browser, browserName: _browserName }) => {
   browserName = _browserName;
 });
 
-test('can create a new project', async () => {
+test("can create a new project", async () => {
   await projectsPagePom.newProjectButton.click();
 
-  await page.waitForURL(getURL('/projects/new'));
+  await page.waitForURL(getURL("/projects/new"));
 
-  expect(page.url()).toBe(getURL('/projects/new'));
+  expect(page.url()).toBe(getURL("/projects/new"));
 
   const newProjectPagePom = new NewProjectPage(page);
 
@@ -63,16 +63,16 @@ test('can create a new project', async () => {
   projectEditorPom = new ProjectEditorPage(page);
 });
 
-test('can edit the project HTML', async () => {
-  await projectEditorPom.selectFile('index.html');
+test("can edit the project HTML", async () => {
+  await projectEditorPom.selectFile("index.html");
 
   expect(await projectEditorPom.selectedFile.innerText()).toContain(
-    'index.html'
+    "index.html"
   );
 
   await projectEditorPom.clearEditor(browserName);
 
-  expect(await projectEditorPom.getEditorValue()).toBe('');
+  expect(await projectEditorPom.getEditorValue()).toBe("");
 
   const newContent = NEW_HTML;
 
@@ -81,16 +81,16 @@ test('can edit the project HTML', async () => {
   expect(await projectEditorPom.getEditorValue()).toBe(newContent);
 });
 
-test('can edit the project CSS', async () => {
-  await projectEditorPom.selectFile('styles.css');
+test("can edit the project CSS", async () => {
+  await projectEditorPom.selectFile("styles.css");
 
   expect(await projectEditorPom.selectedFile.innerText()).toContain(
-    'styles.css'
+    "styles.css"
   );
 
   await projectEditorPom.clearEditor(browserName);
 
-  expect(await projectEditorPom.getEditorValue()).toBe('');
+  expect(await projectEditorPom.getEditorValue()).toBe("");
 
   const newContent = NEW_CSS;
 
@@ -99,14 +99,14 @@ test('can edit the project CSS', async () => {
   expect(await projectEditorPom.getEditorValue()).toBe(newContent);
 });
 
-test('can edit the project JavaScript', async () => {
-  await projectEditorPom.selectFile('app.js');
+test("can edit the project JavaScript", async () => {
+  await projectEditorPom.selectFile("app.js");
 
-  expect(await projectEditorPom.selectedFile.innerText()).toContain('app.js');
+  expect(await projectEditorPom.selectedFile.innerText()).toContain("app.js");
 
   await projectEditorPom.clearEditor(browserName);
 
-  expect(await projectEditorPom.getEditorValue()).toBe('');
+  expect(await projectEditorPom.getEditorValue()).toBe("");
 
   const newContent = NEW_JS;
 
@@ -115,7 +115,7 @@ test('can edit the project JavaScript', async () => {
   expect(await projectEditorPom.getEditorValue()).toBe(newContent);
 });
 
-test('can save the project and see changes in preview window', async () => {
+test("can save the project and see changes in preview window", async () => {
   await projectEditorPom.save();
 
   await projectEditorPom.previewWindow.previewWindow
@@ -135,22 +135,22 @@ test('can save the project and see changes in preview window', async () => {
   expect(js).toContain(NEW_JS);
 });
 
-test('can see expected JS output in the console', async () => {
+test("can see expected JS output in the console", async () => {
   const consoleMessages = await (
     await projectEditorPom.editorConsole.getConsoleMessages()
-  ).join(', ');
+  ).join(", ");
 
   expect(consoleMessages).toContain(CONSOLE_MESSAGE);
 });
 
-test('can view JS error in the console', async () => {
-  await projectEditorPom.selectFile('app.js');
+test("can view JS error in the console", async () => {
+  await projectEditorPom.selectFile("app.js");
 
-  expect(await projectEditorPom.selectedFile.innerText()).toContain('app.js');
+  expect(await projectEditorPom.selectedFile.innerText()).toContain("app.js");
 
   await projectEditorPom.clearEditor(browserName);
 
-  expect(await projectEditorPom.getEditorValue()).toBe('');
+  expect(await projectEditorPom.getEditorValue()).toBe("");
 
   const newContent = JS_ERROR;
 
@@ -166,15 +166,15 @@ test('can view JS error in the console', async () => {
 
   const consoleMessages = await (
     await projectEditorPom.editorConsole.getConsoleMessages()
-  ).join(', ');
+  ).join(", ");
 
   expect(consoleMessages).toContain(ERROR_MESSAGE);
 });
 
-test('cleanup: can delete project', async () => {
+test("cleanup: can delete project", async () => {
   await projectEditorPom.settingsButton.click();
 
   await projectEditorPom.settingsModal.deleteProject();
 
-  await page.waitForURL(getURL('/projects'));
+  await page.waitForURL(getURL("/projects"));
 });

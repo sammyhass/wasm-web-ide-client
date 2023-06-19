@@ -1,7 +1,7 @@
-import { LoginInputT } from '@/lib/api/services/auth';
-import { faker } from '@faker-js/faker';
-import { Locator, Page } from '@playwright/test';
-import { getTestUser, getURL } from '..';
+import { LoginInputT } from "@/lib/api/services/auth";
+import { faker } from "@faker-js/faker";
+import { Locator, Page } from "@playwright/test";
+import { getTestUser, getURL } from "..";
 
 export class LoginRegisterPage {
   readonly page: Page;
@@ -17,12 +17,12 @@ export class LoginRegisterPage {
   constructor(page: Page) {
     this.page = page;
 
-    this.emailInput = page.getByTestId('email-input');
-    this.passwordInput = page.getByTestId('password-input');
-    this.confirmPasswordInput = page.getByTestId('confirm-password-input');
-    this.submitButton = page.locator('form').locator('button[type="submit"]');
-    this.toggleMode = page.getByTestId('toggle-mode');
-    this.error = page.getByTestId('error');
+    this.emailInput = page.getByTestId("email-input");
+    this.passwordInput = page.getByTestId("password-input");
+    this.confirmPasswordInput = page.getByTestId("confirm-password-input");
+    this.submitButton = page.locator("form").locator('button[type="submit"]');
+    this.toggleMode = page.getByTestId("toggle-mode");
+    this.error = page.getByTestId("error");
   }
 
   async login(email: string, password: string) {
@@ -46,7 +46,7 @@ export const createRandomLoginInput = (): LoginInputT => ({
 
 // Login helper function used to setup tests
 export const loginWithTestUser = async (page: Page) => {
-  await page.goto('/login');
+  await page.goto("/login");
 
   const pom = new LoginRegisterPage(page);
 
@@ -54,6 +54,6 @@ export const loginWithTestUser = async (page: Page) => {
 
   await pom.login(testUser.email, testUser.password);
 
-  await page.waitForURL(getURL('/projects'));
-  await page.waitForLoadState('networkidle');
+  await page.waitForURL(getURL("/projects"));
+  await page.waitForLoadState("networkidle");
 };

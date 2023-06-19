@@ -1,6 +1,6 @@
-import { chromium, FullConfig } from '@playwright/test';
-import { getTestURL } from './util';
-import { loginWithTestUser } from './util/pom/LoginRegisterPage';
+import { chromium, FullConfig } from "@playwright/test";
+import { getTestURL } from "./util";
+import { loginWithTestUser } from "./util/pom/LoginRegisterPage";
 
 export default async function globalSetup(cfg: FullConfig) {
   const browser = await chromium.launch();
@@ -9,12 +9,12 @@ export default async function globalSetup(cfg: FullConfig) {
     baseURL: getTestURL(),
   });
 
-  await page.goto('/login');
+  await page.goto("/login");
 
   await loginWithTestUser(page);
 
   // saving the auth state for the test user so we can reuse it.
-  await page.context().storageState({ path: 'authedStorageState.json' });
+  await page.context().storageState({ path: "authedStorageState.json" });
 
   await browser.close();
 }

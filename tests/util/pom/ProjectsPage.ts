@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page } from "@playwright/test";
 
 export class ProjectsPage {
   readonly page: Page;
@@ -9,7 +9,7 @@ export class ProjectsPage {
   constructor(page: Page) {
     this.page = page;
 
-    this.projectCards = page.getByTestId('project-card');
-    this.newProjectButton = page.getByTestId('new-project-button');
+    this.projectCards = page.getByTestId("project-card");
+    this.newProjectButton = page.getByTestId("new-project-button");
   }
 }

@@ -3,12 +3,12 @@ const postMessageToParent = (type, data) => {
   window.parent.postMessage({ type, data }, '*');
 };
 
-${['log', 'error', 'warn', 'info', 'debug']
+${["log", "error", "warn", "info", "debug"]
   .map(
-    method =>
+    (method) =>
       `console.${method} = (...args) => {\n\n\tpostMessageToParent('console', ['${method}', '[JS]', args]);};`
   )
-  .join('')}
+  .join("")}
 `;
 
 const runJS = (js: string) => `
@@ -48,18 +48,18 @@ const runWasm = (js?: string, src?: string, isGo = true) =>
   ${instantiateMemory(isGo)}
 
   WebAssembly.instantiateStreaming(fetch('${src}'), ${
-        isGo ? 'memory.importObject' : getAssemblyScriptImports()
+        isGo ? "memory.importObject" : getAssemblyScriptImports()
       }).then(___result => {
     wasm = ___result.instance;
-    ${isGo ? 'memory.run(wasm);' : ''}
-    ${runJS(js || '')}
+    ${isGo ? "memory.run(wasm);" : ""}
+    ${runJS(js || "")}
   }).catch(e => {
     console.error(e)
   });
 `
     : `
     console.warn('Running JS only. Try recompiling your code to include WebAssembly.')
-    ${runJS(js || '')}
+    ${runJS(js || "")}
     `;
 
 export const iframeContent = ({

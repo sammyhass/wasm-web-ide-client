@@ -1,12 +1,12 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page } from "@playwright/test";
 
 export class EditorConsole {
   readonly consoleContainer: Locator;
   readonly consoleMessages: Locator;
 
   constructor(page: Page) {
-    this.consoleContainer = page.getByTestId('console-messages');
-    this.consoleMessages = this.consoleContainer.getByTestId('console-message');
+    this.consoleContainer = page.getByTestId("console-messages");
+    this.consoleMessages = this.consoleContainer.getByTestId("console-message");
   }
 
   async getConsoleMessages() {
@@ -18,7 +18,7 @@ export class EditorConsole {
   }
 
   async hasMessage(message: string) {
-    const joinedMessages = (await this.getConsoleMessages()).join('');
+    const joinedMessages = (await this.getConsoleMessages()).join("");
 
     return joinedMessages.includes(message);
   }

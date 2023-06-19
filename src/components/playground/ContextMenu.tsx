@@ -1,13 +1,13 @@
-import { useDirListing } from '@/lib/webcontainers/files/dir';
-import { useRemoveNode } from '@/lib/webcontainers/files/writer';
-import { isDirectoryNode, isFileNode } from '@/lib/webcontainers/util';
-import { Dialog, Portal } from '@headlessui/react';
-import { TrashIcon } from '@heroicons/react/20/solid';
-import { FolderPlusIcon, PlusIcon } from '@heroicons/react/24/solid';
-import { DirectoryNode, FileNode } from '@webcontainer/api';
-import { ButtonHTMLAttributes, useEffect, useRef, useState } from 'react';
-import { usePlaygroundEditor } from '.';
-import { NewNode } from './NewNodeDialogue';
+import { useDirListing } from "@/lib/webcontainers/files/dir";
+import { useRemoveNode } from "@/lib/webcontainers/files/writer";
+import { isDirectoryNode, isFileNode } from "@/lib/webcontainers/util";
+import { Dialog, Portal } from "@headlessui/react";
+import { TrashIcon } from "@heroicons/react/20/solid";
+import { FolderPlusIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { DirectoryNode, FileNode } from "@webcontainer/api";
+import { ButtonHTMLAttributes, useEffect, useRef, useState } from "react";
+import { usePlaygroundEditor } from ".";
+import { NewNode } from "./NewNodeDialogue";
 
 type ContextMenuProps = {
   hide: () => void;
@@ -31,10 +31,10 @@ export default function ContextMenuWrapper({
       }
     };
 
-    document.addEventListener('click', handleClick);
+    document.addEventListener("click", handleClick);
 
     return () => {
-      document.removeEventListener('click', handleClick);
+      document.removeEventListener("click", handleClick);
     };
   }, [hide]);
 
@@ -43,14 +43,14 @@ export default function ContextMenuWrapper({
       <div className="fixed inset-0 bg-black opacity-0" />
       <div
         ref={ref}
-        className="absolute flex flex-col  menu menu-compact min-w-[200px] bg-base-300 rounded overflow-hidden shadow-lg"
+        className="menu menu-compact absolute  flex min-w-[200px] flex-col overflow-hidden rounded bg-base-300 shadow-lg"
         data-testid="context-menu"
         style={{
           top: props.top,
           left: props.left,
         }}
       >
-        <li className="menu-title text-sm text-base-content opacity-50 font-mono p-2">
+        <li className="menu-title p-2 font-mono text-sm text-base-content opacity-50">
           {props.path}
         </li>
         {isDirectory && (
@@ -60,7 +60,7 @@ export default function ContextMenuWrapper({
             node={props.node as DirectoryNode}
           />
         )}
-        {props.path !== '/' && <DeleteButton {...props} onDone={hide} />}
+        {props.path !== "/" && <DeleteButton {...props} onDone={hide} />}
       </div>
     </Portal>
   );
@@ -87,19 +87,19 @@ function ContextMenuButton({
   }
 
   return (
-    <li className={props.disabled ? 'opacity-50' : ''}>
+    <li className={props.disabled ? "opacity-50" : ""}>
       <button {...props}>{children}</button>
     </li>
   );
 }
 
 function CreateNew(
-  props: Pick<ContextMenuProps, 'hide' | 'path'> & { node: DirectoryNode }
+  props: Pick<ContextMenuProps, "hide" | "path"> & { node: DirectoryNode }
 ) {
   const [show, setShow] = useState(false);
   const { refetch: refetchDirListing } = useDirListing();
 
-  const selectFile = usePlaygroundEditor(s => s.setSelectedFile);
+  const selectFile = usePlaygroundEditor((s) => s.setSelectedFile);
 
   return (
     <>
@@ -107,8 +107,8 @@ function CreateNew(
         <ContextMenuDialog
           title={
             <span className="flex items-center gap-2">
-              <PlusIcon className="w-5 h-5" />
-              New File/Folder {props.path !== '/' && `in ${props.path}`}
+              <PlusIcon className="h-5 w-5" />
+              New File/Folder {props.path !== "/" && `in ${props.path}`}
             </span>
           }
           hide={props.hide}
@@ -120,7 +120,7 @@ function CreateNew(
               props.hide();
               refetchDirListing();
 
-              if (type === 'file') {
+              if (type === "file") {
                 selectFile(path);
               }
             }}
@@ -128,14 +128,14 @@ function CreateNew(
         </ContextMenuDialog>
       )}
       <ContextMenuButton onClick={() => setShow(true)}>
-        <FolderPlusIcon className="w-5 h-5 text-info" />
+        <FolderPlusIcon className="h-5 w-5 text-info" />
         New File/Folder
       </ContextMenuButton>
     </>
   );
 }
 
-const NEVER_DELETE = ['package.json', 'index.html', 'asconfig.json'];
+const NEVER_DELETE = ["package.json", "index.html", "asconfig.json"];
 function DeleteButton({
   path,
   onDone,
@@ -154,11 +154,11 @@ function DeleteButton({
     <div className="flex flex-col gap-2">
       <ContextMenuButton
         onClick={() => setConfirmDelete(true)}
-        disabledTip={canDelete ? undefined : 'Cannot delete this file'}
+        disabledTip={canDelete ? undefined : "Cannot delete this file"}
         disabled={!canDelete}
       >
-        <TrashIcon className="w-5 h-5 text-error" />
-        Delete {isFile ? 'File' : 'Folder'}
+        <TrashIcon className="h-5 w-5 text-error" />
+        Delete {isFile ? "File" : "Folder"}
       </ContextMenuButton>
       {confirmDelete && path && (
         <ConfirmDeleteDialgoue
@@ -190,20 +190,20 @@ function ConfirmDeleteDialgoue({
       hide={hide}
       title={`Delete ${path}?`}
       description={`Are you sure you want to delete this ${
-        isFileNode(node) ? 'file' : 'folder'
+        isFileNode(node) ? "file" : "folder"
       }?`}
     >
-      <div className="flex my-2 gap-2 w-full">
+      <div className="my-2 flex w-full gap-2">
         <button
           onClick={() => {
             path && mutate(path);
             hide();
           }}
-          className="flex-1 btn btn-error text-white normal-case"
+          className="btn btn-error flex-1 normal-case text-white"
         >
           Yes
         </button>
-        <button onClick={hide} className="flex-1 btn btn-accent normal-case">
+        <button onClick={hide} className="btn btn-accent flex-1 normal-case">
           No
         </button>
       </div>
@@ -225,7 +225,7 @@ function ContextMenuDialog({
   return (
     <Dialog className={`modal modal-open`} open={true} onClose={hide}>
       <Dialog.Panel className={`modal-box`}>
-        <Dialog.Title as="h2" className="text-2xl font-bold mb-2">
+        <Dialog.Title as="h2" className="mb-2 text-2xl font-bold">
           {title}
         </Dialog.Title>
         {description && <Dialog.Description>{description}</Dialog.Description>}

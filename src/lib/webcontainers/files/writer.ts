@@ -1,11 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { WebContainer } from '@webcontainer/api';
-import { useRef, useState } from 'react';
-import { useContainer } from '..';
-import { useDirListing } from './dir';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { WebContainer } from "@webcontainer/api";
+import { useRef, useState } from "react";
+import { useContainer } from "..";
+import { useDirListing } from "./dir";
 
 const createFileWriter = (container: WebContainer, path: string) => {
-  return (value: string) => container.fs.writeFile(path, value, 'utf-8');
+  return (value: string) => container.fs.writeFile(path, value, "utf-8");
 };
 
 export const useCreateFolder = () => {
@@ -27,14 +27,14 @@ export const useCreateFile = () => {
     async (path: string) => {
       if (!container) return;
 
-      return createFileWriter(container, path)('');
+      return createFileWriter(container, path)("");
     },
     {
-      onMutate: async path => {
-        await queryCache.invalidateQueries(['dirListing', true]);
-        await queryCache.cancelQueries(['readFile', path]);
-        const previousValue = queryCache.getQueryData(['readFile', path]);
-        queryCache.setQueryData(['readFile', path], '');
+      onMutate: async (path) => {
+        await queryCache.invalidateQueries(["dirListing", true]);
+        await queryCache.cancelQueries(["readFile", path]);
+        const previousValue = queryCache.getQueryData(["readFile", path]);
+        queryCache.setQueryData(["readFile", path], "");
         return previousValue;
       },
     }
@@ -57,7 +57,7 @@ export const useRemoveNode = () => {
     },
     {
       onSuccess: (d, e, path) => {
-        queryCache.removeQueries(['readFile', path]);
+        queryCache.removeQueries(["readFile", path]);
         refetch();
       },
     }
@@ -74,10 +74,10 @@ export const useFileWriter = (path: string) => {
       return createFileWriter(container, path)(value);
     },
     {
-      onMutate: async value => {
-        await queryCache.cancelQueries(['readFile', path]);
-        const previousValue = queryCache.getQueryData(['readFile', path]);
-        queryCache.setQueryData(['readFile', path], value);
+      onMutate: async (value) => {
+        await queryCache.cancelQueries(["readFile", path]);
+        const previousValue = queryCache.getQueryData(["readFile", path]);
+        queryCache.setQueryData(["readFile", path], value);
         return previousValue;
       },
     }
