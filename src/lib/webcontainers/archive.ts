@@ -9,6 +9,7 @@ const exportProject = async (
 ) => {
   const allFiles = await container.fs.readdir("/");
   const processOut = await container?.spawn("npx", [
+    "-y",
     "bestzip",
     "./project.zip",
     ...allFiles.filter((f) => f !== "node_modules"),
